@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IELTS Evaluator - 雅思评估助手</title>
+    <title>Live in English - 英语即日常</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1719,7 +1719,7 @@
         <div class="header-content">
             <div class="logo">
                 <div class="logo-icon">📝</div>
-                <span>IELTS Evaluator</span>
+                <span>Live in English</span>
             </div>
             <div class="header-actions">
                 <div class="api-status">
@@ -1747,7 +1747,7 @@
                         <label class="form-label" for="backendUrl">Backend Server URL</label>
                         <input type="url" class="form-input" id="backendUrl" name="backendUrl"
                                placeholder="http://localhost:8000">
-                        <div class="form-hint">IELTS Evaluator backend address. Default: http://localhost:8000</div>
+                        <div class="form-hint">Live in English backend address. Default: http://localhost:8000</div>
                     </div>
 
                     <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
@@ -2186,8 +2186,6 @@
             if (saved) {
                 try {
                     const parsed = JSON.parse(saved);
-                    console.log('Raw config from localStorage:', parsed);
-                    
                     // 检查是否是新格式（有 apiKeys 对象）
                     if (parsed.apiKeys) {
                         // 新格式
@@ -2204,7 +2202,7 @@
                         };
                     } else if (parsed.apiKey) {
                         // 旧格式：迁移数据
-                        console.log('Migrating from old config format');
+
                         const provider = getProvider(parsed.model || 'deepseek-chat');
                         apiConfig = {
                             model: parsed.model || 'deepseek-chat',
@@ -2225,7 +2223,7 @@
                         return;
                     }
                     
-                    console.log('Processed config:', apiConfig);
+
 
                     // 更新 UI
                     // Backend URL
@@ -2353,11 +2351,6 @@
                 return;
             }
 
-            // 调试：检查 apiUrlInput 元素
-            console.log('apiUrlInput element:', apiUrlInput);
-            console.log('apiUrlInput value:', apiUrlInput ? apiUrlInput.value : 'element not found');
-            console.log('apiUrlInput type:', typeof apiUrlInput);
-
             const config = {
                 api_key: apiKeyInput.value.trim(),
                 model: modelSelect.value === 'custom' ? customModelInput.value.trim() : modelSelect.value
@@ -2370,8 +2363,7 @@
             }
             
             // 调试日志
-            console.log('Test connection config:', JSON.stringify(config, null, 2));
-            console.log('Request URL:', `${API_BASE_URL}/test-api`);
+
 
             // Show loading state
             testBtn.disabled = true;
@@ -2397,8 +2389,7 @@
                 }
 
                 // 调试日志
-                console.log('Response status:', response.status);
-                console.log('Response data:', data);
+
                 
                 // 确保 message 是字符串
                 let message = data.message || data.detail || 'Unknown error';
@@ -2464,8 +2455,7 @@
             const newProvider = getProvider(apiConfig.model);
             apiKeyInput.value = apiConfig.apiKeys[newProvider] || '';
             
-            console.log(`Switched from ${currentProvider} to ${newProvider}`);
-            console.log('Current API Key:', apiKeyInput.value ? '***' + apiKeyInput.value.slice(-4) : '(empty)');
+
             
             if (modelSelect.value === 'custom') {
                 customModelGroup.style.display = 'block';
@@ -2477,8 +2467,7 @@
                 
                 // 如果选择了 Google Gemini 模型，显示提示
                 if (modelSelect.value.startsWith('gemini-')) {
-                    console.log('Selected Gemini model:', modelSelect.value);
-                    console.log('API URL will be: https://generativelanguage.googleapis.com/v1beta/models/' + modelSelect.value + ':generateContent');
+
                 }
             }
             hideTestResult();
@@ -2544,7 +2533,7 @@
             localStorage.removeItem('ielts_backend_url');
             // 清除 localStorage
             localStorage.removeItem('ieltsApiConfig');
-            console.log('Config reset and localStorage cleared');
+
         });
 
         // Mode Selection - handled by unified listener below (practice mode section)
@@ -2628,11 +2617,7 @@
             errorMessage.style.display = 'none';
             resultsSection.classList.remove('show');
 
-            // Debug: 检查 apiConfig
-            console.log('apiConfig:', apiConfig);
-            console.log('Provider:', currentProvider);
-            console.log('API Key:', currentApiKey ? '***' + currentApiKey.slice(-4) : '(empty)');
-            
+
             try {
                 // 构建 api_config，只包含非空值
                 const apiConfigData = {
@@ -2658,7 +2643,7 @@
                     word_count: wordCount,
                     api_config: apiConfigData
                 };
-                console.log('Request body:', requestBody);
+
                 
                 const apiResponse = await fetch(`${API_BASE_URL}/evaluate`, {
                     method: 'POST',
@@ -2736,7 +2721,7 @@
             const taskPrompt = document.getElementById('taskPrompt');
             if (taskPrompt && (taskPrompt.value.includes('@') || taskPrompt.value.includes('qq.com'))) {
                 taskPrompt.value = '';
-                console.log('Cleared autofill from taskPrompt');
+
             }
         }
         // Try multiple times as browser autofill happens at different times
@@ -3924,31 +3909,17 @@
             }
         });
 
-        // Mic button: unified recording handler (replaces any previous handlers)
-        // Use a wrapper to prevent duplicate handlers
-        let micHandlerAttached = false;
-        if (!micHandlerAttached) {
-            micHandlerAttached = true;
-            practiceMicBtn.addEventListener('click', async () => {
-                if (isPracticeRecording) {
-                    // Stop recording and analyze
-                    isPracticeRecording = false;
-                    await stopPracticeRecordingAndAnalyze();
-                } else {
-                    // Start recording
-                    isPracticeRecording = true;
-                    await startPracticeRecording();
-                }
-            });
-        }
-
-        // Text send handler
-        practiceSendBtn.addEventListener('click', () => {
-            const text = document.getElementById('practiceInput').value.trim();
-            if (text && practiceActive) {
-                sendPracticeMessage(text);
+        // Mic button handler
+        practiceMicBtn.addEventListener('click', async () => {
+            if (isPracticeRecording) {
+                isPracticeRecording = false;
+                await stopPracticeRecordingAndAnalyze();
+            } else {
+                isPracticeRecording = true;
+                await startPracticeRecording();
             }
         });
+
     </script>
 </body>
 </html>

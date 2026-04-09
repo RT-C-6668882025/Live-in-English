@@ -1,6 +1,6 @@
-# IELTS Evaluator - 雅思评估助手
+# Live in English - 英语即日常
 
-一个基于多AI模型（DeepSeek/OpenAI/Anthropic/Google）的雅思写作和口语评估工具，提供专业的评分、详细的改进建议，以及AI-powered发音练习功能。
+一个基于多AI模型（DeepSeek/OpenAI/Anthropic/Google）的英语口语练习与评估工具，提供专业的发音分析、AI对话练习，以及日常英语场景模拟功能。
 
 ## 功能特性
 

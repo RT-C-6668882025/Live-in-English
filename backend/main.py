@@ -1,18 +1,21 @@
 """
-雅思评估助手 - FastAPI 后端服务
-IELTS Evaluator Backend Service
+英语即日常 - FastAPI 后端服务
+Live in English Backend Service
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel, Field
 import os
 import httpx
 import json
-from typing import Literal, Optional, Dict, Any
+import io
+import asyncio
+from typing import Literal, Optional, Dict, Any, List
 from datetime import datetime
 
-app = FastAPI(title="IELTS Evaluator API", version="1.1.0")
+app = FastAPI(title="Live in English API", version="1.1.0")
 
 # 配置 CORS
 app.add_middleware(
@@ -374,8 +377,8 @@ def build_api_headers(api_key: str, provider: str = "deepseek") -> Dict[str, str
 async def root():
     """根路径 - 服务状态检查"""
     return {
-        "status": "ok", 
-        "service": "IELTS Evaluator API",
+        "status": "ok",
+        "service": "Live in English API",
         "version": "1.1.0",
         "supported_models": len(SUPPORTED_MODELS)
     }
@@ -729,6 +732,698 @@ CANDIDATE'S RESPONSE:
         raise HTTPException(status_code=503, detail="Cannot connect to AI API. Please check your network and API URL.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Evaluation failed: {str(e)}")
+
+
+# ==========================================
+# Voice Practice - TTS & Conversation
+# ==========================================
+
+# IELTS Speaking 考官系统提示词
+EXAMINER_SYSTEM_PROMPT = """You are an IELTS Speaking examiner conducting a one-on-one interview. Follow these rules strictly:
+
+1. You ask ONE question at a time, then wait for the candidate's response.
+2. Match the current part (Part 1, 2, or 3) of the test:
+   - Part 1: Warm-up questions about familiar topics (hobbies, hometown, studies, etc.). 4-5 questions.
+   - Part 2: Give a cue card topic and ask the candidate to speak for 1-2 minutes.
+   - Part 3: Follow-up discussion questions related to the Part 2 topic. Deeper, more abstract questions. 4-5 questions.
+3. Be encouraging but professional. Use natural spoken English.
+4. If the candidate gives a short answer, ask a follow-up to encourage elaboration.
+5. When the candidate says they're ready, start with Part 1.
+6. After all parts are done, provide a final Band Score with brief feedback.
+
+Keep your responses conversational and brief (1-3 sentences max per turn). Do NOT give long explanations. You are having a conversation, not writing an essay.
+
+Current conversation state will be provided with each message."""
+
+# TTS 可用语音列表
+TTS_VOICES = {
+    "en-US-AriaNeural": {"name": "Aria (Female, US)", "gender": "Female", "lang": "en-US"},
+    "en-US-DavisNeural": {"name": "Davis (Male, US)", "gender": "Male", "lang": "en-US"},
+    "en-US-JennyNeural": {"name": "Jenny (Female, US)", "gender": "Female", "lang": "en-US"},
+    "en-US-GuyNeural": {"name": "Guy (Male, US)", "gender": "Male", "lang": "en-US"},
+    "en-GB-SoniaNeural": {"name": "Sonia (Female, UK)", "gender": "Female", "lang": "en-GB"},
+    "en-GB-RyanNeural": {"name": "Ryan (Male, UK)", "gender": "Male", "lang": "en-GB"},
+    "en-AU-NatashaNeural": {"name": "Natasha (Female, AU)", "gender": "Female", "lang": "en-AU"},
+}
+
+
+class TTSRequest(BaseModel):
+    """TTS 请求模型"""
+    text: str = Field(description="要转换为语音的文本")
+    voice: str = Field(default="en-US-AriaNeural", description="语音名称")
+    rate: str = Field(default="+0%", description="语速调整，如 +20%, -10%")
+
+
+class ConversationMessage(BaseModel):
+    """对话消息模型"""
+    role: str = Field(description="角色: user 或 assistant")
+    content: str = Field(description="消息内容")
+
+
+class PracticeRequest(BaseModel):
+    """口语练习请求模型"""
+    messages: List[ConversationMessage] = Field(description="对话历史")
+    api_config: Optional[ApiConfig] = None
+    part: str = Field(default="1", description="当前 Part (1/2/3)")
+
+
+class PracticeEvaluateRequest(BaseModel):
+    """口语练习最终评估请求"""
+    messages: List[ConversationMessage] = Field(description="完整对话记录")
+    api_config: Optional[ApiConfig] = None
+
+
+@app.get("/tts/voices")
+async def get_tts_voices():
+    """获取可用的 TTS 语音列表"""
+    return {"voices": TTS_VOICES}
+
+
+@app.post("/tts/speak")
+async def text_to_speech(request: TTSRequest):
+    """将文本转换为语音并返回音频流"""
+    try:
+        import edge_tts
+    except ImportError:
+        raise HTTPException(
+            status_code=500,
+            detail="edge-tts not installed. Run: pip install edge-tts"
+        )
+
+    voice = request.voice
+    if voice not in TTS_VOICES:
+        voice = "en-US-AriaNeural"
+
+    try:
+        communicate = edge_tts.Communicate(request.text, voice, rate=request.rate)
+        audio_buffer = io.BytesIO()
+
+        async for chunk in communicate.stream():
+            if chunk["type"] == "audio":
+                audio_data = chunk.get("data") or chunk.get("bytes") or b""
+                if isinstance(audio_data, bytes):
+                    audio_buffer.write(audio_data)
+
+        audio_buffer.seek(0)
+
+        return StreamingResponse(
+            audio_buffer,
+            media_type="audio/mpeg",
+            headers={
+                "Content-Disposition": "inline; filename=tts_output.mp3",
+                "Cache-Control": "no-cache",
+            }
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"TTS failed: {str(e)}")
+
+
+@app.post("/practice/chat")
+async def practice_chat(request: PracticeRequest):
+    """IELTS 口语练习对话端点"""
+    if request.api_config:
+        api_key = request.api_config.api_key
+        model = request.api_config.custom_model if request.api_config.model == "custom" and request.api_config.custom_model else request.api_config.model
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+        if request.api_config.api_url:
+            api_url = request.api_config.api_url
+        else:
+            if provider == "google":
+                api_url = DEFAULT_API_URLS["google"].format(model=model)
+            else:
+                api_url = DEFAULT_API_URLS.get(provider, DEFAULT_API_URLS["deepseek"])
+    else:
+        api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
+        api_key = os.getenv("DEEPSEEK_API_KEY", "")
+        model = "deepseek-chat"
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+    if not api_key:
+        raise HTTPException(status_code=500, detail="API key not configured.")
+
+    # 构建对话消息
+    system_msg = {
+        "role": "system",
+        "content": EXAMINER_SYSTEM_PROMPT + f"\n\nCurrent Part: Part {request.part}"
+    }
+
+    messages = [system_msg]
+    for msg in request.messages:
+        messages.append({"role": msg.role, "content": msg.content})
+
+    headers = build_api_headers(api_key, provider)
+
+    if provider == "google":
+        contents = []
+        for msg in messages:
+            role = "user" if msg["role"] in ("user", "system") else "model"
+            contents.append({"role": role, "parts": [{"text": msg["content"]}]})
+        body = {
+            "contents": contents,
+            "generationConfig": {
+                "maxOutputTokens": 500,
+                "temperature": 0.8
+            }
+        }
+        if "?" in api_url:
+            api_url = f"{api_url}&key={api_key}"
+        else:
+            api_url = f"{api_url}?key={api_key}"
+    else:
+        body = build_api_request_body(model, messages, max_tokens=500)
+        body["temperature"] = 0.8
+
+    try:
+        async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
+            api_response = await client.post(api_url, headers=headers, json=body)
+
+            if api_response.status_code != 200:
+                error_detail = api_response.text[:200]
+                raise HTTPException(status_code=api_response.status_code, detail=f"API error: {error_detail}")
+
+            result = api_response.json()
+
+            if provider == "anthropic":
+                reply = result["content"][0]["text"]
+            elif provider == "google":
+                reply = result["candidates"][0]["content"]["parts"][0]["text"]
+            else:
+                reply = result["choices"][0]["message"]["content"]
+
+            return {"reply": reply}
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="AI API timeout.")
+    except httpx.ConnectError:
+        raise HTTPException(status_code=503, detail="Cannot connect to AI API.")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Chat failed: {str(e)}")
+
+
+@app.post("/practice/evaluate")
+async def practice_evaluate(request: PracticeEvaluateRequest):
+    """口语练习结束后给出最终 Band Score 评估"""
+    if request.api_config:
+        api_key = request.api_config.api_key
+        model = request.api_config.custom_model if request.api_config.model == "custom" and request.api_config.custom_model else request.api_config.model
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+        if request.api_config.api_url:
+            api_url = request.api_config.api_url
+        else:
+            if provider == "google":
+                api_url = DEFAULT_API_URLS["google"].format(model=model)
+            else:
+                api_url = DEFAULT_API_URLS.get(provider, DEFAULT_API_URLS["deepseek"])
+    else:
+        api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
+        api_key = os.getenv("DEEPSEEK_API_KEY", "")
+        model = "deepseek-chat"
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+    if not api_key:
+        raise HTTPException(status_code=500, detail="API key not configured.")
+
+    # 构建完整对话文本
+    conversation_text = ""
+    for msg in request.messages:
+        role_label = "Examiner" if msg.role == "assistant" else "Candidate"
+        conversation_text += f"\n{role_label}: {msg.content}"
+
+    evaluate_prompt = f"""Based on the following IELTS Speaking conversation, provide a detailed band score assessment.
+
+CONVERSATION:
+{conversation_text}
+
+Evaluate using IELTS Speaking criteria:
+- FC: Fluency & Coherence (how natural and connected the speech is)
+- LR: Lexical Resource (vocabulary range and accuracy)
+- GRA: Grammatical Range & Accuracy
+- P: Pronunciation (estimated from text patterns)
+
+OUTPUT FORMAT:
+
+## Band Score
+FC: X/9
+LR: X/9
+GRA: X/9
+P: X/9 (estimated)
+**Overall Band: X/9**
+
+## Strengths
+What the candidate did well.
+
+## Areas for Improvement
+Specific weaknesses with examples from the conversation.
+
+## Key Vocabulary to Learn
+5-8 vocabulary words/phrases that would have improved the candidate's responses.
+
+## Practice Tips
+2-3 specific exercises to improve before the next session."""
+
+    messages = [
+        {"role": "system", "content": "You are an expert IELTS speaking examiner."},
+        {"role": "user", "content": evaluate_prompt}
+    ]
+
+    headers = build_api_headers(api_key, provider)
+
+    if provider == "google":
+        contents = [{"role": "user", "parts": [{"text": evaluate_prompt}]}]
+        body = {
+            "contents": contents,
+            "generationConfig": {
+                "maxOutputTokens": min(4000, model_info.get("max_tokens", 8192)),
+                "temperature": 0.7
+            }
+        }
+        if "?" in api_url:
+            api_url = f"{api_url}&key={api_key}"
+        else:
+            api_url = f"{api_url}?key={api_key}"
+    else:
+        body = build_api_request_body(model, messages, max_tokens=4000)
+
+    try:
+        async with httpx.AsyncClient(timeout=120.0, follow_redirects=True) as client:
+            api_response = await client.post(api_url, headers=headers, json=body)
+
+            if api_response.status_code != 200:
+                raise HTTPException(status_code=api_response.status_code, detail="API error")
+
+            result = api_response.json()
+
+            if provider == "anthropic":
+                evaluation = result["content"][0]["text"]
+            elif provider == "google":
+                evaluation = result["candidates"][0]["content"]["parts"][0]["text"]
+            else:
+                evaluation = result["choices"][0]["message"]["content"]
+
+            return {"result": evaluation}
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="AI API timeout.")
+    except httpx.ConnectError:
+        raise HTTPException(status_code=503, detail="Cannot connect to AI API.")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Evaluation failed: {str(e)}")
+
+
+# ==========================================
+# Pronunciation Analysis
+# ==========================================
+
+import tempfile
+import shutil
+
+# Lazy-loaded models
+_whisper_model = None
+
+def get_whisper_model():
+    """Lazy-load Whisper model on first use"""
+    global _whisper_model
+    if _whisper_model is None:
+        try:
+            import whisper
+            _whisper_model = whisper.load_model("base")
+        except ImportError:
+            raise HTTPException(status_code=500, detail="whisper not installed. Run: pip install openai-whisper")
+    return _whisper_model
+
+
+def transcribe_with_whisper(audio_path: str) -> dict:
+    """Transcribe audio using local Whisper model"""
+    model = get_whisper_model()
+    result = model.transcribe(audio_path, language="en")
+    return {
+        "text": result["text"].strip(),
+        "segments": result.get("segments", [])
+    }
+
+
+def extract_pitch_contour(audio_path: str) -> dict:
+    """Extract F0 pitch contour using Parselmouth (Praat)"""
+    try:
+        import parselmouth
+        import numpy as np
+    except ImportError:
+        return {"time": [], "f0": []}
+
+    try:
+        snd = parselmouth.Sound(audio_path)
+        pitch = snd.to_pitch(time_step=0.01, f0_min=75, f0_max=500)
+
+        n_frames = pitch.get_number_of_frames()
+        times = []
+        f0_values = []
+        for i in range(1, n_frames + 1):
+            t = pitch.get_time_from_frame_number(i)
+            f = pitch.get_value_in_frame(i)
+            times.append(round(t, 4))
+            f0_values.append(round(f, 1) if f != 0 and not np.isnan(f) else 0)
+
+        return {"time": times, "f0": f0_values}
+    except Exception as e:
+        print(f"Pitch extraction error: {e}")
+        return {"time": [], "f0": []}
+
+
+async def azure_pronunciation_assessment(audio_path: str, reference_text: str, azure_key: str, azure_region: str) -> dict:
+    """Azure Speech SDK pronunciation assessment - phoneme level scoring"""
+    try:
+        import azure.cognitiveservices.speech as speechsdk
+    except ImportError:
+        raise HTTPException(status_code=500, detail="azure-cognitiveservices-speech not installed. Run: pip install azure-cognitiveservices-speech")
+
+    speech_config = speechsdk.SpeechConfig(
+        subscription=azure_key,
+        region=azure_region
+    )
+    speech_config.speech_recognition_language = "en-US"
+
+    # Configure pronunciation assessment
+    pronunciation_config = speechsdk.PronunciationAssessmentConfig(
+        reference_text=reference_text,
+        grading_system=speechsdk.PronunciationAssessmentGradingSystem.HundredMark,
+        granularity=speechsdk.PronunciationAssessmentGranularity.Phoneme,
+        phoneme_alphabet="IPA"
+    )
+
+    audio_config = speechsdk.audio.AudioConfig(filename=audio_path)
+    recognizer = speechsdk.SpeechRecognizer(
+        speech_config=speech_config,
+        audio_config=audio_config
+    )
+    pronunciation_config.apply_to(recognizer)
+
+    result = recognizer.recognize_once_async().get()
+
+    if result.reason == speechsdk.ResultReason.RecognizedSpeech:
+        import json as _json
+        detail = _json.loads(result.properties.get(
+            speechsdk.PropertyId.SpeechServiceResponse_JsonResult
+        ))
+
+        words = []
+        for w in detail.get("NBest", [{}])[0].get("Words", []):
+            word_data = {
+                "word": w.get("Word", ""),
+                "score": round(w.get("PronunciationAssessment", {}).get("AccuracyScore", 0))
+            }
+            phonemes = []
+            for p in w.get("Phonemes", []):
+                p_data = {
+                    "phoneme": p.get("Phoneme", ""),
+                    "score": round(p.get("PronunciationAssessment", {}).get("AccuracyScore", 0))
+                }
+                # Identify error types
+                if p_data["score"] < 60:
+                    p_data["error_type"] = classify_phoneme_error(p_data["phoneme"])
+                phonemes.append(p_data)
+            word_data["phonemes"] = phonemes
+            # Use worst phoneme score as word score if available
+            if phonemes:
+                word_data["score"] = round(sum(p["score"] for p in phonemes) / len(phonemes))
+            words.append(word_data)
+
+        nbest = detail.get("NBest", [{}])[0].get("PronunciationAssessment", {})
+        overall = {
+            "accuracy": round(nbest.get("AccuracyScore", 0)),
+            "fluency": round(nbest.get("FluencyScore", 0)),
+            "completeness": round(nbest.get("CompletenessScore", 0)),
+            "prosody": round(nbest.get("ProsodyScore", 0))
+        }
+
+        return {
+            "transcript": result.text,
+            "words": words,
+            "overall_scores": overall
+        }
+
+    elif result.reason == speechsdk.ResultReason.NoMatch:
+        return {"error": "No speech detected"}
+    else:
+        return {"error": f"Recognition failed: {result.reason}"}
+
+
+def classify_phoneme_error(phoneme: str) -> str:
+    """Classify common pronunciation errors for Chinese learners"""
+    error_map = {
+        "θ": "th_sound", "ð": "th_sound",
+        "l": "l_r_confusion", "r": "l_r_confusion",
+        "v": "v_w_confusion", "w": "v_w_confusion",
+        "n": "n_ng_confusion", "ŋ": "n_ng_confusion",
+        "ɪ": "short_vowel", "æ": "short_vowel",
+        "ʒ": "zh_sound", "ʃ": "sh_sound",
+    }
+    return error_map.get(phoneme, "articulation")
+
+
+def generate_diagnostics(words: list) -> list:
+    """Generate diagnostic messages from word/phoneme scores"""
+    diagnostics = []
+    th_errors = []
+    lr_errors = []
+    vw_errors = []
+    low_words = []
+
+    for w in words:
+        if w.get("score", 100) < 60:
+            low_words.append(w["word"])
+        for p in w.get("phonemes", []):
+            if p.get("score", 100) < 60:
+                err_type = p.get("error_type", "")
+                if err_type == "th_sound":
+                    th_errors.append(w["word"])
+                elif err_type == "l_r_confusion":
+                    lr_errors.append(w["word"])
+                elif err_type == "v_w_confusion":
+                    vw_errors.append(w["word"])
+
+    if th_errors:
+        diagnostics.append(f"TH sound issue in: {', '.join(set(th_errors[:5]))} — tongue should touch upper teeth")
+    if lr_errors:
+        diagnostics.append(f"L/R confusion detected in: {', '.join(set(lr_errors[:5]))} — practice tongue position")
+    if vw_errors:
+        diagnostics.append(f"V/W confusion in: {', '.join(set(vw_errors[:5]))} — bite lower lip for V")
+    if low_words:
+        diagnostics.append(f"Words needing practice: {', '.join(set(low_words[:5]))}")
+
+    return diagnostics or ["Pronunciation is generally good. Keep practicing!"]
+
+
+# AI Feedback prompt for pronunciation analysis
+PRONUNCIATION_FEEDBACK_PROMPT = """You are an IELTS Speaking examiner providing detailed pronunciation feedback.
+Based on the pronunciation analysis data below, provide a comprehensive report.
+
+The analysis includes:
+- Word-level and phoneme-level accuracy scores
+- Pitch/intonation data
+- Diagnostic findings
+
+OUTPUT FORMAT:
+
+## Band Score Estimate
+**Pronunciation: X/9** (based on accuracy scores)
+**Overall Speaking (estimated): X/9**
+
+## Grammar Corrections
+List any grammar errors found in the transcript. For each:
+- Quote the error
+- Explain the correction
+- Show the corrected version
+
+## Vocabulary Enhancement
+Replace 3-5 simple words with IELTS 7+ alternatives. Show:
+- Original word → Better alternative
+- Why the alternative is stronger
+
+## Key Pronunciation Focus
+Based on the diagnostics, give 2-3 specific exercises:
+- What to practice
+- How to practice it
+- Expected improvement
+
+## Encouragement
+One positive note about their speaking."""
+
+
+class AnalyzeRequest:
+    """Pronunciation analysis request (form data)"""
+    pass
+
+
+@app.post("/practice/analyze")
+async def practice_analyze(
+    audio: UploadFile = File(...),
+    api_config: str = Form("{}"),
+    azure_key: str = Form(""),
+    azure_region: str = Form("eastasia")
+):
+    """Analyze pronunciation from recorded audio"""
+    import numpy as np
+
+    # Save uploaded audio to temp file
+    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+        shutil.copyfileobj(audio.file, tmp)
+        tmp_path = tmp.name
+
+    try:
+        words_data = []
+        overall_scores = None
+        transcript = ""
+        diagnostics = []
+
+        # Try Azure first if key provided
+        if azure_key and azure_key.strip():
+            try:
+                azure_result = await azure_pronunciation_assessment(
+                    tmp_path, "", azure_key.strip(), azure_region
+                )
+                if "error" not in azure_result:
+                    words_data = azure_result.get("words", [])
+                    overall_scores = azure_result.get("overall_scores")
+                    transcript = azure_result.get("transcript", "")
+                else:
+                    # Fall back to Whisper
+                    whisper_result = transcribe_with_whisper(tmp_path)
+                    transcript = whisper_result["text"]
+            except Exception as e:
+                print(f"Azure error, falling back to Whisper: {e}")
+                whisper_result = transcribe_with_whisper(tmp_path)
+                transcript = whisper_result["text"]
+        else:
+            # Default: Whisper transcription
+            whisper_result = transcribe_with_whisper(tmp_path)
+            transcript = whisper_result["text"]
+
+            # Estimate word-level scores from Whisper confidence
+            for seg in whisper_result.get("segments", []):
+                for word_info in seg.get("words", []):
+                    word = word_info.get("word", "").strip()
+                    prob = word_info.get("probability", 0.9)
+                    score = round(prob * 100)
+                    words_data.append({
+                        "word": word,
+                        "score": score,
+                        "phonemes": []
+                    })
+
+        # Extract pitch contour
+        pitch_data = extract_pitch_contour(tmp_path)
+
+        # Generate diagnostics
+        if words_data:
+            diagnostics = generate_diagnostics(words_data)
+
+        # Calculate overall scores if not from Azure
+        if not overall_scores and words_data:
+            scores = [w["score"] for w in words_data if w["score"] > 0]
+            if scores:
+                avg = sum(scores) / len(scores)
+                overall_scores = {
+                    "accuracy": round(avg),
+                    "fluency": round(min(100, avg + 5)),
+                    "completeness": round(min(100, avg + 10)),
+                    "prosody": round(max(0, avg - 5))
+                }
+
+        # AI feedback via DeepSeek
+        ai_feedback = ""
+        try:
+            api_cfg = json.loads(api_config) if api_config else {}
+            if api_cfg.get("api_key"):
+                feedback_text = await generate_ai_feedback(transcript, overall_scores, diagnostics, api_cfg)
+                ai_feedback = feedback_text
+        except Exception as e:
+            print(f"AI feedback error: {e}")
+            ai_feedback = "AI feedback unavailable. Please check your API configuration."
+
+        return {
+            "transcript": transcript,
+            "words": words_data,
+            "pitch_data": pitch_data,
+            "overall_scores": overall_scores,
+            "diagnostics": diagnostics,
+            "ai_feedback": ai_feedback
+        }
+
+    finally:
+        os.unlink(tmp_path)
+
+
+async def generate_ai_feedback(transcript: str, scores: dict, diagnostics: list, api_cfg: dict) -> str:
+    """Generate AI feedback using configured LLM"""
+    model = api_cfg.get("model", "deepseek-chat")
+    api_key = api_cfg.get("api_key", "")
+    api_url = api_cfg.get("api_url")
+    custom_model = api_cfg.get("custom_model")
+
+    if custom_model:
+        model = custom_model
+
+    model_info = get_model_info(model)
+    provider = model_info.get("provider", "unknown")
+
+    if not api_url:
+        if provider == "google":
+            api_url = DEFAULT_API_URLS["google"].format(model=model)
+        else:
+            api_url = DEFAULT_API_URLS.get(provider, DEFAULT_API_URLS["deepseek"])
+
+    diagnostics_text = "\n".join(f"- {d}" for d in diagnostics) if diagnostics else "- No issues detected"
+    scores_text = json.dumps(scores) if scores else "N/A"
+
+    user_msg = f"""TRANSCRIPT: {transcript}
+
+OVERALL SCORES: {scores_text}
+
+DIAGNOSTICS:
+{diagnostics_text}
+
+Please provide detailed IELTS pronunciation feedback."""
+
+    messages = [
+        {"role": "system", "content": PRONUNCIATION_FEEDBACK_PROMPT},
+        {"role": "user", "content": user_msg}
+    ]
+
+    headers = build_api_headers(api_key, provider)
+
+    if provider == "google":
+        contents = [{"role": "user", "parts": [{"text": f"{PRONUNCIATION_FEEDBACK_PROMPT}\n\n{user_msg}"}]}]
+        body = {
+            "contents": contents,
+            "generationConfig": {"maxOutputTokens": 2000, "temperature": 0.7}
+        }
+        if "?" in api_url:
+            api_url = f"{api_url}&key={api_key}"
+        else:
+            api_url = f"{api_url}?key={api_key}"
+    else:
+        body = build_api_request_body(model, messages, max_tokens=2000)
+
+    async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
+        resp = await client.post(api_url, headers=headers, json=body)
+        if resp.status_code != 200:
+            return f"AI feedback error: HTTP {resp.status_code}"
+
+        result = resp.json()
+        if provider == "anthropic":
+            return result["content"][0]["text"]
+        elif provider == "google":
+            return result["candidates"][0]["content"]["parts"][0]["text"]
+        else:
+            return result["choices"][0]["message"]["content"]
 
 
 if __name__ == "__main__":
