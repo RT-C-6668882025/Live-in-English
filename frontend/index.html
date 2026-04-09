@@ -1877,9 +1877,10 @@
         <div class="input-section">
             <div class="form-group">
                 <label class="form-label">Task Prompt (Optional)</label>
-                <input type="text" class="form-input" id="taskPrompt" 
+                <input type="text" class="form-input" id="taskPrompt" name="task_prompt_text"
                        placeholder="e.g., Some people believe technology is making society more unequal..."
-                       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+                       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                       readonly onfocus="this.removeAttribute('readonly')">
             </div>
             <div class="form-group">
                 <div class="voice-controls">
@@ -2731,12 +2732,20 @@
         setInterval(checkApiStatus, 30000);
 
         // Clear any browser autofilled values
-        setTimeout(() => {
+        function clearAutofill() {
             const taskPrompt = document.getElementById('taskPrompt');
-            if (taskPrompt && taskPrompt.value.includes('@')) {
+            if (taskPrompt && (taskPrompt.value.includes('@') || taskPrompt.value.includes('qq.com'))) {
                 taskPrompt.value = '';
+                console.log('Cleared autofill from taskPrompt');
             }
-        }, 100);
+        }
+        // Try multiple times as browser autofill happens at different times
+        setTimeout(clearAutofill, 100);
+        setTimeout(clearAutofill, 500);
+        setTimeout(clearAutofill, 1000);
+        setTimeout(clearAutofill, 2000);
+        // Also clear when user interacts with the field
+        document.getElementById('taskPrompt').addEventListener('focus', clearAutofill);
 
         // ==========================================
         // Voice Features - STT (Speech-to-Text)
