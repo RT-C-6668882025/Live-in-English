@@ -3081,7 +3081,7 @@
 
                 if (!response.ok) {
                     showToast('TTS not available. Install edge-tts: pip install edge-tts');
-                    resetBtn(btnElement);
+                    resetTtsBtn(btnElement);
                     return;
                 }
 
@@ -3099,21 +3099,21 @@
                 currentAudio.onended = () => {
                     URL.revokeObjectURL(url);
                     currentAudio = null;
-                    resetBtn(btnElement);
+                    resetTtsBtn(btnElement);
                 };
                 currentAudio.onerror = () => {
                     URL.revokeObjectURL(url);
                     currentAudio = null;
-                    resetBtn(btnElement);
+                    resetTtsBtn(btnElement);
                 };
                 currentAudio.play();
             } catch (e) {
                 showToast('TTS failed: ' + e.message);
-                resetBtn(btnElement);
+                resetTtsBtn(btnElement);
             }
         }
 
-        function resetBtn(btn) {
+        function resetTtsBtn(btn) {
             if (!btn) return;
             btn.classList.remove('loading', 'playing');
             btn.textContent = '▶';
@@ -3125,7 +3125,7 @@
                 currentAudio.pause();
                 currentAudio = null;
             }
-            resetBtn(btn || lastTtsBtn);
+            resetTtsBtn(btn || lastTtsBtn);
         }
 
         // Add chat message
