@@ -725,6 +725,182 @@
             font-size: 0.875rem;
         }
 
+        /* Voice - Live Transcript Panel */
+        .live-transcript {
+            display: none;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            min-height: 80px;
+            max-height: 180px;
+            overflow-y: auto;
+            font-size: 0.9375rem;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .live-transcript.active {
+            display: block;
+            border-color: var(--error);
+            box-shadow: 0 0 0 1px rgba(223, 102, 102, 0.2);
+        }
+
+        .live-transcript .t-final {
+            color: var(--text-primary);
+        }
+
+        .live-transcript .t-interim {
+            color: var(--text-muted);
+            border-right: 2px solid var(--error);
+            animation: cursorBlink 0.8s step-end infinite;
+            padding-right: 2px;
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { border-color: var(--error); }
+            50% { border-color: transparent; }
+        }
+
+        .live-transcript-bar {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.8125rem;
+            color: var(--error);
+        }
+
+        .live-transcript-bar.active {
+            display: flex;
+        }
+
+        .live-transcript-bar .rec-dot-sm {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--error);
+            animation: recDot 1s ease-in-out infinite;
+        }
+
+        /* Voice - Microphone Button */
+        .voice-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mic-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .mic-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: rgba(217, 119, 87, 0.1);
+        }
+
+        .mic-btn.recording {
+            border-color: var(--error);
+            background: var(--error);
+            color: white;
+            animation: micPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(223, 102, 102, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(223, 102, 102, 0); }
+        }
+
+        .recording-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8125rem;
+            color: var(--error);
+        }
+
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--error);
+            animation: recDot 1s ease-in-out infinite;
+        }
+
+        @keyframes recDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .voice-hint {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        /* Voice - TTS Controls */
+        .tts-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tts-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tts-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tts-btn.playing {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(90, 155, 90, 0.1);
+        }
+
+        .tts-speed {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tts-speed:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -776,6 +952,765 @@
                 width: 100%;
             }
         }
+
+        /* ==========================================
+           Practice Mode - Voice Conversation
+           ========================================== */
+        .practice-container {
+            display: none;
+        }
+
+        .practice-container.active {
+            display: block;
+        }
+
+        .practice-header {
+            text-align: center;
+            padding: 1.5rem 0;
+        }
+
+        .practice-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .practice-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .practice-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .practice-controls select,
+        .practice-controls button {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .practice-controls select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.5L6 8L9.5 4.5' stroke='%2387867f' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2rem;
+        }
+
+        .part-indicator {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .part-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .part-dot.active {
+            background: var(--primary);
+            box-shadow: 0 0 8px rgba(217, 119, 87, 0.5);
+        }
+
+        .part-dot.completed {
+            background: var(--success);
+        }
+
+        .part-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Chat area */
+        .chat-area {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            min-height: 400px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-msg {
+            display: flex;
+            gap: 0.75rem;
+            max-width: 85%;
+            animation: chatFadeIn 0.3s ease;
+        }
+
+        @keyframes chatFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-msg.examiner {
+            align-self: flex-start;
+        }
+
+        .chat-msg.candidate {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .chat-msg.examiner .chat-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        }
+
+        .chat-msg.candidate .chat-avatar {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+        }
+
+        .chat-bubble {
+            padding: 0.875rem 1.125rem;
+            border-radius: var(--radius);
+            line-height: 1.6;
+            font-size: 0.9375rem;
+            position: relative;
+        }
+
+        .chat-msg.examiner .chat-bubble {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-top-left-radius: 4px;
+        }
+
+        .chat-msg.candidate .chat-bubble {
+            background: rgba(217, 119, 87, 0.15);
+            border: 1px solid rgba(217, 119, 87, 0.3);
+            border-top-right-radius: 4px;
+        }
+
+        .chat-bubble .play-audio-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+            transition: all 0.2s ease;
+        }
+
+        .chat-bubble .play-audio-btn:hover {
+            background: rgba(255,255,255,0.2);
+            color: var(--text-primary);
+        }
+
+        .chat-bubble .play-audio-btn.playing {
+            background: var(--primary);
+            color: white;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+
+        .chat-bubble .play-audio-btn.loading {
+            background: rgba(255,255,255,0.15);
+            color: var(--text-muted);
+            animation: spin 0.8s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .chat-time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        .chat-msg.candidate .chat-time {
+            text-align: right;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            padding: 0.875rem 1.125rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            border-top-left-radius: 4px;
+        }
+
+        .typing-indicator.show {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-indicator span:nth-child(1) { animation-delay: 0s; }
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Voice input bar */
+        .voice-input-bar {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+        }
+
+        .voice-input-bar .text-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .voice-input-bar .text-input:focus {
+            border-color: var(--primary);
+        }
+
+        .voice-input-bar .text-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .record-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            font-size: 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .record-btn:hover {
+            background: rgba(217, 119, 87, 0.1);
+        }
+
+        .record-btn.recording {
+            background: var(--error);
+            border-color: var(--error);
+            color: white;
+            animation: recordPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes recordPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(223, 102, 102, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(223, 102, 102, 0); }
+        }
+
+        .send-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Action buttons */
+        .practice-actions {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .practice-actions button {
+            padding: 0.625rem 1.5rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .practice-actions button:hover {
+            border-color: var(--primary);
+        }
+
+        .practice-actions button.primary-action {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .practice-actions button.primary-action:hover {
+            background: var(--primary-dark);
+        }
+
+        .practice-actions button.danger-action {
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .practice-actions button.danger-action:hover {
+            background: rgba(223, 102, 102, 0.1);
+        }
+
+        /* Live STT in practice mode */
+        .practice-stt-status {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: rgba(223, 102, 102, 0.1);
+            border-radius: var(--radius-sm);
+            font-size: 0.8125rem;
+            color: var(--error);
+            margin-bottom: 0.5rem;
+        }
+
+        .practice-stt-status.show {
+            display: flex;
+        }
+
+        .practice-stt-status .stt-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--error);
+            animation: recordPulse 1.5s ease-in-out infinite;
+        }
+
+        /* Waveform canvas */
+        .waveform-container {
+            display: none;
+            margin-bottom: 0.75rem;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: #1a1a1a;
+        }
+
+        .waveform-container.active {
+            display: block;
+        }
+
+        .waveform-container canvas {
+            width: 100%;
+            height: 80px;
+            display: block;
+        }
+
+        .waveform-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.375rem 0.75rem;
+            background: rgba(0,0,0,0.3);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .waveform-info .rec-timer {
+            color: var(--error);
+            font-weight: 600;
+        }
+
+        /* Analysis result panel */
+        .analysis-panel {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .analysis-panel.active {
+            display: block;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .analysis-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .analysis-card h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        /* Color-coded transcript */
+        .transcript-words {
+            line-height: 2.2;
+            font-size: 1.0625rem;
+        }
+
+        .transcript-words .word-span {
+            display: inline-block;
+            padding: 0.125rem 0.25rem;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            position: relative;
+            border-bottom: 2px solid transparent;
+        }
+
+        .transcript-words .word-span:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        .word-span.score-high { color: #4caf50; border-bottom-color: #4caf50; }
+        .word-span.score-mid { color: #ff9800; border-bottom-color: #ff9800; }
+        .word-span.score-low { color: #f44336; border-bottom-color: #f44336; }
+        .word-span.score-na { color: var(--text-secondary); }
+
+        /* Phoneme tooltip */
+        .word-span .phoneme-tooltip {
+            display: none;
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a2a2a;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.625rem 0.875rem;
+            font-size: 0.8125rem;
+            white-space: nowrap;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .word-span .phoneme-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #2a2a2a;
+        }
+
+        .word-span:hover .phoneme-tooltip {
+            display: block;
+        }
+
+        .phoneme-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-right: 0.5rem;
+        }
+
+        .phoneme-symbol {
+            font-family: monospace;
+            font-size: 0.9375rem;
+        }
+
+        .phoneme-score {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .phoneme-score.p-high { color: #4caf50; }
+        .phoneme-score.p-mid { color: #ff9800; }
+        .phoneme-score.p-low { color: #f44336; }
+
+        /* Pitch chart */
+        .pitch-chart-container {
+            position: relative;
+            height: 160px;
+        }
+
+        .pitch-chart-container canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Score badges */
+        .score-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .score-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            font-size: 0.8125rem;
+        }
+
+        .score-badge .badge-label {
+            color: var(--text-secondary);
+        }
+
+        .score-badge .badge-value {
+            font-weight: 600;
+        }
+
+        /* Diagnostics list */
+        .diagnostics-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .diagnostics-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.875rem;
+            display: flex;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+
+        .diagnostics-list li:last-child {
+            border-bottom: none;
+        }
+
+        .diag-icon {
+            flex-shrink: 0;
+            font-size: 0.875rem;
+        }
+
+        /* AI Feedback card with TTS */
+        .ai-feedback-card {
+            grid-column: 1 / -1;
+        }
+
+        .ai-feedback-card .feedback-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .ai-feedback-card .tts-play-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8125rem;
+            transition: all 0.2s ease;
+        }
+
+        .ai-feedback-card .tts-play-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .ai-feedback-card .tts-play-btn.playing {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Loading animation - geometric */
+        .analysis-loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .analysis-loading.active {
+            display: block;
+        }
+
+        .geo-loader {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .geo-loader span {
+            position: absolute;
+            border: 2px solid var(--primary);
+            opacity: 0;
+        }
+
+        .geo-loader span:nth-child(1) {
+            inset: 0;
+            animation: geoSpin 2s ease-in-out infinite;
+        }
+
+        .geo-loader span:nth-child(2) {
+            inset: 8px;
+            animation: geoSpin 2s ease-in-out 0.3s infinite;
+            border-color: var(--text-secondary);
+        }
+
+        .geo-loader span:nth-child(3) {
+            inset: 16px;
+            animation: geoSpin 2s ease-in-out 0.6s infinite;
+            border-color: var(--primary);
+        }
+
+        @keyframes geoSpin {
+            0%, 100% { transform: rotate(0deg) scale(0.8); opacity: 0.3; }
+            50% { transform: rotate(180deg) scale(1.2); opacity: 1; }
+        }
+
+        .analysis-loading p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Overall band score display */
+        .band-score-display {
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .band-score-display .band-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .band-score-display .band-label {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        /* Audio player (hidden) */
+        .audio-player-hidden {
+            display: none;
+        }
+
+        /* Empty state */
+        .chat-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .chat-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .chat-empty h4 {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .chat-empty p {
+            font-size: 0.875rem;
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -807,6 +1742,19 @@
             </div>
             <div class="modal-body">
                 <form id="apiConfigForm">
+                    <!-- Backend Server URL -->
+                    <div class="form-group">
+                        <label class="form-label" for="backendUrl">Backend Server URL</label>
+                        <input type="url" class="form-input" id="backendUrl" name="backendUrl"
+                               placeholder="http://localhost:8000">
+                        <div class="form-hint">IELTS Evaluator backend address. Default: http://localhost:8000</div>
+                    </div>
+
+                    <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
+
+                    <!-- AI Model Section Label -->
+                    <div style="font-size:0.9rem;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">🤖 AI Model (LLM)</div>
+
                     <!-- Model Selection -->
                     <div class="form-group">
                         <label class="form-label form-label-required" for="model">Model</label>
@@ -918,22 +1866,45 @@
             <button class="mode-btn" data-mode="speaking">
                 🎤 Speaking
             </button>
+            <button class="mode-btn" data-mode="practice">
+                🗣️ Practice
+            </button>
         </div>
 
+        <!-- Writing/Speaking Mode -->
+        <div class="eval-mode" id="evalMode">
         <!-- Input Section -->
         <div class="input-section">
             <div class="form-group">
                 <label class="form-label">Task Prompt (Optional)</label>
                 <input type="text" class="form-input" id="taskPrompt" 
-                       placeholder="e.g., Some people believe technology is making society more unequal...">
+                       placeholder="e.g., Some people believe technology is making society more unequal..."
+                       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
             </div>
             <div class="form-group">
-                <label class="form-label">Your Response</label>
-                <textarea class="form-textarea" id="candidateResponse" 
+                <div class="voice-controls">
+                    <label class="form-label">Your Response</label>
+                    <button class="mic-btn" id="micBtn" title="Voice Input" style="display:none;">🎤</button>
+                    <div class="recording-info" id="recordingInfo" style="display:none;">
+                        <span class="recording-dot"></span>
+                        <span id="recordingTime">0:00</span>
+                    </div>
+                </div>
+                <textarea class="form-textarea" id="candidateResponse"
                           placeholder="Paste your essay or speaking transcript here..."></textarea>
+                <div class="live-transcript-bar" id="liveTranscriptBar">
+                    <span class="rec-dot-sm"></span>
+                    <span>Listening...</span>
+                </div>
+                <div class="live-transcript" id="liveTranscript">
+                    <span class="t-final" id="transcriptFinal"></span><span class="t-interim" id="transcriptInterim"></span>
+                </div>
                 <div class="char-count">
                     <span id="wordCount">0</span> words | <span id="charCount">0</span> characters
                     <span id="wordCountWarning" style="color: var(--warning); display: none;"> (Short input - expansion mode)</span>
+                </div>
+                <div class="voice-hint" id="voiceHint" style="display:none;">
+                    Click the mic button to start recording. Speak in English and your words will appear here automatically.
                 </div>
             </div>
             <button class="evaluate-btn" id="evaluateBtn">
@@ -948,12 +1919,185 @@
         <div class="results-section" id="resultsSection">
             <div class="results-header">
                 <h2 class="results-title">Evaluation Results</h2>
-                <button class="copy-btn" id="copyBtn">📋 Copy Results</button>
+                <div class="tts-controls">
+                    <button class="tts-btn" id="ttsBtn" title="Read Aloud" style="display:none;">▶</button>
+                    <button class="tts-btn" id="ttsStopBtn" title="Stop" style="display:none;">⏹</button>
+                    <select class="tts-speed" id="ttsSpeed" style="display:none;">
+                        <option value="0.7">0.7x Slow</option>
+                        <option value="1" selected>1.0x Normal</option>
+                        <option value="1.3">1.3x Fast</option>
+                    </select>
+                    <button class="copy-btn" id="copyBtn">📋 Copy Results</button>
+                </div>
             </div>
             <div class="results-content">
                 <div class="markdown-body" id="resultsContent"></div>
             </div>
         </div>
+        </div><!-- end evalMode -->
+
+        <!-- Practice Mode -->
+        <div class="practice-container" id="practiceMode">
+            <div class="practice-header">
+                <h3>IELTS Speaking Practice</h3>
+                <p>Record your voice for pronunciation analysis (phoneme scoring, pitch curve) or chat with AI examiner.</p>
+                <div class="practice-api-status" id="practiceApiStatus" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.75rem;font-size:0.875rem;cursor:pointer;" title="Click to open Settings">
+                    <span class="status-dot" id="practiceStatusDot"></span>
+                    <span id="practiceStatusText" style="color: var(--text-secondary);">Checking...</span>
+                </div>
+            </div>
+
+            <div class="practice-controls">
+                <select id="practiceVoice" title="TTS Voice">
+                    <option value="en-GB-SoniaNeural">Sonia (UK Female)</option>
+                    <option value="en-GB-RyanNeural">Ryan (UK Male)</option>
+                    <option value="en-US-AriaNeural">Aria (US Female)</option>
+                    <option value="en-US-DavisNeural">Davis (US Male)</option>
+                    <option value="en-AU-NatashaNeural">Natasha (AU Female)</option>
+                </select>
+                <select id="practiceSpeed" title="Speech Speed">
+                    <option value="-20%">0.8x Slow</option>
+                    <option value="+0%" selected>1.0x Normal</option>
+                    <option value="+20%">1.2x Fast</option>
+                </select>
+                <button id="autoPlayToggle" title="Auto-play examiner voice">Auto-play: ON</button>
+                <button id="azureInlineToggle" title="Azure Speech pronunciation scoring" style="border-color:var(--border);">Azure: OFF</button>
+            </div>
+
+            <!-- Azure inline config (collapsible) -->
+            <div id="azureInlineConfig" style="display:none;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem 1rem;margin-bottom:0.75rem;">
+                <div style="display:flex;gap:0.75rem;align-items:flex-end;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:200px;">
+                        <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:0.25rem;">Azure Speech Key</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="azureKeyInline" class="form-input" placeholder="Paste your Azure Speech key" style="font-size:0.8rem;padding:0.4rem 0.6rem;">
+                            <button type="button" class="password-toggle" id="toggleAzureKeyInline" title="Show/Hide" style="right:0.5rem;top:50%;transform:translateY(-50%);font-size:0.8rem;background:none;border:none;cursor:pointer;color:var(--text-muted);">👁️</button>
+                        </div>
+                    </div>
+                    <div style="min-width:140px;">
+                        <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:0.25rem;">Region</label>
+                        <select id="azureRegionInline" class="form-input" style="font-size:0.8rem;padding:0.4rem 0.6rem;">
+                            <option value="eastus">East US</option>
+                            <option value="eastus2">East US 2</option>
+                            <option value="westus">West US</option>
+                            <option value="westus2">West US 2</option>
+                            <option value="westeurope">West Europe</option>
+                            <option value="northeurope">North Europe</option>
+                            <option value="eastasia" selected>East Asia</option>
+                            <option value="southeastasia">Southeast Asia</option>
+                        </select>
+                    </div>
+                    <button id="azureInlineSave" style="padding:0.4rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--primary);background:var(--primary);color:white;font-size:0.8rem;cursor:pointer;white-space:nowrap;">Save</button>
+                </div>
+                <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;">5h/month free. <a href="https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/" target="_blank" style="color:var(--primary);">Get Azure Key →</a></div>
+            </div>
+
+            <div class="part-label" id="partLabel">Part 1 — Introduction & Warm-up</div>
+            <div class="part-indicator" id="partIndicator">
+                <div class="part-dot active" data-part="1" title="Part 1"></div>
+                <div class="part-dot" data-part="2" title="Part 2"></div>
+                <div class="part-dot" data-part="3" title="Part 3"></div>
+            </div>
+
+            <div class="chat-area" id="chatArea">
+                <div class="chat-empty" id="chatEmpty">
+                    <div class="chat-empty-icon">🗣️</div>
+                    <h4>Ready to Practice?</h4>
+                    <p>Click "Start Practice" below to begin your IELTS speaking mock test with the AI examiner.</p>
+                </div>
+                <div class="typing-indicator" id="typingIndicator">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+
+            <div class="waveform-container" id="waveformContainer">
+                <canvas id="waveformCanvas"></canvas>
+                <div class="waveform-info">
+                    <span class="rec-timer" id="recTimer">● 0:00</span>
+                    <span>16kHz · 16bit · Mono</span>
+                </div>
+            </div>
+
+            <div class="practice-stt-status" id="practiceSttStatus">
+                <span class="stt-dot"></span>
+                <span id="practiceSttText">Listening...</span>
+            </div>
+
+            <div class="voice-input-bar">
+                <button class="record-btn" id="practiceMicBtn" title="Hold to speak">🎤</button>
+                <input type="text" class="text-input" id="practiceInput"
+                       placeholder="Type your response or press the mic to speak..." />
+                <button class="send-btn" id="practiceSendBtn" title="Send">➤</button>
+            </div>
+
+            <div class="practice-actions">
+                <button class="primary-action" id="startPracticeBtn">▶ Start Practice</button>
+                <button id="nextPartBtn" style="display:none;">⏭ Next Part</button>
+                <button class="primary-action" id="endPracticeBtn" style="display:none;">📋 Get Band Score</button>
+                <button class="danger-action" id="resetPracticeBtn" style="display:none;">🔄 Reset</button>
+            </div>
+
+            <!-- Loading animation for analysis -->
+            <div class="analysis-loading" id="analysisLoading">
+                <div class="geo-loader">
+                    <span></span><span></span><span></span>
+                </div>
+                <p id="analysisLoadingText">Analyzing pronunciation...</p>
+            </div>
+
+            <!-- Pronunciation analysis results -->
+            <div class="analysis-panel" id="analysisPanel">
+                <div class="analysis-grid">
+                    <!-- Left: Color-coded transcript -->
+                    <div class="analysis-card">
+                        <h4>Transcript</h4>
+                        <div class="transcript-words" id="transcriptWords"></div>
+                        <div class="score-badges" id="scoreBadges"></div>
+                    </div>
+
+                    <!-- Right: Pitch chart + diagnostics -->
+                    <div class="analysis-card">
+                        <h4>Intonation Curve</h4>
+                        <div class="pitch-chart-container">
+                            <canvas id="pitchChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Diagnostics -->
+                    <div class="analysis-card">
+                        <h4>Diagnostics</h4>
+                        <ul class="diagnostics-list" id="diagnosticsList"></ul>
+                    </div>
+
+                    <!-- Band score preview -->
+                    <div class="analysis-card">
+                        <h4>Pronunciation Scores</h4>
+                        <div class="band-score-display" id="bandScoreDisplay"></div>
+                    </div>
+
+                    <!-- AI Feedback with TTS -->
+                    <div class="analysis-card ai-feedback-card">
+                        <div class="feedback-header">
+                            <h4>AI Examiner Report</h4>
+                            <button class="tts-play-btn" id="feedbackTtsBtn" title="Read report aloud">▶ Listen</button>
+                        </div>
+                        <div class="markdown-body" id="aiFeedbackContent"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice evaluation results -->
+            <div class="results-section" id="practiceResultsSection" style="display:none; margin-top:1.5rem;">
+                <div class="results-header">
+                    <h2 class="results-title">Practice Evaluation</h2>
+                    <button class="copy-btn" id="copyPracticeResultBtn">📋 Copy</button>
+                </div>
+                <div class="results-content">
+                    <div class="markdown-body" id="practiceResultsContent"></div>
+                </div>
+            </div>
+        </div><!-- end practiceMode -->
+
     </main>
 
     <!-- Toast Notification -->
@@ -964,7 +2108,7 @@
 
     <script>
         // Configuration
-        const API_BASE_URL = 'http://localhost:8000';
+        let API_BASE_URL = localStorage.getItem('ielts_backend_url') || 'http://localhost:8000';
 
         // DOM Elements
         const settingsBtn = document.getElementById('settingsBtn');
@@ -1081,8 +2225,12 @@
                     }
                     
                     console.log('Processed config:', apiConfig);
-                    
+
                     // 更新 UI
+                    // Backend URL
+                    const backendUrlInput = document.getElementById('backendUrl');
+                    backendUrlInput.value = API_BASE_URL;
+
                     const savedUrl = apiConfig.apiUrl;
                     apiUrlInput.value = (savedUrl && savedUrl !== 'undefined') ? savedUrl : '';
                     modelSelect.value = apiConfig.model || 'deepseek-chat';
@@ -1343,17 +2491,24 @@
             if (validateForm()) {
                 const customUrl = apiUrlInput.value.trim();
                 const currentProvider = getProvider(modelSelect.value);
-                
+
                 // 更新当前提供商的 API Key
                 apiConfig.apiKeys[currentProvider] = apiKeyInput.value.trim();
                 apiConfig.model = modelSelect.value;
                 apiConfig.customModel = customModelInput.value.trim();
                 apiConfig.apiUrl = customUrl || null;
-                
+
+                // Save Backend URL
+                const backendUrlInput = document.getElementById('backendUrl');
+                const newBackendUrl = backendUrlInput.value.trim() || 'http://localhost:8000';
+                API_BASE_URL = newBackendUrl;
+                localStorage.setItem('ielts_backend_url', newBackendUrl);
+
                 saveConfig();
                 closeModalFunc();
                 showToast('Configuration saved successfully!');
                 checkApiStatus();
+                if (typeof updatePracticeApiStatus === 'function') updatePracticeApiStatus();
             }
         });
 
@@ -1382,19 +2537,17 @@
                     google: ''
                 }
             };
+            // Reset Backend URL
+            API_BASE_URL = 'http://localhost:8000';
+            document.getElementById('backendUrl').value = '';
+            localStorage.removeItem('ielts_backend_url');
             // 清除 localStorage
             localStorage.removeItem('ieltsApiConfig');
             console.log('Config reset and localStorage cleared');
         });
 
-        // Mode Selection
-        modeBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                modeBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentMode = btn.dataset.mode;
-            });
-        });
+        // Mode Selection - handled by unified listener below (practice mode section)
+        // Do NOT add duplicate listeners here
 
         // Character and Word Count
         candidateResponseInput.addEventListener('input', () => {
@@ -1576,6 +2729,1217 @@
         loadConfig();
         checkApiStatus();
         setInterval(checkApiStatus, 30000);
+
+        // Clear any browser autofilled values
+        setTimeout(() => {
+            const taskPrompt = document.getElementById('taskPrompt');
+            if (taskPrompt && taskPrompt.value.includes('@')) {
+                taskPrompt.value = '';
+            }
+        }, 100);
+
+        // ==========================================
+        // Voice Features - STT (Speech-to-Text)
+        // ==========================================
+        const micBtn = document.getElementById('micBtn');
+        const recordingInfo = document.getElementById('recordingInfo');
+        const recordingTimeEl = document.getElementById('recordingTime');
+        const voiceHint = document.getElementById('voiceHint');
+        const liveTranscript = document.getElementById('liveTranscript');
+        const liveTranscriptBar = document.getElementById('liveTranscriptBar');
+        const transcriptFinal = document.getElementById('transcriptFinal');
+        const transcriptInterim = document.getElementById('transcriptInterim');
+
+        let recognition = null;
+        let isRecording = false;
+        let recordingTimer = null;
+        let recordingSeconds = 0;
+        let finalTranscript = '';
+
+        // Check STT support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const sttSupported = !!SpeechRecognition;
+
+        // Check TTS support
+        const ttsSupported = 'speechSynthesis' in window;
+
+        // Show mic button only in speaking mode
+        function updateVoiceUI() {
+            if (sttSupported && currentMode === 'speaking') {
+                micBtn.style.display = 'flex';
+                voiceHint.style.display = 'block';
+            } else {
+                micBtn.style.display = 'none';
+                voiceHint.style.display = 'none';
+                if (isRecording) stopRecording();
+            }
+        }
+
+        if (sttSupported) {
+            recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.continuous = true;
+            recognition.interimResults = true;
+
+            recognition.onresult = (event) => {
+                let interim = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript + ' ';
+                    } else {
+                        interim += transcript;
+                    }
+                }
+                // Update live transcript panel
+                transcriptFinal.textContent = finalTranscript;
+                transcriptInterim.textContent = interim;
+                liveTranscript.scrollTop = liveTranscript.scrollHeight;
+
+                // Also update textarea
+                candidateResponseInput.value = finalTranscript + interim;
+                candidateResponseInput.dispatchEvent(new Event('input'));
+            };
+
+            recognition.onerror = (event) => {
+                if (event.error === 'no-speech') return;
+                showToast('Speech recognition error: ' + event.error);
+                stopRecording();
+            };
+
+            recognition.onend = () => {
+                if (isRecording) {
+                    // Auto-restart if still recording (continuous mode)
+                    try { recognition.start(); } catch (e) { stopRecording(); }
+                }
+            };
+        }
+
+        function startRecording() {
+            if (!sttSupported) return;
+            finalTranscript = candidateResponseInput.value ? candidateResponseInput.value.trim() + ' ' : '';
+            isRecording = true;
+            micBtn.classList.add('recording');
+            micBtn.textContent = '⏹';
+            recordingInfo.style.display = 'flex';
+            // Show live transcript panel
+            liveTranscript.classList.add('active');
+            liveTranscriptBar.classList.add('active');
+            transcriptFinal.textContent = finalTranscript;
+            transcriptInterim.textContent = '';
+            recordingSeconds = 0;
+            recordingTimeEl.textContent = '0:00';
+            recordingTimer = setInterval(() => {
+                recordingSeconds++;
+                const m = Math.floor(recordingSeconds / 60);
+                const s = recordingSeconds % 60;
+                recordingTimeEl.textContent = `${m}:${s.toString().padStart(2, '0')}`;
+            }, 1000);
+            try { recognition.start(); } catch (e) { /* already started */ }
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            micBtn.classList.remove('recording');
+            micBtn.textContent = '🎤';
+            recordingInfo.style.display = 'none';
+            // Hide live transcript panel
+            liveTranscript.classList.remove('active');
+            liveTranscriptBar.classList.remove('active');
+            if (recordingTimer) { clearInterval(recordingTimer); recordingTimer = null; }
+            try { recognition.stop(); } catch (e) { /* already stopped */ }
+        }
+
+        micBtn.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        // Update voice UI on mode change
+        modeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setTimeout(updateVoiceUI, 50);
+            });
+        });
+
+        // Initial UI update
+        updateVoiceUI();
+
+        // ==========================================
+        // Voice Features - TTS (Text-to-Speech)
+        // ==========================================
+        const ttsBtn = document.getElementById('ttsBtn');
+        const ttsStopBtn = document.getElementById('ttsStopBtn');
+        const ttsSpeedSelect = document.getElementById('ttsSpeed');
+        let isSpeaking = false;
+
+        function getEnglishVoice() {
+            const voices = speechSynthesis.getVoices();
+            return voices.find(v => v.lang === 'en-US' && !v.localService)
+                || voices.find(v => v.lang === 'en-US')
+                || voices.find(v => v.lang.startsWith('en'))
+                || voices[0];
+        }
+
+        function stripMarkdown(text) {
+            return text
+                .replace(/^#{1,6}\s/gm, '')
+                .replace(/\*\*(.*?)\*\*/g, '$1')
+                .replace(/```[\s\S]*?```/g, '')
+                .replace(/`([^`]+)`/g, '$1')
+                .replace(/^>\s/gm, '')
+                .replace(/^\s*[-*]\s/gm, '')
+                .replace(/\n{2,}/g, '. ')
+                .replace(/\n/g, '. ');
+        }
+
+        function startTTS() {
+            const text = stripMarkdown(resultsContent.innerText);
+            if (!text.trim()) return;
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = parseFloat(ttsSpeedSelect.value);
+            utterance.voice = getEnglishVoice();
+            utterance.lang = 'en-US';
+
+            utterance.onend = () => { updateTTSUI(false); };
+            utterance.onerror = () => { updateTTSUI(false); };
+
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+            updateTTSUI(true);
+        }
+
+        function stopTTS() {
+            speechSynthesis.cancel();
+            updateTTSUI(false);
+        }
+
+        function updateTTSUI(speaking) {
+            isSpeaking = speaking;
+            ttsBtn.textContent = speaking ? '⏸' : '▶';
+            ttsBtn.classList.toggle('playing', speaking);
+        }
+
+        ttsBtn.addEventListener('click', () => {
+            if (isSpeaking) {
+                if (speechSynthesis.paused) {
+                    speechSynthesis.resume();
+                    updateTTSUI(true);
+                } else {
+                    speechSynthesis.pause();
+                    updateTTSUI(false);
+                }
+            } else {
+                startTTS();
+            }
+        });
+
+        ttsStopBtn.addEventListener('click', stopTTS);
+
+        // Show TTS controls when results appear
+        if (ttsSupported) {
+            ttsBtn.style.display = 'flex';
+            ttsStopBtn.style.display = 'flex';
+            ttsSpeedSelect.style.display = 'inline-block';
+            // Ensure voices are loaded
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = () => {};
+            }
+        }
+
+        // ==========================================
+        // Practice Mode - Voice Conversation
+        // ==========================================
+        const evalMode = document.getElementById('evalMode');
+        const practiceMode = document.getElementById('practiceMode');
+        const chatArea = document.getElementById('chatArea');
+        const chatEmpty = document.getElementById('chatEmpty');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const practiceInput = document.getElementById('practiceInput');
+        const practiceMicBtn = document.getElementById('practiceMicBtn');
+        const practiceSendBtn = document.getElementById('practiceSendBtn');
+        const startPracticeBtn = document.getElementById('startPracticeBtn');
+        const nextPartBtn = document.getElementById('nextPartBtn');
+        const endPracticeBtn = document.getElementById('endPracticeBtn');
+        const resetPracticeBtn = document.getElementById('resetPracticeBtn');
+        const practiceVoice = document.getElementById('practiceVoice');
+        const practiceSpeed = document.getElementById('practiceSpeed');
+        const autoPlayToggle = document.getElementById('autoPlayToggle');
+        const partLabel = document.getElementById('partLabel');
+        const partIndicator = document.getElementById('partIndicator');
+        const practiceSttStatus = document.getElementById('practiceSttStatus');
+        const practiceSttText = document.getElementById('practiceSttText');
+        const practiceResultsSection = document.getElementById('practiceResultsSection');
+        const practiceResultsContent = document.getElementById('practiceResultsContent');
+        const copyPracticeResultBtn = document.getElementById('copyPracticeResultBtn');
+        const practiceApiStatus = document.getElementById('practiceApiStatus');
+        const practiceStatusDot = document.getElementById('practiceStatusDot');
+        const practiceStatusText = document.getElementById('practiceStatusText');
+
+        let practiceMessages = [];
+        let currentPart = '1';
+        let practiceActive = false;
+        let autoPlayVoice = true;
+        let currentAudio = null;
+        let practiceRecognition = null;
+        let isPracticeRecording = false;
+
+        // Recording engine state
+        let audioContext = null;
+        let analyserNode = null;
+        let mediaStream = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let recordingStartTime = 0;
+        let waveformAnimId = null;
+        let lastRecordedWav = null;
+
+        // Analysis UI elements
+        const waveformContainer = document.getElementById('waveformContainer');
+        const waveformCanvas = document.getElementById('waveformCanvas');
+        const recTimer = document.getElementById('recTimer');
+        const analysisLoading = document.getElementById('analysisLoading');
+        const analysisLoadingText = document.getElementById('analysisLoadingText');
+        const analysisPanel = document.getElementById('analysisPanel');
+        const transcriptWords = document.getElementById('transcriptWords');
+        const scoreBadges = document.getElementById('scoreBadges');
+        const diagnosticsList = document.getElementById('diagnosticsList');
+        const bandScoreDisplay = document.getElementById('bandScoreDisplay');
+        const aiFeedbackContent = document.getElementById('aiFeedbackContent');
+        const feedbackTtsBtn = document.getElementById('feedbackTtsBtn');
+        const pitchChart = document.getElementById('pitchChart');
+        const azureInlineToggle = document.getElementById('azureInlineToggle');
+        const azureInlineConfig = document.getElementById('azureInlineConfig');
+        const azureKeyInline = document.getElementById('azureKeyInline');
+        const azureRegionInline = document.getElementById('azureRegionInline');
+        const toggleAzureKeyInline = document.getElementById('toggleAzureKeyInline');
+        const azureInlineSave = document.getElementById('azureInlineSave');
+
+        const PART_LABELS = {
+            '1': 'Part 1 — Introduction & Warm-up',
+            '2': 'Part 2 — Individual Long Turn (Cue Card)',
+            '3': 'Part 3 — Two-way Discussion'
+        };
+
+        // Mode switching - update to handle 3 modes
+        function switchModeUI(mode) {
+            currentMode = mode;
+            if (mode === 'practice') {
+                evalMode.style.display = 'none';
+                practiceMode.classList.add('active');
+                updatePracticeApiStatus();
+            } else {
+                evalMode.style.display = 'block';
+                practiceMode.classList.remove('active');
+            }
+            updateVoiceUI();
+        }
+
+        // Unified mode button listener (handles all 3 modes)
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                switchModeUI(btn.dataset.mode);
+            });
+        });
+
+        // Auto-play toggle
+        autoPlayToggle.addEventListener('click', () => {
+            autoPlayVoice = !autoPlayVoice;
+            autoPlayToggle.textContent = `Auto-play: ${autoPlayVoice ? 'ON' : 'OFF'}`;
+            autoPlayToggle.style.borderColor = autoPlayVoice ? 'var(--primary)' : 'var(--border)';
+        });
+
+        // TTS: Play audio via backend edge-tts (with button state control)
+        async function playTTS(text, btnElement) {
+            if (!text.trim()) return;
+            // Stop any current audio
+            stopTTSPlayback(btnElement);
+
+            // Set loading state
+            if (btnElement) {
+                btnElement.classList.add('loading');
+                btnElement.classList.remove('playing');
+                btnElement.textContent = '⏳';
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tts/speak`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text,
+                        voice: practiceVoice.value,
+                        rate: practiceSpeed.value
+                    })
+                });
+
+                if (!response.ok) {
+                    showToast('TTS not available. Install edge-tts: pip install edge-tts');
+                    resetBtn(btnElement);
+                    return;
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                currentAudio = new Audio(url);
+
+                // Playing state
+                if (btnElement) {
+                    btnElement.classList.remove('loading');
+                    btnElement.classList.add('playing');
+                    btnElement.textContent = '⏸';
+                }
+
+                currentAudio.onended = () => {
+                    URL.revokeObjectURL(url);
+                    currentAudio = null;
+                    resetBtn(btnElement);
+                };
+                currentAudio.onerror = () => {
+                    URL.revokeObjectURL(url);
+                    currentAudio = null;
+                    resetBtn(btnElement);
+                };
+                currentAudio.play();
+            } catch (e) {
+                showToast('TTS failed: ' + e.message);
+                resetBtn(btnElement);
+            }
+        }
+
+        function resetBtn(btn) {
+            if (!btn) return;
+            btn.classList.remove('loading', 'playing');
+            btn.textContent = '▶';
+        }
+
+        let lastTtsBtn = null;
+        function stopTTSPlayback(btn) {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            resetBtn(btn || lastTtsBtn);
+        }
+
+        // Add chat message
+        function addChatMessage(role, text) {
+            chatEmpty.style.display = 'none';
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `chat-msg ${role === 'assistant' ? 'examiner' : 'candidate'}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'chat-avatar';
+            avatar.textContent = role === 'assistant' ? '🎓' : '😊';
+
+            const bubbleWrap = document.createElement('div');
+            const bubble = document.createElement('div');
+            bubble.className = 'chat-bubble';
+            bubble.textContent = text;
+
+            // Add play button for examiner messages
+            if (role === 'assistant') {
+                const playBtn = document.createElement('button');
+                playBtn.className = 'play-audio-btn';
+                playBtn.textContent = '▶';
+                playBtn.title = 'Play audio';
+                playBtn.addEventListener('click', () => {
+                    lastTtsBtn = playBtn;
+                    playTTS(text, playBtn);
+                });
+                bubble.appendChild(playBtn);
+            }
+
+            const time = document.createElement('div');
+            time.className = 'chat-time';
+            const now = new Date();
+            time.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+            bubbleWrap.appendChild(bubble);
+            bubbleWrap.appendChild(time);
+            msgDiv.appendChild(avatar);
+            msgDiv.appendChild(bubbleWrap);
+
+            // Insert before typing indicator
+            chatArea.insertBefore(msgDiv, typingIndicator);
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // Auto-play examiner voice
+            if (role === 'assistant' && autoPlayVoice) {
+                playTTS(text);
+            }
+        }
+
+        function setPart(part) {
+            currentPart = part;
+            partLabel.textContent = PART_LABELS[part] || `Part ${part}`;
+            document.querySelectorAll('.part-dot').forEach(dot => {
+                const p = dot.dataset.part;
+                dot.classList.toggle('active', p === part);
+                dot.classList.toggle('completed', parseInt(p) < parseInt(part));
+            });
+        }
+
+        // Send message to AI examiner
+        async function sendPracticeMessage(text) {
+            if (!text.trim() || !practiceActive) return;
+
+            // Check API config
+            const currentProvider = getProvider(apiConfig.model);
+            const currentApiKey = apiConfig.apiKeys[currentProvider];
+            if (!currentApiKey || !currentApiKey.trim()) {
+                showToast('Please configure your API key first.');
+                openModal();
+                return;
+            }
+
+            // Add user message
+            practiceMessages.push({ role: 'user', content: text });
+            addChatMessage('user', text);
+            practiceInput.value = '';
+
+            // Show typing indicator
+            typingIndicator.classList.add('show');
+            chatArea.scrollTop = chatArea.scrollHeight;
+
+            // Build api config for request
+            const apiConfigData = { api_key: currentApiKey, model: apiConfig.model };
+            if (apiConfig.apiUrl) apiConfigData.api_url = apiConfig.apiUrl;
+            if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/practice/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: practiceMessages,
+                        api_config: apiConfigData,
+                        part: currentPart
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({ detail: 'Unknown error' }));
+                    throw new Error(err.detail || 'API error');
+                }
+
+                const data = await response.json();
+                typingIndicator.classList.remove('show');
+
+                practiceMessages.push({ role: 'assistant', content: data.reply });
+                addChatMessage('assistant', data.reply);
+            } catch (e) {
+                typingIndicator.classList.remove('show');
+                showToast('Error: ' + e.message);
+            }
+        }
+
+        // Start practice
+        startPracticeBtn.addEventListener('click', () => {
+            if (!practiceActive) {
+                practiceActive = true;
+                practiceMessages = [];
+                setPart('1');
+                startPracticeBtn.style.display = 'none';
+                nextPartBtn.style.display = 'inline-flex';
+                endPracticeBtn.style.display = 'inline-flex';
+                resetPracticeBtn.style.display = 'inline-flex';
+
+                // Send initial message to start
+                sendPracticeMessage("Hello, I'm ready to start the IELTS speaking test. Let's begin with Part 1.");
+            }
+        });
+
+        // Next part
+        nextPartBtn.addEventListener('click', () => {
+            const next = String(Math.min(3, parseInt(currentPart) + 1));
+            setPart(next);
+            sendPracticeMessage(`I'm ready for Part ${next}. Please continue.`);
+            if (next === '3') {
+                nextPartBtn.style.display = 'none';
+            }
+        });
+
+        // End practice & evaluate
+        endPracticeBtn.addEventListener('click', async () => {
+            if (practiceMessages.length < 4) {
+                showToast('Please have at least a brief conversation first.');
+                return;
+            }
+
+            // Ask AI to wrap up
+            await sendPracticeMessage("I'd like to end the practice now. Thank you for the session.");
+
+            // Wait a moment then evaluate
+            endPracticeBtn.disabled = true;
+            endPracticeBtn.textContent = '⏳ Evaluating...';
+
+            const currentProvider = getProvider(apiConfig.model);
+            const currentApiKey = apiConfig.apiKeys[currentProvider];
+            if (!currentApiKey || !currentApiKey.trim()) {
+                showToast('API key not configured.');
+                openModal();
+                return;
+            }
+            const apiConfigData = { api_key: currentApiKey, model: apiConfig.model };
+            if (apiConfig.apiUrl) apiConfigData.api_url = apiConfig.apiUrl;
+            if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/practice/evaluate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: practiceMessages,
+                        api_config: apiConfigData
+                    })
+                });
+
+                if (!response.ok) throw new Error('Evaluation failed');
+
+                const data = await response.json();
+                practiceResultsContent.innerHTML = parseMarkdown(data.result);
+                practiceResultsSection.style.display = 'block';
+                practiceResultsSection.scrollIntoView({ behavior: 'smooth' });
+            } catch (e) {
+                showToast('Evaluation failed: ' + e.message);
+            } finally {
+                endPracticeBtn.disabled = false;
+                endPracticeBtn.textContent = '📋 Get Band Score';
+            }
+        });
+
+        // Reset practice
+        resetPracticeBtn.addEventListener('click', () => {
+            if (!confirm('Reset the practice session? All conversation will be lost.')) return;
+            practiceActive = false;
+            practiceMessages = [];
+            currentPart = '1';
+            stopTTSPlayback();
+            isPracticeRecording = false;
+            if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+            if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+            if (waveformAnimId) cancelAnimationFrame(waveformAnimId);
+            waveformContainer.classList.remove('active');
+            analysisPanel.classList.remove('active');
+            analysisLoading.classList.remove('active');
+
+            // Clear chat
+            chatArea.innerHTML = '';
+            chatArea.appendChild(chatEmpty);
+            chatEmpty.style.display = 'flex';
+            chatArea.appendChild(typingIndicator);
+            typingIndicator.classList.remove('show');
+
+            setPart('1');
+            startPracticeBtn.style.display = 'inline-flex';
+            nextPartBtn.style.display = 'none';
+            endPracticeBtn.style.display = 'none';
+            resetPracticeBtn.style.display = 'none';
+            practiceResultsSection.style.display = 'none';
+        });
+
+        // Send via text input
+        practiceSendBtn.addEventListener('click', () => {
+            sendPracticeMessage(practiceInput.value);
+        });
+        practiceInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendPracticeMessage(practiceInput.value);
+            }
+        });
+
+        // Practice API status check
+        async function updatePracticeApiStatus() {
+            // Check backend online first
+            try {
+                const resp = await fetch(`${API_BASE_URL}/`);
+                if (!resp.ok) throw new Error('Backend offline');
+            } catch (e) {
+                practiceStatusDot.className = 'status-dot';
+                practiceStatusText.textContent = 'Backend Offline — Start backend first';
+                practiceStatusText.style.color = 'var(--error)';
+                return;
+            }
+
+            // Check API key
+            const currentProvider = getProvider(apiConfig.model);
+            const key = apiConfig.apiKeys[currentProvider];
+            if (key && key.trim()) {
+                practiceStatusDot.className = 'status-dot online';
+                practiceStatusText.textContent = `${apiConfig.model} — Ready`;
+                practiceStatusText.style.color = 'var(--success)';
+            } else {
+                practiceStatusDot.className = 'status-dot';
+                practiceStatusText.textContent = 'No API Key — Click Settings';
+                practiceStatusText.style.color = 'var(--error)';
+            }
+        }
+
+        // Practice API status — click to open Settings
+        practiceApiStatus.addEventListener('click', () => {
+            openModal();
+        });
+
+        // Initial status check
+        updatePracticeApiStatus();
+
+        // Copy practice results
+        copyPracticeResultBtn.addEventListener('click', async () => {
+            const text = practiceResultsContent.innerText;
+            try {
+                await navigator.clipboard.writeText(text);
+                showToast('Results copied!');
+            } catch (e) {
+                showToast('Copy failed');
+            }
+        });
+
+        // Update part indicator UI
+        setPart('1');
+
+        // ==========================================
+        // Azure Settings (Inline on Practice page)
+        // ==========================================
+        let azureEnabled = false;
+
+        // Load Azure settings on page load
+        (function loadAzureSettings() {
+            const saved = localStorage.getItem('ielts_azure_config');
+            if (saved) {
+                try {
+                    const azure = JSON.parse(saved);
+                    if (azure.key) {
+                        azureEnabled = true;
+                        azureKeyInline.value = azure.key;
+                        azureRegionInline.value = azure.region || 'eastasia';
+                        azureInlineToggle.textContent = 'Azure: ON';
+                        azureInlineToggle.style.borderColor = 'var(--primary)';
+                    }
+                } catch(e) {}
+            }
+        })();
+
+        // Toggle Azure config panel
+        azureInlineToggle.addEventListener('click', () => {
+            const isVisible = azureInlineConfig.style.display !== 'none';
+            azureInlineConfig.style.display = isVisible ? 'none' : 'block';
+        });
+
+        // Toggle password visibility
+        toggleAzureKeyInline.addEventListener('click', () => {
+            azureKeyInline.type = azureKeyInline.type === 'password' ? 'text' : 'password';
+        });
+
+        // Save Azure config
+        azureInlineSave.addEventListener('click', () => {
+            const key = azureKeyInline.value.trim();
+            if (key) {
+                azureEnabled = true;
+                localStorage.setItem('ielts_azure_config', JSON.stringify({
+                    key: key,
+                    region: azureRegionInline.value
+                }));
+                azureInlineToggle.textContent = 'Azure: ON';
+                azureInlineToggle.style.borderColor = 'var(--primary)';
+                azureInlineConfig.style.display = 'none';
+                showToast('Azure Speech configured!');
+            } else {
+                azureEnabled = false;
+                localStorage.removeItem('ielts_azure_config');
+                azureInlineToggle.textContent = 'Azure: OFF';
+                azureInlineToggle.style.borderColor = 'var(--border)';
+                azureInlineConfig.style.display = 'none';
+                showToast('Azure Speech disabled');
+            }
+        });
+
+        function getAzureConfig() {
+            if (!azureEnabled) return null;
+            const key = azureKeyInline.value.trim();
+            if (!key) return null;
+            return { key: key, region: azureRegionInline.value };
+        }
+
+        // ==========================================
+        // Recording Engine (MediaRecorder + Waveform)
+        // ==========================================
+
+        const wCtx = waveformCanvas.getContext('2d');
+
+        function initWaveformCanvas() {
+            const rect = waveformContainer.getBoundingClientRect();
+            waveformCanvas.width = rect.width * window.devicePixelRatio;
+            waveformCanvas.height = 80 * window.devicePixelRatio;
+            wCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        function drawWaveform() {
+            if (!analyserNode) return;
+            const w = waveformCanvas.width / window.devicePixelRatio;
+            const h = waveformCanvas.height / window.devicePixelRatio;
+            const bufferLength = analyserNode.fftSize;
+            const dataArray = new Uint8Array(bufferLength);
+            analyserNode.getByteTimeDomainData(dataArray);
+
+            wCtx.clearRect(0, 0, w, h);
+
+            // Background
+            wCtx.fillStyle = '#1a1a1a';
+            wCtx.fillRect(0, 0, w, h);
+
+            // Grid lines
+            wCtx.strokeStyle = 'rgba(255,255,255,0.06)';
+            wCtx.lineWidth = 1;
+            for (let i = 0; i < 5; i++) {
+                const y = (h / 4) * i;
+                wCtx.beginPath(); wCtx.moveTo(0, y); wCtx.lineTo(w, y); wCtx.stroke();
+            }
+
+            // Waveform
+            wCtx.lineWidth = 2;
+            wCtx.strokeStyle = '#d97757';
+            wCtx.beginPath();
+            const sliceWidth = w / bufferLength;
+            let x = 0;
+            for (let i = 0; i < bufferLength; i++) {
+                const v = dataArray[i] / 128.0;
+                const y = (v * h) / 2;
+                if (i === 0) wCtx.moveTo(x, y);
+                else wCtx.lineTo(x, y);
+                x += sliceWidth;
+            }
+            wCtx.lineTo(w, h / 2);
+            wCtx.stroke();
+
+            // Timer update
+            const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
+            const mins = Math.floor(elapsed / 60);
+            const secs = elapsed % 60;
+            recTimer.textContent = `● ${mins}:${secs.toString().padStart(2, '0')}`;
+
+            waveformAnimId = requestAnimationFrame(drawWaveform);
+        }
+
+        // Convert AudioBuffer to WAV (16kHz, 16bit, mono)
+        function audioBufferToWav(buffer) {
+            const numChannels = 1;
+            const sampleRate = 16000;
+            const format = 1; // PCM
+
+            // Resample to 16kHz mono
+            const offlineCtx = new OfflineAudioContext(numChannels, Math.ceil(buffer.duration * sampleRate), sampleRate);
+            const source = offlineCtx.createBufferSource();
+            source.buffer = buffer;
+            source.connect(offlineCtx.destination);
+
+            return new Promise((resolve) => {
+                source.start(0);
+                offlineCtx.startRendering().then((renderedBuffer) => {
+                    const data = renderedBuffer.getChannelData(0);
+
+                    // Trim silence from start/end
+                    const threshold = 0.01;
+                    let start = 0, end = data.length - 1;
+                    while (start < data.length && Math.abs(data[start]) < threshold) start++;
+                    while (end > start && Math.abs(data[end]) < threshold) end--;
+                    const trimmed = data.slice(start, end + 1);
+
+                    const dataLength = trimmed.length * 2;
+                    const headerLength = 44;
+                    const totalLength = headerLength + dataLength;
+                    const arrayBuffer = new ArrayBuffer(totalLength);
+                    const view = new DataView(arrayBuffer);
+
+                    // WAV header
+                    writeString(view, 0, 'RIFF');
+                    view.setUint32(4, totalLength - 8, true);
+                    writeString(view, 8, 'WAVE');
+                    writeString(view, 12, 'fmt ');
+                    view.setUint32(16, 16, true);
+                    view.setUint16(20, format, true);
+                    view.setUint16(22, numChannels, true);
+                    view.setUint32(24, sampleRate, true);
+                    view.setUint32(28, sampleRate * numChannels * 2, true);
+                    view.setUint16(32, numChannels * 2, true);
+                    view.setUint16(34, 16, true);
+                    writeString(view, 36, 'data');
+                    view.setUint32(40, dataLength, true);
+
+                    // PCM data
+                    let offset = 44;
+                    for (let i = 0; i < trimmed.length; i++) {
+                        const s = Math.max(-1, Math.min(1, trimmed[i]));
+                        view.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+                        offset += 2;
+                    }
+
+                    resolve(new Blob([arrayBuffer], { type: 'audio/wav' }));
+                });
+            });
+        }
+
+        function writeString(view, offset, str) {
+            for (let i = 0; i < str.length; i++) {
+                view.setUint8(offset + i, str.charCodeAt(i));
+            }
+        }
+
+        async function startPracticeRecording() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    audio: {
+                        channelCount: 1,
+                        echoCancellation: true,
+                        noiseSuppression: true
+                    }
+                });
+
+                audioContext = new AudioContext();
+                const source = audioContext.createMediaStreamSource(mediaStream);
+                analyserNode = audioContext.createAnalyser();
+                analyserNode.fftSize = 2048;
+                source.connect(analyserNode);
+
+                recordedChunks = [];
+                mediaRecorder = new MediaRecorder(mediaStream);
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
+                };
+
+                recordingStartTime = Date.now();
+                mediaRecorder.start(100);
+
+                // Show waveform
+                waveformContainer.classList.add('active');
+                initWaveformCanvas();
+                drawWaveform();
+
+                // Update mic button
+                practiceMicBtn.classList.add('recording');
+                practiceMicBtn.textContent = '⏹';
+                practiceInput.placeholder = 'Recording... click ⏹ to stop and analyze';
+
+            } catch (e) {
+                showToast('Microphone access denied: ' + e.message);
+            }
+        }
+
+        async function stopPracticeRecordingAndAnalyze() {
+            // Stop waveform
+            if (waveformAnimId) cancelAnimationFrame(waveformAnimId);
+            waveformContainer.classList.remove('active');
+
+            // Reset mic button
+            practiceMicBtn.classList.remove('recording');
+            practiceMicBtn.textContent = '🎤';
+            practiceInput.placeholder = 'Type your response or press the mic to speak...';
+
+            if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
+
+            return new Promise((resolve) => {
+                mediaRecorder.onstop = async () => {
+                    const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+
+                    // Convert to WAV
+                    const arrayBuffer = await blob.arrayBuffer();
+                    const tempCtx = new AudioContext();
+                    const audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
+                    const wavBlob = await audioBufferToWav(audioBuffer);
+                    tempCtx.close();
+
+                    lastRecordedWav = wavBlob;
+
+                    // Clean up
+                    if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+                    if (audioContext) { audioContext.close(); audioContext = null; }
+                    analyserNode = null;
+
+                    // Upload and analyze
+                    await analyzeRecording(wavBlob);
+                    resolve();
+                };
+                mediaRecorder.stop();
+            });
+        }
+
+        async function analyzeRecording(wavBlob) {
+            analysisLoading.classList.add('active');
+            analysisLoadingText.textContent = 'Transcribing audio...';
+            analysisPanel.classList.remove('active');
+
+            const formData = new FormData();
+            formData.append('audio', wavBlob, 'recording.wav');
+
+            // Get API config for AI feedback
+            const currentProvider = getProvider(apiConfig.model);
+            const currentApiKey = apiConfig.apiKeys[currentProvider];
+            if (currentApiKey) {
+                const apiConfigData = { api_key: currentApiKey, model: apiConfig.model };
+                if (apiConfig.apiUrl) apiConfigData.api_url = apiConfig.apiUrl;
+                if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
+                formData.append('api_config', JSON.stringify(apiConfigData));
+            }
+
+            // Azure config
+            const azureCfg = getAzureConfig();
+            if (azureCfg) {
+                formData.append('azure_key', azureCfg.key);
+                formData.append('azure_region', azureCfg.region);
+            }
+
+            try {
+                analysisLoadingText.textContent = 'Analyzing pronunciation...';
+                const response = await fetch(`${API_BASE_URL}/practice/analyze`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({ detail: 'Analysis failed' }));
+                    throw new Error(err.detail || 'Analysis error');
+                }
+
+                analysisLoadingText.textContent = 'Generating AI feedback...';
+                const data = await response.json();
+                renderAnalysisResults(data);
+
+            } catch (e) {
+                showToast('Analysis error: ' + e.message);
+            } finally {
+                analysisLoading.classList.remove('active');
+            }
+        }
+
+        function renderAnalysisResults(data) {
+            analysisPanel.classList.add('active');
+
+            // 1. Color-coded transcript
+            transcriptWords.innerHTML = '';
+            if (data.words && data.words.length > 0) {
+                data.words.forEach(w => {
+                    const span = document.createElement('span');
+                    span.className = 'word-span';
+                    if (w.score > 80) span.classList.add('score-high');
+                    else if (w.score >= 60) span.classList.add('score-mid');
+                    else if (w.score > 0) span.classList.add('score-low');
+                    else span.classList.add('score-na');
+                    span.textContent = w.word;
+
+                    // Phoneme tooltip
+                    if (w.phonemes && w.phonemes.length > 0) {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'phoneme-tooltip';
+                        tooltip.innerHTML = w.phonemes.map(p => {
+                            const cls = p.score > 80 ? 'p-high' : p.score >= 60 ? 'p-mid' : 'p-low';
+                            return `<span class="phoneme-item"><span class="phoneme-symbol">/${p.phoneme}/</span><span class="phoneme-score ${cls}">${p.score}</span></span>`;
+                        }).join('');
+                        span.appendChild(tooltip);
+                    }
+                    transcriptWords.appendChild(span);
+                    transcriptWords.appendChild(document.createTextNode(' '));
+                });
+            } else {
+                transcriptWords.textContent = data.transcript || '(no transcript)';
+            }
+
+            // 2. Score badges
+            scoreBadges.innerHTML = '';
+            if (data.overall_scores) {
+                const labels = { accuracy: 'Accuracy', fluency: 'Fluency', completeness: 'Completeness', prosody: 'Prosody' };
+                Object.entries(data.overall_scores).forEach(([key, val]) => {
+                    if (val !== undefined && val !== null) {
+                        const badge = document.createElement('div');
+                        badge.className = 'score-badge';
+                        badge.innerHTML = `<span class="badge-label">${labels[key] || key}</span><span class="badge-value">${val}</span>`;
+                        scoreBadges.appendChild(badge);
+                    }
+                });
+            }
+
+            // 3. Pitch chart
+            if (data.pitch_data) {
+                drawPitchChart(data.pitch_data);
+            }
+
+            // 4. Diagnostics
+            diagnosticsList.innerHTML = '';
+            if (data.diagnostics && data.diagnostics.length > 0) {
+                data.diagnostics.forEach(d => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="diag-icon">⚠️</span><span>${d}</span>`;
+                    diagnosticsList.appendChild(li);
+                });
+            } else {
+                diagnosticsList.innerHTML = '<li><span class="diag-icon">✅</span><span>No major pronunciation issues detected.</span></li>';
+            }
+
+            // 5. Band score display
+            bandScoreDisplay.innerHTML = '';
+            if (data.overall_scores) {
+                const avg = Object.values(data.overall_scores).filter(v => v != null);
+                if (avg.length > 0) {
+                    const bandEst = (avg.reduce((a, b) => a + b, 0) / avg.length / 100 * 9).toFixed(1);
+                    bandScoreDisplay.innerHTML = `<div class="band-number">${bandEst}</div><div class="band-label">Estimated Band Score</div>`;
+                }
+            }
+
+            // 6. AI feedback with TTS
+            if (data.ai_feedback) {
+                aiFeedbackContent.innerHTML = parseMarkdown(data.ai_feedback);
+            }
+
+            analysisPanel.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function drawPitchChart(pitchData) {
+            const canvas = pitchChart;
+            const container = canvas.parentElement;
+            const rect = container.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = 160 * window.devicePixelRatio;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+            const w = rect.width;
+            const h = 160;
+
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(0, 0, w, h);
+
+            // Grid
+            ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 4; i++) {
+                const y = (h / 4) * i;
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+            }
+
+            const { time, f0, reference_f0 } = pitchData;
+            if (!time || !f0 || time.length === 0) return;
+
+            const tMin = time[0], tMax = time[time.length - 1];
+            const f0Valid = f0.filter(v => v > 0);
+            if (f0Valid.length === 0) return;
+            const fMin = Math.max(50, Math.min(...f0Valid) - 20);
+            const fMax = Math.max(...f0Valid) + 20;
+
+            const mapX = (t) => ((t - tMin) / (tMax - tMin)) * w;
+            const mapY = (f) => h - ((f - fMin) / (fMax - fMin)) * h;
+
+            // Reference line (gray)
+            if (reference_f0 && reference_f0.length === time.length) {
+                ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                let started = false;
+                for (let i = 0; i < time.length; i++) {
+                    if (reference_f0[i] <= 0) { started = false; continue; }
+                    const x = mapX(time[i]), y = mapY(reference_f0[i]);
+                    if (!started) { ctx.moveTo(x, y); started = true; }
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            // User F0 (blue/orange)
+            ctx.strokeStyle = '#4a9eff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            let started = false;
+            for (let i = 0; i < time.length; i++) {
+                if (f0[i] <= 0) { started = false; continue; }
+                const x = mapX(time[i]), y = mapY(f0[i]);
+                if (!started) { ctx.moveTo(x, y); started = true; }
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = 'rgba(255,255,255,0.4)';
+            ctx.font = '10px sans-serif';
+            ctx.fillText(`${Math.round(fMin)}Hz`, 4, h - 4);
+            ctx.fillText(`${Math.round(fMax)}Hz`, 4, 12);
+        }
+
+        // TTS for AI feedback
+        let feedbackAudio = null;
+        feedbackTtsBtn.addEventListener('click', async () => {
+            if (feedbackAudio) {
+                feedbackAudio.pause();
+                feedbackAudio = null;
+                feedbackTtsBtn.classList.remove('playing');
+                feedbackTtsBtn.innerHTML = '▶ Listen';
+                return;
+            }
+
+            const text = aiFeedbackContent.innerText;
+            if (!text.trim()) return;
+
+            feedbackTtsBtn.classList.add('playing');
+            feedbackTtsBtn.innerHTML = '⏹ Stop';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/tts/speak`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: text.substring(0, 2000),
+                        voice: practiceVoice.value,
+                        rate: practiceSpeed.value
+                    })
+                });
+                if (!response.ok) throw new Error('TTS failed');
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                feedbackAudio = new Audio(url);
+                feedbackAudio.onended = () => {
+                    URL.revokeObjectURL(url);
+                    feedbackAudio = null;
+                    feedbackTtsBtn.classList.remove('playing');
+                    feedbackTtsBtn.innerHTML = '▶ Listen';
+                };
+                feedbackAudio.play();
+            } catch (e) {
+                showToast('TTS: ' + e.message);
+                feedbackTtsBtn.classList.remove('playing');
+                feedbackTtsBtn.innerHTML = '▶ Listen';
+            }
+        });
+
+        // Mic button: unified recording handler (replaces any previous handlers)
+        // Use a wrapper to prevent duplicate handlers
+        let micHandlerAttached = false;
+        if (!micHandlerAttached) {
+            micHandlerAttached = true;
+            practiceMicBtn.addEventListener('click', async () => {
+                if (isPracticeRecording) {
+                    // Stop recording and analyze
+                    isPracticeRecording = false;
+                    await stopPracticeRecordingAndAnalyze();
+                } else {
+                    // Start recording
+                    isPracticeRecording = true;
+                    await startPracticeRecording();
+                }
+            });
+        }
+
+        // Text send handler
+        practiceSendBtn.addEventListener('click', () => {
+            const text = document.getElementById('practiceInput').value.trim();
+            if (text && practiceActive) {
+                sendPracticeMessage(text);
+            }
+        });
     </script>
 </body>
 </html>
