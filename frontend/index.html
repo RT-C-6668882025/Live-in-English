@@ -1711,6 +1711,404 @@
             font-size: 0.875rem;
             max-width: 300px;
         }
+
+        /* ==========================================
+           Chatroom Mode - Multi-Expert Discussion
+           ========================================== */
+        .chatroom-container {
+            display: none;
+        }
+        .chatroom-container.active {
+            display: block;
+        }
+
+        .chatroom-controls {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .chatroom-topic-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .chatroom-topic-input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .chatroom-topic-input:focus {
+            border-color: var(--primary);
+        }
+
+        .chatroom-lang-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 0.5rem 0.75rem;
+            font-size: 0.85rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 160px;
+        }
+
+        .chatroom-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .expert-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .expert-tag {
+            padding: 0.4rem 0.85rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            background: var(--bg-input);
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .expert-tag:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+        .expert-tag.selected {
+            background: rgba(217, 119, 87, 0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .expert-tag-add {
+            border-style: dashed;
+        }
+
+        .custom-expert-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+            align-items: center;
+        }
+        .custom-expert-input {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            outline: none;
+        }
+        .custom-expert-input:focus {
+            border-color: var(--primary);
+        }
+        .custom-expert-add-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        .custom-expert-cancel-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.4rem 0.75rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .selected-experts {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 0.75rem;
+            min-height: 28px;
+        }
+        .selected-expert-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .selected-expert-tag .remove-expert {
+            cursor: pointer;
+            opacity: 0.6;
+            font-size: 0.85rem;
+            line-height: 1;
+        }
+        .selected-expert-tag .remove-expert:hover {
+            opacity: 1;
+        }
+
+        .chatroom-start-btn {
+            margin-top: 0.5rem;
+        }
+
+        /* Chat area */
+        .chatroom-chat-area {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            min-height: 300px;
+            max-height: 550px;
+            overflow-y: auto;
+            margin-bottom: 1rem;
+        }
+
+        .chatroom-empty {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3rem 1rem;
+            color: var(--text-muted);
+        }
+        .chatroom-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+        .chatroom-empty p {
+            font-size: 0.9rem;
+        }
+
+        /* Expert messages */
+        .chatroom-msg {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+        .chatroom-msg-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+        .chatroom-msg-body {
+            flex: 1;
+            min-width: 0;
+        }
+        .chatroom-msg-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+        .chatroom-msg-bubble {
+            background: #2a2a28;
+            border-radius: 0 var(--radius) var(--radius) var(--radius);
+            padding: 0.85rem 1rem;
+            border-left: 3px solid var(--primary);
+            position: relative;
+        }
+
+        .expert-text-en {
+            color: var(--text-primary);
+            line-height: 1.65;
+            font-size: 0.92rem;
+            white-space: pre-wrap;
+        }
+        .expert-text-en-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        .expert-text-en-row .play-audio-btn {
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .translation-toggle {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            cursor: pointer;
+            padding: 6px 0 2px;
+            border-top: 1px dashed var(--border);
+            margin-top: 8px;
+            transition: color 0.2s;
+            user-select: none;
+        }
+        .translation-toggle:hover {
+            color: var(--text-secondary);
+        }
+
+        .expert-text-zh {
+            display: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            padding-top: 4px;
+            line-height: 1.55;
+            white-space: pre-wrap;
+        }
+
+        .chatroom-msg-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Loading state */
+        .chatroom-msg.loading .chatroom-msg-bubble {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.2rem;
+        }
+        .chatroom-loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .chatroom-loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .chatroom-loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Judge summary */
+        .judge-summary-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+        }
+        .judge-summary-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+        }
+        .judge-summary-en {
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        .judge-summary-card .translation-toggle {
+            margin-top: 10px;
+        }
+        .judge-summary-zh {
+            display: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            line-height: 1.55;
+            margin-top: 4px;
+            white-space: pre-wrap;
+        }
+
+        /* Followup bar */
+        .followup-bar {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem;
+        }
+        .followup-target-select {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 0.5rem;
+            font-size: 0.8rem;
+            outline: none;
+            cursor: pointer;
+            min-width: 140px;
+        }
+        .followup-input {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 0.6rem 0.85rem;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .followup-input:focus {
+            border-color: var(--primary);
+        }
+        .followup-send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 0.6rem 1.2rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .followup-send-btn:hover {
+            opacity: 0.9;
+        }
+        .followup-send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Expert color palette */
+        .expert-color-0 { --expert-color: #5b9bd5; }
+        .expert-color-1 { --expert-color: #70c1b3; }
+        .expert-color-2 { --expert-color: #e8a838; }
+        .expert-color-3 { --expert-color: #c084fc; }
+        .expert-color-4 { --expert-color: #f472b6; }
+        .expert-color-5 { --expert-color: #86efac; }
+
+        @media (max-width: 768px) {
+            .chatroom-topic-row {
+                flex-direction: column;
+            }
+            .chatroom-lang-select {
+                min-width: auto;
+            }
+            .chatroom-chat-area {
+                max-height: 400px;
+            }
+            .custom-expert-form {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1868,6 +2266,9 @@
             </button>
             <button class="mode-btn" data-mode="practice">
                 🗣️ Practice
+            </button>
+            <button class="mode-btn" data-mode="chatroom">
+                💬 Chatroom
             </button>
         </div>
 
@@ -2098,6 +2499,79 @@
                 </div>
             </div>
         </div><!-- end practiceMode -->
+
+        <!-- Chatroom Mode -->
+        <div class="chatroom-container" id="chatroomMode">
+            <!-- Control Bar -->
+            <div class="chatroom-controls">
+                <div class="chatroom-topic-row">
+                    <input type="text" id="chatroomTopic" class="chatroom-topic-input" placeholder="Enter a topic for discussion, e.g. Should AI replace teachers?">
+                    <select id="chatroomLang" class="chatroom-lang-select">
+                        <option value="en">English (Default)</option>
+                        <option value="zh">中文优先</option>
+                        <option value="bilingual">Bilingual</option>
+                    </select>
+                </div>
+                <div class="chatroom-expert-section">
+                    <label class="chatroom-label">Choose Experts (2-5):</label>
+                    <div class="expert-tags" id="expertTags">
+                        <!-- Nobel Laureates - Physics -->
+                        <button class="expert-tag" data-expert="Feynman" data-desc="Nobel Prize physicist. Feynman Technique: break down complex concepts into simple terms.">🎭 Feynman</button>
+                        <button class="expert-tag" data-expert="Einstein" data-desc="Nobel Prize physicist. Thought experiments, relativity, imagination over knowledge.">🧠 Einstein</button>
+                        <button class="expert-tag" data-expert="Curie" data-desc="Two-time Nobel Prize winner. Experimental method, persistence, discovery mindset.">🔬 Curie</button>
+                        <button class="expert-tag" data-expert="Heisenberg" data-desc="Nobel Prize physicist. Uncertainty principle, quantum thinking, probabilistic reasoning.">⚛️ Heisenberg</button>
+                        
+                        <!-- Nobel Laureates - Other Fields -->
+                        <button class="expert-tag" data-expert="Nash" data-desc="Nobel Prize mathematician. Game theory, equilibrium analysis, strategic thinking.">🎲 Nash</button>
+                        <button class="expert-tag" data-expert="Kahneman" data-desc="Nobel Prize psychologist. System 1 vs 2, cognitive biases, behavioral economics.">🧩 Kahneman</button>
+                        <button class="expert-tag" data-expert="Darwin" data-desc="Naturalist. Evolution by natural selection, adaptation, gradual change.">🦎 Darwin</button>
+                        
+                        <!-- Thinkers & Investors -->
+                        <button class="expert-tag" data-expert="Munger" data-desc="Billionaire investor. Mental models, inversion, multidisciplinary wisdom.">💼 Munger</button>
+                        <button class="expert-tag" data-expert="Taleb" data-desc="Risk analyst. Antifragility, Black Swan thinking, skin in the game.">🦢 Taleb</button>
+                        <button class="expert-tag" data-expert="Altman" data-desc="Entrepreneur & AI pioneer. 10x thinking, exponential mindset, scale everything.">🚀 Altman</button>
+                        
+                        <!-- IELTS & Language Experts -->
+                        <button class="expert-tag" data-expert="IELTS Examiner" data-desc="Senior IELTS examiner. Band descriptors, error patterns, scoring expertise.">🎓 IELTS Examiner</button>
+                        <button class="expert-tag" data-expert="Native Speaker" data-desc="Native English speaker. Natural intuition, idiomatic expressions, authentic usage.">🇬🇧 Native Speaker</button>
+                        
+                        <!-- Custom Expert Button -->
+                        <button class="expert-tag expert-tag-add" id="addCustomExpertBtn">+ Custom</button>
+                    </div>
+                    <!-- Custom expert input (hidden by default) -->
+                    <div class="custom-expert-form" id="customExpertForm" style="display:none;">
+                        <input type="text" id="customExpertName" placeholder="Expert name (English)" class="custom-expert-input">
+                        <input type="text" id="customExpertDesc" placeholder="Brief description" class="custom-expert-input">
+                        <button class="custom-expert-add-btn" id="confirmCustomExpert">Add</button>
+                        <button class="custom-expert-cancel-btn" id="cancelCustomExpert">Cancel</button>
+                    </div>
+                    <div class="selected-experts" id="selectedExperts"></div>
+                </div>
+                <button class="evaluate-btn chatroom-start-btn" id="chatroomStartBtn">
+                    Start Discussion
+                </button>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chatroom-chat-area" id="chatroomChatArea">
+                <div class="chatroom-empty" id="chatroomEmpty">
+                    <div class="chatroom-empty-icon">💬</div>
+                    <p>Select experts and enter a topic to start a discussion</p>
+                </div>
+            </div>
+
+            <!-- Judge Summary (hidden by default) -->
+            <div class="judge-summary-card" id="judgeSummary" style="display:none;"></div>
+
+            <!-- Followup Bar -->
+            <div class="followup-bar" id="followupBar" style="display:none;">
+                <select id="followupTarget" class="followup-target-select">
+                    <option value="">@ All Experts</option>
+                </select>
+                <input type="text" id="followupInput" class="followup-input" placeholder="Ask a follow-up question...">
+                <button class="followup-send-btn" id="followupSendBtn">Send</button>
+            </div>
+        </div><!-- end chatroomMode -->
 
     </main>
 
@@ -3019,16 +3493,22 @@
             '3': 'Part 3 — Two-way Discussion'
         };
 
-        // Mode switching - update to handle 3 modes
+        // Mode switching - update to handle 4 modes
         function switchModeUI(mode) {
             currentMode = mode;
             if (mode === 'practice') {
                 evalMode.style.display = 'none';
                 practiceMode.classList.add('active');
+                chatroomMode.classList.remove('active');
                 updatePracticeApiStatus();
+            } else if (mode === 'chatroom') {
+                evalMode.style.display = 'none';
+                practiceMode.classList.remove('active');
+                chatroomMode.classList.add('active');
             } else {
                 evalMode.style.display = 'block';
                 practiceMode.classList.remove('active');
+                chatroomMode.classList.remove('active');
             }
             updateVoiceUI();
         }
@@ -3919,6 +4399,380 @@
                 await startPracticeRecording();
             }
         });
+
+        // ==========================================
+        // Chatroom Mode - Multi-Expert Discussion
+        // ==========================================
+        const chatroomMode = document.getElementById('chatroomMode');
+        const chatroomTopic = document.getElementById('chatroomTopic');
+        const chatroomLang = document.getElementById('chatroomLang');
+        const expertTags = document.getElementById('expertTags');
+        const selectedExpertsDiv = document.getElementById('selectedExperts');
+        const customExpertForm = document.getElementById('customExpertForm');
+        const customExpertName = document.getElementById('customExpertName');
+        const customExpertDesc = document.getElementById('customExpertDesc');
+        const confirmCustomExpert = document.getElementById('confirmCustomExpert');
+        const cancelCustomExpert = document.getElementById('cancelCustomExpert');
+        const chatroomStartBtn = document.getElementById('chatroomStartBtn');
+        const chatroomChatArea = document.getElementById('chatroomChatArea');
+        const chatroomEmpty = document.getElementById('chatroomEmpty');
+        const judgeSummary = document.getElementById('judgeSummary');
+        const followupBar = document.getElementById('followupBar');
+        const followupTarget = document.getElementById('followupTarget');
+        const followupInput = document.getElementById('followupInput');
+        const followupSendBtn = document.getElementById('followupSendBtn');
+        const addCustomExpertBtn = document.getElementById('addCustomExpertBtn');
+
+        // Chatroom state
+        let chatroomExperts = [];  // {name, description, colorIndex}
+        let chatroomDiscussion = [];  // {name, en_text, zh_text}
+        let chatroomBusy = false;
+
+        const CHATROOM_COLORS = ['#5b9bd5', '#70c1b3', '#e8a838', '#c084fc', '#f472b6', '#86efac'];
+
+        function getExpertColor(index) {
+            return CHATROOM_COLORS[index % CHATROOM_COLORS.length];
+        }
+
+        // Expert tag selection
+        expertTags.addEventListener('click', (e) => {
+            const tag = e.target.closest('.expert-tag');
+            if (!tag || tag === addCustomExpertBtn) return;
+
+            const name = tag.dataset.expert;
+            const desc = tag.dataset.desc;
+
+            if (tag.classList.contains('selected')) {
+                tag.classList.remove('selected');
+                chatroomExperts = chatroomExperts.filter(ex => ex.name !== name);
+            } else {
+                if (chatroomExperts.length >= 5) {
+                    showToast('Maximum 5 experts allowed');
+                    return;
+                }
+                tag.classList.add('selected');
+                chatroomExperts.push({ name, description: desc, colorIndex: chatroomExperts.length });
+            }
+            renderSelectedExperts();
+        });
+
+        // Custom expert
+        addCustomExpertBtn.addEventListener('click', () => {
+            customExpertForm.style.display = 'flex';
+            customExpertName.focus();
+        });
+        cancelCustomExpert.addEventListener('click', () => {
+            customExpertForm.style.display = 'none';
+            customExpertName.value = '';
+            customExpertDesc.value = '';
+        });
+        confirmCustomExpert.addEventListener('click', () => {
+            const name = customExpertName.value.trim();
+            const desc = customExpertDesc.value.trim();
+            if (!name) { showToast('Please enter expert name'); return; }
+            if (!desc) { showToast('Please enter description'); return; }
+            if (chatroomExperts.length >= 5) { showToast('Maximum 5 experts'); return; }
+            if (chatroomExperts.some(ex => ex.name === name)) { showToast('Expert already added'); return; }
+
+            chatroomExperts.push({ name, description: desc, colorIndex: chatroomExperts.length });
+            customExpertForm.style.display = 'none';
+            customExpertName.value = '';
+            customExpertDesc.value = '';
+            renderSelectedExperts();
+        });
+
+        function renderSelectedExperts() {
+            selectedExpertsDiv.innerHTML = '';
+            chatroomExperts.forEach((ex, i) => {
+                const color = getExpertColor(i);
+                const tag = document.createElement('span');
+                tag.className = 'selected-expert-tag';
+                tag.style.background = color + '22';
+                tag.style.color = color;
+                tag.style.border = `1px solid ${color}44`;
+                tag.innerHTML = `${ex.name} <span class="remove-expert" data-index="${i}">&times;</span>`;
+                selectedExpertsDiv.appendChild(tag);
+            });
+        }
+
+        selectedExpertsDiv.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-expert')) {
+                const idx = parseInt(e.target.dataset.index);
+                const removed = chatroomExperts[idx];
+                chatroomExperts.splice(idx, 1);
+                // Update colorIndex
+                chatroomExperts.forEach((ex, i) => ex.colorIndex = i);
+                // Deselect tag if predefined
+                if (removed) {
+                    const tag = expertTags.querySelector(`[data-expert="${removed.name}"]`);
+                    if (tag) tag.classList.remove('selected');
+                }
+                renderSelectedExperts();
+            }
+        });
+
+        // Start discussion
+        chatroomStartBtn.addEventListener('click', async () => {
+            if (chatroomBusy) return;
+            const topic = chatroomTopic.value.trim();
+            if (!topic) { showToast('Please enter a topic'); return; }
+            if (chatroomExperts.length < 2) { showToast('Please select at least 2 experts'); return; }
+
+            const currentProvider = getProvider(apiConfig.model);
+            const currentApiKey = apiConfig.apiKeys[currentProvider];
+            if (!currentApiKey || !currentApiKey.trim()) {
+                showToast('Please configure your API key first.');
+                openModal();
+                return;
+            }
+
+            chatroomBusy = true;
+            chatroomDiscussion = [];
+            chatroomChatArea.innerHTML = '';
+            judgeSummary.style.display = 'none';
+            followupBar.style.display = 'none';
+            chatroomStartBtn.disabled = true;
+            chatroomStartBtn.textContent = 'Discussing...';
+
+            try {
+                // Show loading for each expert
+                chatroomExperts.forEach((ex, i) => {
+                    addChatroomLoadingMsg(ex.name, i);
+                });
+
+                const response = await fetch(`${API_BASE_URL}/chatroom/discuss`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic,
+                        experts: chatroomExperts.map(ex => ({ name: ex.name, description: ex.description })),
+                        language: chatroomLang.value,
+                        api_config: {
+                            api_key: currentApiKey,
+                            model: apiConfig.model,
+                            api_url: apiConfig.apiUrl || undefined,
+                            custom_model: apiConfig.customModel || undefined
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'Discussion failed');
+                }
+
+                const data = await response.json();
+
+                // Clear loading messages
+                chatroomChatArea.innerHTML = '';
+
+                // Render each expert message
+                data.responses.forEach((r, i) => {
+                    const colorIdx = chatroomExperts.findIndex(ex => ex.name === r.name);
+                    renderExpertMessage(r.name, r.en_text, r.zh_text, colorIdx >= 0 ? colorIdx : i);
+                    chatroomDiscussion.push(r);
+                });
+
+                // Render judge summary
+                if (data.judge_summary && data.judge_summary.en_text) {
+                    showJudgeSummary(data.judge_summary.en_text, data.judge_summary.zh_text);
+                }
+
+                // Show followup bar
+                updateFollowupTargets();
+                followupBar.style.display = 'flex';
+                chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
+
+            } catch (e) {
+                chatroomChatArea.innerHTML = '';
+                showToast('Discussion failed: ' + e.message);
+            } finally {
+                chatroomBusy = false;
+                chatroomStartBtn.disabled = false;
+                chatroomStartBtn.textContent = 'Start Discussion';
+            }
+        });
+
+        function addChatroomLoadingMsg(name, colorIndex) {
+            const color = getExpertColor(colorIndex);
+            const msg = document.createElement('div');
+            msg.className = 'chatroom-msg loading';
+            msg.innerHTML = `
+                <div class="chatroom-msg-avatar" style="background:${color};">${name.charAt(0).toUpperCase()}</div>
+                <div class="chatroom-msg-body">
+                    <div class="chatroom-msg-name" style="color:${color};">${name}</div>
+                    <div class="chatroom-msg-bubble" style="border-left-color:${color};">
+                        <div class="chatroom-loading-dots"><span></span><span></span><span></span></div>
+                    </div>
+                </div>`;
+            chatroomChatArea.appendChild(msg);
+        }
+
+        function renderExpertMessage(name, enText, zhText, colorIndex) {
+            const color = getExpertColor(colorIndex);
+            const msg = document.createElement('div');
+            msg.className = 'chatroom-msg';
+            const now = new Date();
+            const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+            const bubbleId = 'bubble-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
+
+            msg.innerHTML = `
+                <div class="chatroom-msg-avatar" style="background:${color};">${name.charAt(0).toUpperCase()}</div>
+                <div class="chatroom-msg-body">
+                    <div class="chatroom-msg-name" style="color:${color};">${name}</div>
+                    <div class="chatroom-msg-bubble" style="border-left-color:${color};" id="${bubbleId}">
+                        <div class="expert-text-en-row">
+                            <p class="expert-text-en">${escapeHtml(enText)}</p>
+                            <button class="play-audio-btn" title="Play audio">▶</button>
+                        </div>
+                        <div class="translation-toggle">点击查看中文翻译</div>
+                        <p class="expert-text-zh">${escapeHtml(zhText)}</p>
+                    </div>
+                    <div class="chatroom-msg-time">${time}</div>
+                </div>`;
+
+            chatroomChatArea.appendChild(msg);
+
+            // Bind TTS button
+            const playBtn = msg.querySelector('.play-audio-btn');
+            playBtn.addEventListener('click', () => {
+                lastTtsBtn = playBtn;
+                playTTS(enText, playBtn);
+            });
+
+            // Bind translation toggle
+            const toggle = msg.querySelector('.translation-toggle');
+            const zhP = msg.querySelector('.expert-text-zh');
+            toggle.addEventListener('click', () => {
+                const open = zhP.style.display === 'block';
+                zhP.style.display = open ? 'none' : 'block';
+                toggle.textContent = open ? '点击查看中文翻译' : '收起翻译 ▲';
+            });
+
+            chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showJudgeSummary(enText, zhText) {
+            judgeSummary.style.display = 'block';
+            judgeSummary.innerHTML = `
+                <h4>🎯 Judge Summary</h4>
+                <div class="judge-summary-en">${escapeHtml(enText)}</div>
+                <div class="translation-toggle">点击查看中文翻译</div>
+                <div class="judge-summary-zh">${escapeHtml(zhText)}</div>`;
+
+            const toggle = judgeSummary.querySelector('.translation-toggle');
+            const zhDiv = judgeSummary.querySelector('.judge-summary-zh');
+            toggle.addEventListener('click', () => {
+                const open = zhDiv.style.display === 'block';
+                zhDiv.style.display = open ? 'none' : 'block';
+                toggle.textContent = open ? '点击查看中文翻译' : '收起翻译 ▲';
+            });
+        }
+
+        function updateFollowupTargets() {
+            followupTarget.innerHTML = '<option value="">@ All Experts</option>';
+            chatroomExperts.forEach(ex => {
+                const opt = document.createElement('option');
+                opt.value = ex.name;
+                opt.textContent = '@ ' + ex.name;
+                followupTarget.appendChild(opt);
+            });
+        }
+
+        // Followup
+        followupSendBtn.addEventListener('click', sendFollowup);
+        followupInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendFollowup();
+        });
+
+        async function sendFollowup() {
+            const question = followupInput.value.trim();
+            if (!question || chatroomBusy) return;
+
+            const currentProvider = getProvider(apiConfig.model);
+            const currentApiKey = apiConfig.apiKeys[currentProvider];
+
+            chatroomBusy = true;
+            followupSendBtn.disabled = true;
+            followupInput.value = '';
+
+            // Show user question
+            const qMsg = document.createElement('div');
+            qMsg.className = 'chatroom-msg';
+            qMsg.innerHTML = `
+                <div class="chatroom-msg-avatar" style="background:rgba(217,119,87,0.3);color:var(--primary);">You</div>
+                <div class="chatroom-msg-body">
+                    <div class="chatroom-msg-name" style="color:var(--primary);">You</div>
+                    <div class="chatroom-msg-bubble" style="border-left-color:var(--primary);background:rgba(217,119,87,0.08);">
+                        <p class="expert-text-en">${escapeHtml(question)}</p>
+                    </div>
+                </div>`;
+            chatroomChatArea.appendChild(qMsg);
+
+            try {
+                const targetName = followupTarget.value || null;
+                const targetExperts = targetName
+                    ? chatroomExperts.filter(ex => ex.name === targetName)
+                    : chatroomExperts;
+
+                // Show loading
+                targetExperts.forEach((ex, i) => {
+                    addChatroomLoadingMsg(ex.name, chatroomExperts.indexOf(ex));
+                });
+
+                const response = await fetch(`${API_BASE_URL}/chatroom/followup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        topic: chatroomTopic.value.trim(),
+                        experts: chatroomExperts.map(ex => ({ name: ex.name, description: ex.description })),
+                        previous_messages: chatroomDiscussion.map(r => ({ name: r.name, en_text: r.en_text })),
+                        question,
+                        target_expert: targetName,
+                        language: chatroomLang.value,
+                        api_config: {
+                            api_key: currentApiKey,
+                            model: apiConfig.model,
+                            api_url: apiConfig.apiUrl || undefined,
+                            custom_model: apiConfig.customModel || undefined
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json();
+                    throw new Error(err.detail || 'Followup failed');
+                }
+
+                const data = await response.json();
+
+                // Remove loading messages (last N)
+                const loadings = chatroomChatArea.querySelectorAll('.chatroom-msg.loading');
+                const toRemove = Array.from(loadings).slice(-targetExperts.length);
+                toRemove.forEach(el => el.remove());
+
+                data.responses.forEach((r) => {
+                    const colorIdx = chatroomExperts.findIndex(ex => ex.name === r.name);
+                    renderExpertMessage(r.name, r.en_text, r.zh_text, colorIdx >= 0 ? colorIdx : 0);
+                    chatroomDiscussion.push(r);
+                });
+
+            } catch (e) {
+                const loadings = chatroomChatArea.querySelectorAll('.chatroom-msg.loading');
+                loadings.forEach(el => el.remove());
+                showToast('Followup failed: ' + e.message);
+            } finally {
+                chatroomBusy = false;
+                followupSendBtn.disabled = false;
+            }
+        }
 
     </script>
 </body>
