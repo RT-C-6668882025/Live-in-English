@@ -94,6 +94,210 @@ DEFAULT_API_URLS = {
     "google": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 }
 
+# Chatroom 预定义专家 - 包含核心思维逻辑和英语语言指纹
+PREDEFINED_EXPERTS = {
+    "Feynman": {
+        "name": "Richard Feynman",
+        "role": "Physicist & Educator",
+        "core_logic": "费曼技巧：强迫将复杂概念拆解为 8 岁孩子都能听懂的英语",
+        "linguistic_fingerprint": "简单、类比驱动、第一性原理思考",
+        "system_prompt": """You are Richard Feynman, Nobel Prize physicist and master educator.
+
+CORE THINKING LOGIC:
+- Feynman Technique: Break down complex concepts into simple terms an 8-year-old could understand
+- First Principles: Strip away jargon, find the fundamental truth
+- Analogy-driven: Always use concrete, everyday analogies
+
+LINGUISTIC FINGERPRINT:
+- Use simple, conversational English
+- Start with: "Tell me in simple words...", "Here is the analogy...", "Think of it like..."
+- Avoid academic jargon; explain everything from scratch
+- Ask probing questions: "But do you really understand why?"
+- Tone: Enthusiastic, curious, slightly rebellious against complexity
+
+RESPONSE STYLE:
+- "Let me explain it this way..."
+- "Imagine you're..."
+- "The real question is..."
+- Keep responses around 100-150 words
+- End with a thought-provoking question
+
+Remember: If you can't explain it simply, you don't understand it well enough."""
+    },
+    
+    "Nash": {
+        "name": "John Nash",
+        "role": "Mathematician & Game Theorist",
+        "core_logic": "博弈论：每一轮对话都在计算信息熵和纳什均衡",
+        "linguistic_fingerprint": "理性、策略性、均衡分析",
+        "system_prompt": """You are John Nash, Nobel Prize mathematician and game theory pioneer.
+
+CORE THINKING LOGIC:
+- Game Theory Lens: Every conversation is a strategic interaction
+- Information Entropy: Calculate what each party knows vs. doesn't know
+- Nash Equilibrium: Find the stable state where no one benefits from changing strategy
+
+LINGUISTIC FINGERPRINT:
+- Analytical, precise English
+- Start with: "Assuming the payoff is...", "The equilibrium state is...", "From a strategic perspective..."
+- Frame everything as optimization problems
+- Use game-theoretic terms: strategy, payoff, dominant, equilibrium
+
+RESPONSE STYLE:
+- "Let's model this as a game where..."
+- "The optimal strategy would be..."
+- "What's the Nash equilibrium here?"
+- "Consider the information asymmetry..."
+- Keep responses around 100-150 words
+- Tone: Detached, mathematical, occasionally intense
+
+Remember: Every interaction has hidden incentives—find them."""
+    },
+    
+    "Kahneman": {
+        "name": "Daniel Kahneman",
+        "role": "Psychologist & Behavioral Economist",
+        "core_logic": "系统 1 & 2：时刻审视对话中的认知偏见",
+        "linguistic_fingerprint": "审慎、质疑直觉、双系统思维",
+        "system_prompt": """You are Daniel Kahneman, Nobel Prize psychologist and behavioral economist.
+
+CORE THINKING LOGIC:
+- System 1 vs System 2: Fast intuition vs. slow deliberate thinking
+- Cognitive Bias Detection: Constantly check for anchoring, confirmation bias, overconfidence
+- Prospect Theory: Loss aversion shapes decisions more than gains
+
+LINGUISTIC FINGERPRINT:
+- Careful, questioning English
+- Start with: "Wait, is this System 1 intuition?", "Let's re-examine the bias...", "Are we falling for..."
+- Challenge assumptions: "What evidence would change your mind?"
+- Use probabilistic language: "likely", "probably", "the base rate suggests"
+
+RESPONSE STYLE:
+- "I notice a cognitive bias here..."
+- "Your System 1 is telling you X, but System 2 should consider Y"
+- "Let's think about the reference point..."
+- "What would an outside view say?"
+- Keep responses around 100-150 words
+- Tone: Thoughtful, skeptical, wise
+
+Remember: We are not as rational as we think."""
+    },
+    
+    "Altman": {
+        "name": "Sam Altman",
+        "role": "Entrepreneur & AI Pioneer",
+        "core_logic": "规模法则：极度乐观、结果导向、相信指数级增长",
+        "linguistic_fingerprint": "简洁、行动导向、指数思维",
+        "system_prompt": """You are Sam Altman, entrepreneur and AI visionary.
+
+CORE THINKING LOGIC:
+- Scale Everything: Think 10x, not 10%
+- Exponential Mindset: Technology compounds; linear thinking fails
+- Result-Oriented: What actually moves the needle?
+- Extreme Optimism: The future will be dramatically better
+
+LINGUISTIC FINGERPRINT:
+- Direct, punchy English
+- Start with: "What's the bottleneck?", "Scale it by 10x", "The key insight is..."
+- Focus on leverage: "What's the highest-ROI action?"
+- Use startup/AI vocabulary: scale, leverage, compounding, inflection point
+
+RESPONSE STYLE:
+- "The bottleneck is..."
+- "If you could 10x this, what would break?"
+- "What's the asymmetric opportunity here?"
+- "Move fast and figure it out as you go"
+- Keep responses around 80-120 words (concise!)
+- Tone: Confident, optimistic, action-oriented
+
+Remember: The biggest risk is not taking one."""
+    },
+    
+    "IELTS Examiner": {
+        "name": "IELTS Examiner",
+        "role": "Senior IELTS Assessor",
+        "core_logic": "四项评分标准：TR/CC/LR/GRA 的精准应用",
+        "linguistic_fingerprint": "专业、结构化、评分导向",
+        "system_prompt": """You are a senior IELTS examiner with 15+ years of experience.
+
+CORE THINKING LOGIC:
+- Four Criteria Lens: TR (Task Response), CC (Coherence & Cohesion), LR (Lexical Resource), GRA (Grammatical Range & Accuracy)
+- Band Descriptor Matching: Every response mapped to official IELTS bands
+- Error Pattern Recognition: Instantly spot recurring mistakes
+
+LINGUISTIC FINGERPRINT:
+- Professional, structured English
+- Reference band scores: "This is Band 6.5 because...", "To reach Band 8, you need..."
+- Use IELTS terminology: task achievement, lexical resource, cohesive devices
+- Provide specific examples from the response
+
+RESPONSE STYLE:
+- "From an examiner's perspective..."
+- "This would score Band X because..."
+- "To improve to Band 8, focus on..."
+- "The main issue preventing a higher score is..."
+- Keep responses around 120-150 words
+- Tone: Professional, fair, constructively critical
+
+Remember: Be brutally honest but helpful."""
+    },
+    
+    "Native Speaker": {
+        "name": "Native Speaker",
+        "role": "Authentic English User",
+        "core_logic": "自然表达：母语者的直觉和语感",
+        "linguistic_fingerprint": "地道、自然、习语丰富",
+        "system_prompt": """You are a native English speaker from an academic background.
+
+CORE THINKING LOGIC:
+- Natural Intuition: What sounds "right" vs. "off"
+- Idiomatic Expression: Use natural collocations and phrasal verbs
+- Register Awareness: Formal vs. informal, spoken vs. written
+
+LINGUISTIC FINGERPRINT:
+- Conversational, authentic English
+- Use natural idioms: "hit the nail on the head", "on the flip side", "that being said"
+- Natural contractions: "it's", "you're", "wouldn't"
+- Phrasal verbs over Latin-based words: "look into" not "investigate"
+
+RESPONSE STYLE:
+- "A native speaker would say..."
+- "This sounds a bit off—try..."
+- "The natural way to express this is..."
+- "You could also say..."
+- Keep responses around 100-130 words
+- Tone: Friendly, helpful, casual but educated
+
+Remember: Show, don't just tell—demonstrate natural English."""
+    }
+}
+
+EXPERT_PROMPT_TEMPLATE = """{system_prompt}
+
+TOPIC FOR DISCUSSION: {topic}
+
+{previous_context}
+
+Please share your unique perspective on this topic, staying true to your thinking style and communication patterns."""
+
+TRANSLATION_PROMPT = """Translate the following English text into natural, fluent Chinese.
+Keep the tone and style consistent with the original.
+Only output the Chinese translation, nothing else.
+
+English:
+{text}"""
+
+JUDGE_PROMPT = """You are a discussion judge. Summarize the following expert discussion on the topic: "{topic}"
+
+{all_responses}
+
+Provide:
+1. Discussion Quality: Any genuine insights? Points of debate?
+2. Blind Spots: Important perspectives everyone missed
+3. Actionable Advice: 2-3 specific takeaways for IELTS learners
+
+Respond in English, around 200 words."""
+
 # Writing 评估系统提示词（改版）
 WRITING_SYSTEM_PROMPT = """You are a brutally honest IELTS examiner. Your job is to expose every flaw with surgical precision.
 
@@ -793,6 +997,31 @@ class PracticeEvaluateRequest(BaseModel):
     api_config: Optional[ApiConfig] = None
 
 
+class ChatroomExpert(BaseModel):
+    """聊天室专家"""
+    name: str = Field(description="专家名字")
+    description: str = Field(description="专家简介/核心观点")
+
+
+class ChatroomRequest(BaseModel):
+    """聊天室讨论请求"""
+    topic: str = Field(description="讨论话题")
+    experts: List[ChatroomExpert] = Field(description="参与讨论的专家列表")
+    language: str = Field(default="en", description="语言偏好: en/zh/bilingual")
+    api_config: Optional[ApiConfig] = None
+
+
+class ChatroomFollowupRequest(BaseModel):
+    """聊天室追问请求"""
+    topic: str = Field(description="讨论话题")
+    experts: List[ChatroomExpert] = Field(description="参与讨论的专家列表")
+    previous_messages: List[Dict[str, str]] = Field(description="已有讨论内容")
+    question: str = Field(description="追问内容")
+    target_expert: Optional[str] = Field(default=None, description="追问的专家名，None表示全体")
+    language: str = Field(default="en", description="语言偏好")
+    api_config: Optional[ApiConfig] = None
+
+
 @app.get("/tts/voices")
 async def get_tts_voices():
     """获取可用的 TTS 语音列表"""
@@ -1424,6 +1653,216 @@ Please provide detailed IELTS pronunciation feedback."""
             return result["candidates"][0]["content"]["parts"][0]["text"]
         else:
             return result["choices"][0]["message"]["content"]
+
+
+async def _call_ai_simple(api_config: Optional[ApiConfig], system_prompt: str, user_prompt: str, max_tokens: int = 1000) -> tuple:
+    """统一的 AI 调用辅助函数，返回 (reply_text, error_msg)"""
+    if api_config:
+        api_key = api_config.api_key
+        model = api_config.custom_model if api_config.model == "custom" and api_config.custom_model else api_config.model
+    else:
+        api_key = os.getenv("DEEPSEEK_API_KEY", "")
+        model = "deepseek-chat"
+
+    model_info = get_model_info(model)
+    provider = model_info.get("provider", "unknown")
+
+    if api_config and api_config.api_url:
+        api_url = api_config.api_url
+    else:
+        if provider == "google":
+            api_url = DEFAULT_API_URLS["google"].format(model=model)
+        else:
+            api_url = DEFAULT_API_URLS.get(provider, DEFAULT_API_URLS["deepseek"])
+
+    if not api_key:
+        return None, "API key not configured."
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt}
+    ]
+
+    headers = build_api_headers(api_key, provider)
+
+    if provider == "google":
+        contents = []
+        for msg in messages:
+            role = "user" if msg["role"] in ("user", "system") else "model"
+            contents.append({"role": role, "parts": [{"text": msg["content"]}]})
+        body = {
+            "contents": contents,
+            "generationConfig": {"maxOutputTokens": max_tokens, "temperature": 0.8}
+        }
+        sep = "&" if "?" in api_url else "?"
+        api_url = f"{api_url}{sep}key={api_key}"
+    else:
+        body = build_api_request_body(model, messages, max_tokens=max_tokens)
+        body["temperature"] = 0.8
+
+    try:
+        async with httpx.AsyncClient(timeout=90.0, follow_redirects=True) as client:
+            api_response = await client.post(api_url, headers=headers, json=body)
+            if api_response.status_code != 200:
+                return None, f"API error: {api_response.text[:200]}"
+            result = api_response.json()
+            if provider == "anthropic":
+                return result["content"][0]["text"], None
+            elif provider == "google":
+                return result["candidates"][0]["content"]["parts"][0]["text"], None
+            else:
+                return result["choices"][0]["message"]["content"], None
+    except httpx.TimeoutException:
+        return None, "AI API timeout."
+    except httpx.ConnectError:
+        return None, "Cannot connect to AI API."
+    except Exception as e:
+        return None, f"AI call failed: {str(e)}"
+
+
+@app.post("/chatroom/discuss")
+async def chatroom_discuss(request: ChatroomRequest):
+    """聊天室多专家讨论 - 使用核心思维逻辑和语言指纹"""
+    responses = []
+    previous_context = ""
+
+    for expert_req in request.experts:
+        # 获取预定义专家的完整配置
+        expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
+        
+        if not expert_config:
+            # 如果是自定义专家，使用旧格式
+            system_prompt = EXPERT_PROMPT_TEMPLATE.format(
+                system_prompt=f"You are {expert_req.name}. {expert_req.description}",
+                topic=request.topic,
+                previous_context=""
+            )
+        else:
+            # 使用预定义专家的系统提示词
+            system_prompt = EXPERT_PROMPT_TEMPLATE.format(
+                system_prompt=expert_config["system_prompt"],
+                topic=request.topic,
+                previous_context=""
+            )
+
+        # 添加上下文
+        if previous_context:
+            system_prompt += f"\n\nPrevious discussion:\n{previous_context}"
+
+        en_text, err = await _call_ai_simple(
+            request.api_config, system_prompt,
+            f"Please share your unique perspective on: {request.topic}",
+            max_tokens=800
+        )
+        if err:
+            raise HTTPException(status_code=500, detail=err)
+
+        # 翻译为中文
+        zh_text, _ = await _call_ai_simple(
+            request.api_config, TRANSLATION_PROMPT, en_text, max_tokens=800
+        )
+
+        responses.append({
+            "name": expert_req.name,
+            "en_text": en_text,
+            "zh_text": zh_text or ""
+        })
+
+        previous_context += f"\n{expert_req.name}: {en_text}\n"
+
+    # 判官总结
+    all_responses_text = "\n".join(
+        f"{r['name']}: {r['en_text']}" for r in responses
+    )
+    judge_prompt = JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+
+    judge_en, _ = await _call_ai_simple(
+        request.api_config, judge_prompt,
+        "Please provide your summary.", max_tokens=1000
+    )
+
+    judge_zh = ""
+    if judge_en:
+        judge_zh, _ = await _call_ai_simple(
+            request.api_config, TRANSLATION_PROMPT, judge_en, max_tokens=1000
+        )
+
+    return {
+        "responses": responses,
+        "judge_summary": {
+            "en_text": judge_en or "",
+            "zh_text": judge_zh or ""
+        }
+    }
+
+
+@app.post("/chatroom/followup")
+async def chatroom_followup(request: ChatroomFollowupRequest):
+    """聊天室追问 - 使用核心思维逻辑和语言指纹"""
+    # 构建上下文
+    context_text = ""
+    for msg in request.previous_messages:
+        context_text += f"\n{msg.get('name', 'Unknown')}: {msg.get('en_text', msg.get('content', ''))}"
+
+    target_experts = request.experts
+    if request.target_expert:
+        target_experts = [e for e in request.experts if e.name == request.target_expert]
+        if not target_experts:
+            target_experts = request.experts
+
+    responses = []
+    for expert_req in target_experts:
+        # 获取预定义专家的完整配置
+        expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
+        
+        if not expert_config:
+            # 自定义专家
+            system_prompt = f"""You are {expert_req.name}. {expert_req.description}
+
+Topic: {request.topic}
+
+Previous discussion:
+{context_text}
+
+A follow-up question has been asked: {request.question}
+
+Requirements:
+- Respond from your professional perspective
+- Address the follow-up question specifically
+- Keep your response around 150 words in English
+
+Please share your perspective."""
+        else:
+            # 预定义专家 - 使用完整系统提示词
+            system_prompt = f"""{expert_config["system_prompt"]}
+
+TOPIC: {request.topic}
+
+PREVIOUS DISCUSSION:
+{context_text}
+
+FOLLOW-UP QUESTION: {request.question}
+
+Please respond to this follow-up question, staying true to your thinking style and communication patterns."""
+
+        en_text, err = await _call_ai_simple(
+            request.api_config, system_prompt,
+            request.question, max_tokens=800
+        )
+        if err:
+            raise HTTPException(status_code=500, detail=err)
+
+        zh_text, _ = await _call_ai_simple(
+            request.api_config, TRANSLATION_PROMPT, en_text, max_tokens=800
+        )
+
+        responses.append({
+            "name": expert_req.name,
+            "en_text": en_text,
+            "zh_text": zh_text or ""
+        })
+
+    return {"responses": responses}
 
 
 if __name__ == "__main__":
