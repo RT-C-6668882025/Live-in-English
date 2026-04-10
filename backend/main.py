@@ -94,6 +94,68 @@ DEFAULT_API_URLS = {
     "google": "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
 }
 
+# 专家推荐系统 - 根据话题关键词自动推荐
+EXPERT_RECOMMENDATIONS = {
+    # 按领域分类
+    "physics": ["Feynman", "Einstein", "Curie", "Heisenberg"],
+    "science": ["Feynman", "Einstein", "Curie", "Darwin"],
+    "quantum": ["Heisenberg", "Einstein", "Feynman"],
+    "experiment": ["Curie", "Feynman"],
+    
+    "mathematics": ["Nash", "Heisenberg"],
+    "game": ["Nash"],
+    "strategy": ["Nash", "Munger", "Taleb"],
+    "decision": ["Nash", "Kahneman", "Munger"],
+    "economics": ["Nash", "Kahneman", "Munger"],
+    
+    "psychology": ["Kahneman"],
+    "bias": ["Kahneman"],
+    "thinking": ["Kahneman", "Munger", "Taleb"],
+    "behavioral": ["Kahneman"],
+    
+    "business": ["Altman", "Munger", "Taleb"],
+    "startup": ["Altman"],
+    "scale": ["Altman", "Munger"],
+    "technology": ["Altman", "Feynman"],
+    "ai": ["Altman", "Taleb", "Kahneman"],
+    
+    "evolution": ["Darwin"],
+    "biology": ["Darwin"],
+    "adaptation": ["Darwin", "Taleb"],
+    
+    "investment": ["Munger", "Taleb", "Nash"],
+    "risk": ["Taleb", "Kahneman", "Heisenberg"],
+    "uncertainty": ["Heisenberg", "Taleb", "Kahneman"],
+    
+    "education": ["Feynman", "IELTS Examiner"],
+    "learning": ["Feynman"],
+    "explanation": ["Feynman", "Einstein"],
+    
+    "language": ["IELTS Examiner", "Native Speaker"],
+    "english": ["IELTS Examiner", "Native Speaker"],
+    "ielts": ["IELTS Examiner"],
+    
+    # 默认推荐
+    "default": ["Feynman", "Kahneman", "Nash", "Altman"]
+}
+
+# 话题分类关键词（用于智能推荐）
+TOPIC_KEYWORDS = {
+    "physics": ["physics", "quantum", "relativity", "energy", "matter", "particle", "atom"],
+    "science": ["science", "scientific", "discovery", "research", "experiment", "laboratory"],
+    "mathematics": ["math", "mathematics", "equation", "theorem", "proof", "calculation"],
+    "psychology": ["psychology", "mind", "mental", "cognitive", "emotion", "behavior"],
+    "economics": ["economy", "economic", "market", "trade", "finance", "monetary"],
+    "business": ["business", "company", "startup", "entrepreneur", "venture", "innovation"],
+    "technology": ["technology", "tech", "digital", "software", "hardware", "computer", "ai", "algorithm"],
+    "education": ["education", "learning", "teaching", "student", "school", "university"],
+    "language": ["language", "linguistic", "grammar", "vocabulary", "speaking", "writing"],
+    "evolution": ["evolution", "evolutionary", "species", "natural selection", "adaptation", "darwin"],
+    "investment": ["investment", "investing", "portfolio", "asset", "return", "capital"],
+    "risk": ["risk", "uncertainty", "probability", "random", "chaos", "fragile"],
+    "decision": ["decision", "choice", "strategy", "game theory", "incentive", "optimal"]
+}
+
 # Chatroom 预定义专家 - 包含核心思维逻辑和英语语言指纹
 PREDEFINED_EXPERTS = {
     "Feynman": {
@@ -461,16 +523,34 @@ Only output the Chinese translation, nothing else.
 English:
 {text}"""
 
-JUDGE_PROMPT = """You are a discussion judge. Summarize the following expert discussion on the topic: "{topic}"
+JUDGE_PROMPT = """You are a discussion judge. Analyze the following expert discussion on the topic: "{topic}"
 
 {all_responses}
 
-Provide:
-1. Discussion Quality: Any genuine insights? Points of debate?
-2. Blind Spots: Important perspectives everyone missed
-3. Actionable Advice: 2-3 specific takeaways for IELTS learners
+Provide a comprehensive analysis with these sections:
 
-Respond in English, around 200 words."""
+## 1. Consensus Points
+What do all/most experts agree on? List 2-3 key areas of agreement.
+
+## 2. Points of Debate
+Where do experts disagree? What are the fundamental tensions in their perspectives?
+(e.g., Feynman's simplicity vs. Heisenberg's uncertainty, or Taleb's skepticism vs. Altman's optimism)
+
+## 3. Unique Insights
+What valuable perspective did each expert contribute that others missed?
+
+## 4. Critical Blind Spots
+What important angles or counterarguments did ALL experts overlook?
+Be specific - what question should we ask next?
+
+## 5. Actionable Takeaways
+2-3 concrete, specific pieces of advice for someone facing this topic.
+Not generic advice - actionable steps based on the discussion.
+
+## 6. Recommended Next Question
+Based on this discussion, what's the most important follow-up question to explore?
+
+Respond in English, around 250-300 words. Be critical and insightful."""
 
 # Writing 评估系统提示词（改版）
 WRITING_SYSTEM_PROMPT = """You are a brutally honest IELTS examiner. Your job is to expose every flaw with surgical precision.
@@ -775,6 +855,48 @@ async def get_models():
         for model_id, info in SUPPORTED_MODELS.items()
     ]
     return ModelsResponse(models=models)
+
+
+@app.get("/chatroom/recommend")
+async def recommend_experts(topic: str):
+    """根据话题推荐专家"""
+    topic_lower = topic.lower()
+    
+    # 统计匹配的领域
+    category_scores = {}
+    for category, keywords in TOPIC_KEYWORDS.items():
+        for keyword in keywords:
+            if keyword in topic_lower:
+                category_scores[category] = category_scores.get(category, 0) + 1
+    
+    # 如果没有匹配，返回默认推荐
+    if not category_scores:
+        recommended = EXPERT_RECOMMENDATIONS.get("default", [])
+        return {
+            "experts": recommended,
+            "reason": "default_recommendation"
+        }
+    
+    # 获取得分最高的领域
+    best_category = max(category_scores, key=category_scores.get)
+    recommended = EXPERT_RECOMMENDATIONS.get(best_category, EXPERT_RECOMMENDATIONS["default"])
+    
+    # 去重并限制在 3-4 个专家
+    unique_experts = list(dict.fromkeys(recommended))[:4]
+    
+    # 如果少于 2 个，补充默认专家
+    if len(unique_experts) < 2:
+        for expert in EXPERT_RECOMMENDATIONS["default"]:
+            if expert not in unique_experts:
+                unique_experts.append(expert)
+            if len(unique_experts) >= 3:
+                break
+    
+    return {
+        "experts": unique_experts,
+        "reason": f"matched_category: {best_category}",
+        "matched_keywords": [cat for cat, score in category_scores.items() if score > 0]
+    }
 
 
 @app.post("/test-api", response_model=TestApiResponse)

@@ -1799,6 +1799,26 @@
         .expert-tag-add {
             border-style: dashed;
         }
+        
+        .chatroom-recommend-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 6px;
+            padding: 0.4rem 0.85rem;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+        .chatroom-recommend-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .chatroom-recommend-btn:active {
+            transform: translateY(0);
+        }
 
         .custom-expert-form {
             display: flex;
@@ -2513,7 +2533,12 @@
                     </select>
                 </div>
                 <div class="chatroom-expert-section">
-                    <label class="chatroom-label">Choose Experts (2-5):</label>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                        <label class="chatroom-label" style="margin:0;">Choose Experts (2-5):</label>
+                        <button class="chatroom-recommend-btn" id="recommendExpertsBtn" title="Auto-select experts based on your topic">
+                            ✨ Recommend Experts
+                        </button>
+                    </div>
                     <div class="expert-tags" id="expertTags">
                         <!-- Nobel Laureates - Physics -->
                         <button class="expert-tag" data-expert="Feynman" data-desc="Nobel Prize physicist. Feynman Technique: break down complex concepts into simple terms.">🎭 Feynman</button>
@@ -4422,6 +4447,8 @@
         const followupInput = document.getElementById('followupInput');
         const followupSendBtn = document.getElementById('followupSendBtn');
         const addCustomExpertBtn = document.getElementById('addCustomExpertBtn');
+        const recommendExpertsBtn = document.getElementById('recommendExpertsBtn');
+        const chatroomTopic = document.getElementById('chatroomTopic');
 
         // Chatroom state
         let chatroomExperts = [];  // {name, description, colorIndex}
@@ -4454,6 +4481,65 @@
                 chatroomExperts.push({ name, description: desc, colorIndex: chatroomExperts.length });
             }
             renderSelectedExperts();
+        });
+
+        // Recommend experts based on topic
+        recommendExpertsBtn.addEventListener('click', async () => {
+            const topic = chatroomTopic.value.trim();
+            if (!topic) {
+                showToast('Please enter a topic first');
+                chatroomTopic.focus();
+                return;
+            }
+
+            // Clear current selection
+            document.querySelectorAll('.expert-tag.selected').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+            chatroomExperts = [];
+
+            // Show loading state
+            const originalText = recommendExpertsBtn.textContent;
+            recommendExpertsBtn.textContent = '✨ Analyzing...';
+            recommendExpertsBtn.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/chatroom/recommend?topic=${encodeURIComponent(topic)}`);
+                if (!response.ok) throw new Error('Recommendation failed');
+                
+                const data = await response.json();
+                const recommendedExperts = data.experts || [];
+
+                if (recommendedExperts.length === 0) {
+                    showToast('No recommendations found, using defaults');
+                    return;
+                }
+
+                // Auto-select recommended experts
+                recommendedExperts.forEach((expertName, index) => {
+                    const tag = Array.from(document.querySelectorAll('.expert-tag'))
+                        .find(t => t.dataset.expert === expertName);
+                    
+                    if (tag && chatroomExperts.length < 5) {
+                        tag.classList.add('selected');
+                        chatroomExperts.push({
+                            name: expertName,
+                            description: tag.dataset.desc,
+                            colorIndex: index
+                        });
+                    }
+                });
+
+                renderSelectedExperts();
+                showToast(`✨ Recommended ${chatroomExperts.length} experts for your topic`);
+
+            } catch (error) {
+                console.error('Recommendation error:', error);
+                showToast('Recommendation failed: ' + error.message);
+            } finally {
+                recommendExpertsBtn.textContent = originalText;
+                recommendExpertsBtn.disabled = false;
+            }
         });
 
         // Custom expert
