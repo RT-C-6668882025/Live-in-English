@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,19 +11,152 @@
         :root {
             --primary: #d97757;
             --primary-dark: #c46849;
+            --primary-light: #e8956f;
             --bg-dark: #141413;
             --bg-card: #1a1a19;
             --bg-input: #242422;
+            --bg-elevated: #2a2a28;
             --text-primary: #f0eee6;
             --text-secondary: #b0aea5;
             --text-muted: #87867f;
             --border: #3d3d3a;
             --success: #5a9b5a;
+            --success-dark: #4a8a4a;
+            --success-bright: #4caf50;
             --warning: #d9a557;
+            --warning-bright: #ff9800;
             --error: #df6666;
+            --error-bright: #f44336;
+            --info: #5b9bd5;
+            --info-bright: #4a9eff;
+            --accent-teal: #70c1b3;
+            --accent-gold: #e8a838;
+            --accent-purple: #c084fc;
+            --accent-pink: #f472b6;
+            --accent-green: #86efac;
+            --gradient-chatroom: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --radius: 12px;
             --radius-sm: 8px;
             --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Utility classes */
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1rem 0;
+        }
+
+        .section-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .form-label-inline {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .compact-input {
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+        }
+
+        .compact-btn {
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--primary);
+            background: var(--primary);
+            color: white;
+            font-size: 0.8rem;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .compact-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .text-hint {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 0.5rem;
+        }
+
+        .text-hint a {
+            color: var(--primary);
+        }
+
+        .password-toggle-inline {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .azure-config-panel {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .azure-config-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .azure-config-field {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .azure-config-region {
+            min-width: 140px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state.hidden {
+            display: none;
+        }
+
+        .empty-state-icon {
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-desc {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         * {
@@ -38,6 +171,15 @@
             color: var(--text-primary);
             line-height: 1.6;
             min-height: 100vh;
+        }
+
+        /* Ensure all interactive elements show pointer cursor */
+        button, [role="tab"], [role="button"], .expert-tag, select {
+            cursor: pointer;
+        }
+
+        button:disabled, select:disabled {
+            cursor: not-allowed;
         }
 
         /* Header */
@@ -76,8 +218,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
         }
+
+        .logo-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* SVG Icon system */
+        .icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .icon svg {
+            width: 1em;
+            height: 1em;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon-sm svg { width: 16px; height: 16px; }
+        .icon-md svg { width: 20px; height: 20px; }
+        .icon-lg svg { width: 24px; height: 24px; }
 
         .header-actions {
             display: flex;
@@ -113,7 +281,7 @@
             color: var(--text-secondary);
             font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -250,10 +418,21 @@
 
         .form-input:focus,
         .form-textarea:focus,
-        .form-select:focus {
+        .form-select:focus,
+        .followup-input:focus,
+        .followup-target-select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.1);
+        }
+
+        /* Focus-visible for keyboard-only users */
+        .form-input:focus-visible,
+        .form-textarea:focus-visible,
+        .form-select:focus-visible,
+        .followup-input:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 1px;
         }
 
         .form-input::placeholder,
@@ -395,7 +574,7 @@
             font-size: 0.9375rem;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -424,7 +603,7 @@
         }
 
         .btn-success {
-            background: linear-gradient(135deg, var(--success), #4a8a4a);
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
             color: white;
         }
 
@@ -436,6 +615,32 @@
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: white;
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background: var(--error-bright);
+            transform: translateY(-1px);
+        }
+
+        /* Focus ring for all interactive elements */
+        .btn:focus-visible,
+        .mode-btn:focus-visible,
+        .evaluate-btn:focus-visible,
+        .copy-btn:focus-visible,
+        .tts-btn:focus-visible,
+        .record-btn:focus-visible,
+        .send-btn:focus-visible,
+        .expert-tag:focus-visible,
+        .chatroom-recommend-btn:focus-visible,
+        .followup-send-btn:focus-visible,
+        .compact-btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
 
         /* Mode Selector */
@@ -459,7 +664,7 @@
             font-weight: 500;
             cursor: pointer;
             border-radius: var(--radius-sm);
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -501,7 +706,7 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -525,10 +730,6 @@
             border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
 
         /* Results Section */
@@ -560,7 +761,7 @@
             color: var(--text-secondary);
             font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
         }
 
         .copy-btn:hover {
@@ -868,7 +1069,7 @@
             color: var(--text-secondary);
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -893,7 +1094,7 @@
             color: var(--text-secondary);
             font-size: 0.75rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
         }
 
         .tts-speed:hover {
@@ -950,6 +1151,71 @@
 
             .modal-footer .btn {
                 width: 100%;
+            }
+        }
+
+        /* Extra small screens (iPhone SE, small phones) */
+        @media (max-width: 400px) {
+            .container {
+                padding: 0.75rem;
+            }
+
+            .mode-btn {
+                padding: 0.5rem 0.5rem;
+                font-size: 0.8rem;
+            }
+
+            .mode-btn svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .evaluate-btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.875rem;
+            }
+
+            .practice-controls {
+                gap: 0.25rem;
+            }
+
+            .practice-controls select {
+                font-size: 0.75rem;
+                padding: 0.35rem 0.5rem;
+            }
+
+            .chatroom-topic-input {
+                font-size: 0.85rem;
+            }
+
+            .toast {
+                right: 0.75rem;
+                bottom: 0.75rem;
+                left: 0.75rem;
+            }
+        }
+
+        /* Tablet (768px - 1024px) */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .mode-selector {
+                width: fit-content;
+            }
+
+            .practice-container {
+                max-width: 100%;
+            }
+        }
+
+        /* Large screens - centered content with breathing room */
+        @media (min-width: 1440px) {
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 2rem;
+            }
+
+            .header-content {
+                max-width: 1200px;
             }
         }
 
@@ -1129,7 +1395,7 @@
             font-size: 0.75rem;
             margin-left: 0.5rem;
             vertical-align: middle;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
         }
 
         .chat-bubble .play-audio-btn:hover {
@@ -1248,7 +1514,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             flex-shrink: 0;
         }
 
@@ -1280,7 +1546,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             flex-shrink: 0;
         }
 
@@ -1310,7 +1576,7 @@
             color: var(--text-primary);
             font-size: 0.875rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -1371,7 +1637,7 @@
             border-radius: var(--radius);
             overflow: hidden;
             border: 1px solid var(--border);
-            background: #1a1a1a;
+            background: var(--bg-card);
         }
 
         .waveform-container.active {
@@ -1455,9 +1721,9 @@
             background: rgba(255,255,255,0.05);
         }
 
-        .word-span.score-high { color: #4caf50; border-bottom-color: #4caf50; }
-        .word-span.score-mid { color: #ff9800; border-bottom-color: #ff9800; }
-        .word-span.score-low { color: #f44336; border-bottom-color: #f44336; }
+        .word-span.score-high { color: var(--success-bright); border-bottom-color: var(--success-bright); }
+        .word-span.score-mid { color: var(--warning-bright); border-bottom-color: var(--warning-bright); }
+        .word-span.score-low { color: var(--error-bright); border-bottom-color: var(--error-bright); }
         .word-span.score-na { color: var(--text-secondary); }
 
         /* Phoneme tooltip */
@@ -1467,7 +1733,7 @@
             bottom: calc(100% + 8px);
             left: 50%;
             transform: translateX(-50%);
-            background: #2a2a2a;
+            background: var(--bg-elevated);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             padding: 0.625rem 0.875rem;
@@ -1484,7 +1750,7 @@
             left: 50%;
             transform: translateX(-50%);
             border: 6px solid transparent;
-            border-top-color: #2a2a2a;
+            border-top-color: var(--bg-elevated);
         }
 
         .word-span:hover .phoneme-tooltip {
@@ -1508,9 +1774,9 @@
             font-weight: 600;
         }
 
-        .phoneme-score.p-high { color: #4caf50; }
-        .phoneme-score.p-mid { color: #ff9800; }
-        .phoneme-score.p-low { color: #f44336; }
+        .phoneme-score.p-high { color: var(--success-bright); }
+        .phoneme-score.p-mid { color: var(--warning-bright); }
+        .phoneme-score.p-low { color: var(--error-bright); }
 
         /* Pitch chart */
         .pitch-chart-container {
@@ -1597,7 +1863,7 @@
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 0.8125rem;
-            transition: all 0.2s ease;
+            transition: all 0.2s ease-out;
         }
 
         .ai-feedback-card .tts-play-btn:hover {
@@ -1801,7 +2067,7 @@
         }
         
         .chatroom-recommend-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--gradient-chatroom);
             border: none;
             border-radius: 6px;
             padding: 0.4rem 0.85rem;
@@ -1945,7 +2211,7 @@
             margin-bottom: 0.35rem;
         }
         .chatroom-msg-bubble {
-            background: #2a2a28;
+            background: var(--bg-elevated);
             border-radius: 0 var(--radius) var(--radius) var(--radius);
             padding: 0.85rem 1rem;
             border-left: 3px solid var(--primary);
@@ -2108,12 +2374,12 @@
         }
 
         /* Expert color palette */
-        .expert-color-0 { --expert-color: #5b9bd5; }
-        .expert-color-1 { --expert-color: #70c1b3; }
-        .expert-color-2 { --expert-color: #e8a838; }
-        .expert-color-3 { --expert-color: #c084fc; }
-        .expert-color-4 { --expert-color: #f472b6; }
-        .expert-color-5 { --expert-color: #86efac; }
+        .expert-color-0 { --expert-color: var(--info); }
+        .expert-color-1 { --expert-color: var(--accent-teal); }
+        .expert-color-2 { --expert-color: var(--accent-gold); }
+        .expert-color-3 { --expert-color: var(--accent-purple); }
+        .expert-color-4 { --expert-color: var(--accent-pink); }
+        .expert-color-5 { --expert-color: var(--accent-green); }
 
         @media (max-width: 768px) {
             .chatroom-topic-row {
@@ -2129,34 +2395,44 @@
                 flex-wrap: wrap;
             }
         }
+
+        /* Reduced motion: respect user accessibility preferences */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header class="header">
+    <header class="header" role="banner">
         <div class="header-content">
             <div class="logo">
-                <div class="logo-icon">📝</div>
+                <div class="logo-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></div>
                 <span>Live in English</span>
             </div>
             <div class="header-actions">
-                <div class="api-status">
-                    <span class="status-dot" id="statusDot"></span>
+                <div class="api-status" role="status" aria-live="polite">
+                    <span class="status-dot" id="statusDot" aria-hidden="true"></span>
                     <span id="statusText">Checking API...</span>
                 </div>
-                <button class="settings-btn" id="settingsBtn">
-                    ⚙️ <span>Settings</span>
+                <button class="settings-btn" id="settingsBtn" aria-label="Open Settings">
+                    <span aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> <span>Settings</span>
                 </button>
             </div>
         </div>
     </header>
 
     <!-- API Config Modal -->
-    <div class="modal-overlay" id="configModal">
+    <div class="modal-overlay" id="configModal" role="dialog" aria-modal="true" aria-labelledby="configModalTitle">
         <div class="modal">
             <div class="modal-header">
-                <h2 class="modal-title">API Configuration</h2>
-                <button class="modal-close" id="closeModal">&times;</button>
+                <h2 class="modal-title" id="configModalTitle">API Configuration</h2>
+                <button class="modal-close" id="closeModal" aria-label="Close settings">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="apiConfigForm">
@@ -2168,15 +2444,15 @@
                         <div class="form-hint">Live in English backend address. Default: http://localhost:8000</div>
                     </div>
 
-                    <hr style="border:none;border-top:1px solid var(--border);margin:1rem 0;">
+                    <hr class="divider">
 
                     <!-- AI Model Section Label -->
-                    <div style="font-size:0.9rem;font-weight:600;color:var(--text-primary);margin-bottom:0.75rem;">🤖 AI Model (LLM)</div>
+                    <div class="section-label">🤖 AI Model (LLM)</div>
 
                     <!-- Model Selection -->
                     <div class="form-group">
                         <label class="form-label form-label-required" for="model">Model</label>
-                        <select class="form-select" id="model" name="model">
+                        <select class="form-select" id="model" name="model" aria-required="true">
                             <optgroup label="DeepSeek">
                                 <option value="deepseek-chat" selected>DeepSeek Chat (V3)</option>
                                 <option value="deepseek-coder">DeepSeek Coder</option>
@@ -2267,7 +2543,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="resetBtn">Reset</button>
                 <button type="button" class="btn btn-success" id="testBtn">
-                    <span id="testBtnText">🧪 Test Connection</span>
+                    <span id="testBtnText"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg> Test Connection</span>
                 </button>
                 <button type="button" class="btn btn-primary" id="saveBtn">Save Configuration</button>
             </div>
@@ -2275,26 +2551,35 @@
     </div>
 
     <!-- Main Content -->
-    <main class="container">
+    <main class="container" role="main">
         <!-- Mode Selector -->
-        <div class="mode-selector">
-            <button class="mode-btn active" data-mode="writing">
-                ✍️ Writing
+        <div class="mode-selector" role="tablist" aria-label="Application mode">
+            <button class="mode-btn active" data-mode="writing" role="tab" aria-selected="true" aria-controls="evalMode" id="tab-writing">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Writing
             </button>
-            <button class="mode-btn" data-mode="speaking">
-                🎤 Speaking
+            <button class="mode-btn" data-mode="speaking" role="tab" aria-selected="false" aria-controls="evalMode" id="tab-speaking">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> Speaking
             </button>
-            <button class="mode-btn" data-mode="practice">
-                🗣️ Practice
+            <button class="mode-btn" data-mode="practice" role="tab" aria-selected="false" aria-controls="practiceMode" id="tab-practice">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Practice
             </button>
-            <button class="mode-btn" data-mode="chatroom">
-                💬 Chatroom
+            <button class="mode-btn" data-mode="chatroom" role="tab" aria-selected="false" aria-controls="chatroomMode" id="tab-chatroom">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Chatroom
             </button>
         </div>
 
         <!-- Writing/Speaking Mode -->
-        <div class="eval-mode" id="evalMode">
+        <div class="eval-mode" id="evalMode" role="tabpanel" aria-labelledby="tab-writing">
         <!-- Input Section -->
+        <!-- Empty State Guide -->
+        <div class="empty-state" id="evalEmptyState">
+            <div class="empty-state-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3 class="empty-state-title">Ready to evaluate</h3>
+            <p class="empty-state-desc">Paste your IELTS essay or speaking response below to get detailed AI-powered feedback with band scores.</p>
+        </div>
+
         <div class="input-section">
             <div class="form-group">
                 <label class="form-label">Task Prompt (Optional)</label>
@@ -2306,14 +2591,17 @@
             <div class="form-group">
                 <div class="voice-controls">
                     <label class="form-label">Your Response</label>
-                    <button class="mic-btn" id="micBtn" title="Voice Input" style="display:none;">🎤</button>
+                    <button class="mic-btn" id="micBtn" title="Voice Input" aria-label="Voice input" style="display:none;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </button>
                     <div class="recording-info" id="recordingInfo" style="display:none;">
                         <span class="recording-dot"></span>
                         <span id="recordingTime">0:00</span>
                     </div>
                 </div>
                 <textarea class="form-textarea" id="candidateResponse"
-                          placeholder="Paste your essay or speaking transcript here..."></textarea>
+                          placeholder="Paste your essay or speaking transcript here..."
+                          aria-label="Your response text"></textarea>
                 <div class="live-transcript-bar" id="liveTranscriptBar">
                     <span class="rec-dot-sm"></span>
                     <span>Listening...</span>
@@ -2335,21 +2623,21 @@
         </div>
 
         <!-- Error Message -->
-        <div class="error-message" id="errorMessage" style="display: none;"></div>
+        <div class="error-message" id="errorMessage" role="alert" style="display: none;"></div>
 
         <!-- Results Section -->
-        <div class="results-section" id="resultsSection">
+        <div class="results-section" id="resultsSection" aria-live="polite">
             <div class="results-header">
                 <h2 class="results-title">Evaluation Results</h2>
                 <div class="tts-controls">
-                    <button class="tts-btn" id="ttsBtn" title="Read Aloud" style="display:none;">▶</button>
-                    <button class="tts-btn" id="ttsStopBtn" title="Stop" style="display:none;">⏹</button>
-                    <select class="tts-speed" id="ttsSpeed" style="display:none;">
+                    <button class="tts-btn" id="ttsBtn" aria-label="Read results aloud" style="display:none;">▶</button>
+                    <button class="tts-btn" id="ttsStopBtn" aria-label="Stop reading" style="display:none;">⏹</button>
+                    <select class="tts-speed" id="ttsSpeed" aria-label="Speech speed" style="display:none;">
                         <option value="0.7">0.7x Slow</option>
                         <option value="1" selected>1.0x Normal</option>
                         <option value="1.3">1.3x Fast</option>
                     </select>
-                    <button class="copy-btn" id="copyBtn">📋 Copy Results</button>
+                    <button class="copy-btn" id="copyBtn" aria-label="Copy results to clipboard"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Results</button>
                 </div>
             </div>
             <div class="results-content">
@@ -2359,46 +2647,46 @@
         </div><!-- end evalMode -->
 
         <!-- Practice Mode -->
-        <div class="practice-container" id="practiceMode">
+        <div class="practice-container" id="practiceMode" role="tabpanel" aria-labelledby="tab-practice">
             <div class="practice-header">
                 <h3>IELTS Speaking Practice</h3>
                 <p>Record your voice for pronunciation analysis (phoneme scoring, pitch curve) or chat with AI examiner.</p>
-                <div class="practice-api-status" id="practiceApiStatus" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.75rem;font-size:0.875rem;cursor:pointer;" title="Click to open Settings">
+                <div class="practice-api-status" id="practiceApiStatus" role="status" aria-live="polite" style="display:flex;align-items:center;justify-content:center;gap:0.5rem;margin-top:0.75rem;font-size:0.875rem;cursor:pointer;" title="Click to open Settings">
                     <span class="status-dot" id="practiceStatusDot"></span>
                     <span id="practiceStatusText" style="color: var(--text-secondary);">Checking...</span>
                 </div>
             </div>
 
             <div class="practice-controls">
-                <select id="practiceVoice" title="TTS Voice">
+                <select id="practiceVoice" aria-label="TTS Voice">
                     <option value="en-GB-SoniaNeural">Sonia (UK Female)</option>
                     <option value="en-GB-RyanNeural">Ryan (UK Male)</option>
                     <option value="en-US-AriaNeural">Aria (US Female)</option>
                     <option value="en-US-DavisNeural">Davis (US Male)</option>
                     <option value="en-AU-NatashaNeural">Natasha (AU Female)</option>
                 </select>
-                <select id="practiceSpeed" title="Speech Speed">
+                <select id="practiceSpeed" aria-label="Speech speed">
                     <option value="-20%">0.8x Slow</option>
                     <option value="+0%" selected>1.0x Normal</option>
                     <option value="+20%">1.2x Fast</option>
                 </select>
                 <button id="autoPlayToggle" title="Auto-play examiner voice">Auto-play: ON</button>
-                <button id="azureInlineToggle" title="Azure Speech pronunciation scoring" style="border-color:var(--border);">Azure: OFF</button>
+                <button id="azureInlineToggle" aria-pressed="false" title="Azure Speech pronunciation scoring" style="border-color:var(--border);">Azure: OFF</button>
             </div>
 
             <!-- Azure inline config (collapsible) -->
-            <div id="azureInlineConfig" style="display:none;background:var(--bg-input);border:1px solid var(--border);border-radius:var(--radius);padding:0.75rem 1rem;margin-bottom:0.75rem;">
-                <div style="display:flex;gap:0.75rem;align-items:flex-end;flex-wrap:wrap;">
-                    <div style="flex:1;min-width:200px;">
-                        <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:0.25rem;">Azure Speech Key</label>
+            <div id="azureInlineConfig" style="display:none;" class="azure-config-panel">
+                <div class="azure-config-row">
+                    <div class="azure-config-field">
+                        <label class="form-label-inline">Azure Speech Key</label>
                         <div class="password-input-wrapper">
-                            <input type="password" id="azureKeyInline" class="form-input" placeholder="Paste your Azure Speech key" style="font-size:0.8rem;padding:0.4rem 0.6rem;">
-                            <button type="button" class="password-toggle" id="toggleAzureKeyInline" title="Show/Hide" style="right:0.5rem;top:50%;transform:translateY(-50%);font-size:0.8rem;background:none;border:none;cursor:pointer;color:var(--text-muted);">👁️</button>
+                            <input type="password" id="azureKeyInline" class="form-input compact-input" placeholder="Paste your Azure Speech key">
+                            <button type="button" class="password-toggle password-toggle-inline" id="toggleAzureKeyInline" title="Show/Hide">👁️</button>
                         </div>
                     </div>
-                    <div style="min-width:140px;">
-                        <label style="font-size:0.75rem;color:var(--text-secondary);display:block;margin-bottom:0.25rem;">Region</label>
-                        <select id="azureRegionInline" class="form-input" style="font-size:0.8rem;padding:0.4rem 0.6rem;">
+                    <div class="azure-config-region">
+                        <label class="form-label-inline">Region</label>
+                        <select id="azureRegionInline" class="form-input compact-input">
                             <option value="eastus">East US</option>
                             <option value="eastus2">East US 2</option>
                             <option value="westus">West US</option>
@@ -2409,9 +2697,9 @@
                             <option value="southeastasia">Southeast Asia</option>
                         </select>
                     </div>
-                    <button id="azureInlineSave" style="padding:0.4rem 1rem;border-radius:var(--radius-sm);border:1px solid var(--primary);background:var(--primary);color:white;font-size:0.8rem;cursor:pointer;white-space:nowrap;">Save</button>
+                    <button id="azureInlineSave" class="compact-btn">Save</button>
                 </div>
-                <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.5rem;">5h/month free. <a href="https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/" target="_blank" style="color:var(--primary);">Get Azure Key →</a></div>
+                <div class="text-hint">5h/month free. <a href="https://azure.microsoft.com/en-us/services/cognitive-services/speech-services/" target="_blank">Get Azure Key →</a></div>
             </div>
 
             <div class="part-label" id="partLabel">Part 1 — Introduction & Warm-up</div>
@@ -2421,7 +2709,7 @@
                 <div class="part-dot" data-part="3" title="Part 3"></div>
             </div>
 
-            <div class="chat-area" id="chatArea">
+            <div class="chat-area" id="chatArea" aria-live="polite" aria-label="Practice conversation">
                 <div class="chat-empty" id="chatEmpty">
                     <div class="chat-empty-icon">🗣️</div>
                     <h4>Ready to Practice?</h4>
@@ -2433,7 +2721,7 @@
             </div>
 
             <div class="waveform-container" id="waveformContainer">
-                <canvas id="waveformCanvas"></canvas>
+                <canvas id="waveformCanvas" aria-label="Audio waveform visualization" role="img"></canvas>
                 <div class="waveform-info">
                     <span class="rec-timer" id="recTimer">● 0:00</span>
                     <span>16kHz · 16bit · Mono</span>
@@ -2446,17 +2734,17 @@
             </div>
 
             <div class="voice-input-bar">
-                <button class="record-btn" id="practiceMicBtn" title="Hold to speak">🎤</button>
+                <button class="record-btn" id="practiceMicBtn" aria-label="Hold to speak"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></button>
                 <input type="text" class="text-input" id="practiceInput"
                        placeholder="Type your response or press the mic to speak..." />
-                <button class="send-btn" id="practiceSendBtn" title="Send">➤</button>
+                <button class="send-btn" id="practiceSendBtn" aria-label="Send message"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button>
             </div>
 
             <div class="practice-actions">
-                <button class="primary-action" id="startPracticeBtn">▶ Start Practice</button>
-                <button id="nextPartBtn" style="display:none;">⏭ Next Part</button>
-                <button class="primary-action" id="endPracticeBtn" style="display:none;">📋 Get Band Score</button>
-                <button class="danger-action" id="resetPracticeBtn" style="display:none;">🔄 Reset</button>
+                <button class="primary-action" id="startPracticeBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg> Start Practice</button>
+                <button id="nextPartBtn" style="display:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2"/></svg> Next Part</button>
+                <button class="primary-action" id="endPracticeBtn" style="display:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Get Band Score</button>
+                <button class="danger-action" id="resetPracticeBtn" style="display:none;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg> Reset</button>
             </div>
 
             <!-- Loading animation for analysis -->
@@ -2481,7 +2769,7 @@
                     <div class="analysis-card">
                         <h4>Intonation Curve</h4>
                         <div class="pitch-chart-container">
-                            <canvas id="pitchChart"></canvas>
+                            <canvas id="pitchChart" aria-label="Pitch intonation chart" role="img"></canvas>
                         </div>
                     </div>
 
@@ -2512,7 +2800,7 @@
             <div class="results-section" id="practiceResultsSection" style="display:none; margin-top:1.5rem;">
                 <div class="results-header">
                     <h2 class="results-title">Practice Evaluation</h2>
-                    <button class="copy-btn" id="copyPracticeResultBtn">📋 Copy</button>
+                    <button class="copy-btn" id="copyPracticeResultBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</button>
                 </div>
                 <div class="results-content">
                     <div class="markdown-body" id="practiceResultsContent"></div>
@@ -2521,7 +2809,7 @@
         </div><!-- end practiceMode -->
 
         <!-- Chatroom Mode -->
-        <div class="chatroom-container" id="chatroomMode">
+        <div class="chatroom-container" id="chatroomMode" role="tabpanel" aria-labelledby="tab-chatroom">
             <!-- Control Bar -->
             <div class="chatroom-controls">
                 <div class="chatroom-topic-row">
@@ -2578,7 +2866,7 @@
             </div>
 
             <!-- Chat Area -->
-            <div class="chatroom-chat-area" id="chatroomChatArea">
+            <div class="chatroom-chat-area" id="chatroomChatArea" aria-live="polite" aria-label="Expert discussion">
                 <div class="chatroom-empty" id="chatroomEmpty">
                     <div class="chatroom-empty-icon">💬</div>
                     <p>Select experts and enter a topic to start a discussion</p>
@@ -2601,7 +2889,7 @@
     </main>
 
     <!-- Toast Notification -->
-    <div class="toast" id="toast">
+    <div class="toast" id="toast" role="status" aria-live="polite">
         <div class="toast-icon">✓</div>
         <span id="toastMessage">Copied to clipboard!</span>
     </div>
@@ -2759,17 +3047,30 @@
         }
 
         // Modal Functions
+        let lastFocusedElement = null;
+
         function openModal() {
+            lastFocusedElement = document.activeElement;
             configModal.classList.add('show');
             document.body.style.overflow = 'hidden';
             loadConfig();
             hideTestResult();
+            // Focus first input after animation
+            setTimeout(() => {
+                const firstInput = configModal.querySelector('input, select, button');
+                if (firstInput) firstInput.focus();
+            }, 100);
         }
 
         function closeModalFunc() {
             configModal.classList.remove('show');
             document.body.style.overflow = '';
             clearErrors();
+            // Restore focus to the element that opened the modal
+            if (lastFocusedElement) {
+                lastFocusedElement.focus();
+                lastFocusedElement = null;
+            }
         }
 
         // Clear all error messages
@@ -2912,7 +3213,7 @@
                     '1. Check if the backend server is started\n2. Verify the backend URL (default: http://localhost:8000)\n3. Check your network connection');
             } finally {
                 testBtn.disabled = false;
-                testBtnText.textContent = '🧪 Test Connection';
+                testBtnText.textContent = 'Test Connection';
             }
         }
 
@@ -2926,11 +3227,37 @@
             }
         });
 
+        // Keyboard: Escape to close modal, focus trap
+        document.addEventListener('keydown', (e) => {
+            if (!configModal.classList.contains('show')) return;
+            if (e.key === 'Escape') {
+                closeModalFunc();
+                return;
+            }
+            // Focus trap: Tab cycles within modal
+            if (e.key === 'Tab') {
+                const focusable = configModal.querySelectorAll(
+                    'input, select, button, [tabindex]:not([tabindex="-1"])'
+                );
+                const arr = Array.from(focusable).filter(el => !el.disabled && el.offsetParent !== null);
+                if (arr.length === 0) return;
+                const first = arr[0];
+                const last = arr[arr.length - 1];
+                if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                }
+            }
+        });
+
         // Password toggle
         togglePassword.addEventListener('click', () => {
             const type = apiKeyInput.type === 'password' ? 'text' : 'password';
             apiKeyInput.type = type;
-            togglePassword.textContent = type === 'password' ? '👁️' : '🙈';
+            togglePassword.innerHTML = type === 'password' ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
         });
 
         // Advanced settings toggle
@@ -3042,7 +3369,13 @@
         candidateResponseInput.addEventListener('input', () => {
             const text = candidateResponseInput.value;
             charCountSpan.textContent = text.length;
-            
+
+            // Toggle empty state
+            const emptyState = document.getElementById('evalEmptyState');
+            if (emptyState) {
+                emptyState.classList.toggle('hidden', text.trim().length > 0);
+            }
+
             // Count words (split by whitespace and filter empty strings)
             const words = text.trim().split(/\s+/).filter(w => w.length > 0);
             const wordCount = words.length;
@@ -3521,6 +3854,10 @@
         // Mode switching - update to handle 4 modes
         function switchModeUI(mode) {
             currentMode = mode;
+            // Update ARIA selected state on all tabs
+            document.querySelectorAll('.mode-btn').forEach(b => {
+                b.setAttribute('aria-selected', b.dataset.mode === mode ? 'true' : 'false');
+            });
             if (mode === 'practice') {
                 evalMode.style.display = 'none';
                 practiceMode.classList.add('active');
@@ -3778,7 +4115,7 @@
 
             // Wait a moment then evaluate
             endPracticeBtn.disabled = true;
-            endPracticeBtn.textContent = '⏳ Evaluating...';
+            endPracticeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Evaluating...';
 
             const currentProvider = getProvider(apiConfig.model);
             const currentApiKey = apiConfig.apiKeys[currentProvider];
@@ -3811,7 +4148,7 @@
                 showToast('Evaluation failed: ' + e.message);
             } finally {
                 endPracticeBtn.disabled = false;
-                endPracticeBtn.textContent = '📋 Get Band Score';
+                endPracticeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Get Band Score';
             }
         });
 
@@ -3921,6 +4258,7 @@
                         azureKeyInline.value = azure.key;
                         azureRegionInline.value = azure.region || 'eastasia';
                         azureInlineToggle.textContent = 'Azure: ON';
+                        azureInlineToggle.setAttribute('aria-pressed', 'true');
                         azureInlineToggle.style.borderColor = 'var(--primary)';
                     }
                 } catch(e) {}
@@ -3948,6 +4286,7 @@
                     region: azureRegionInline.value
                 }));
                 azureInlineToggle.textContent = 'Azure: ON';
+                azureInlineToggle.setAttribute('aria-pressed', 'true');
                 azureInlineToggle.style.borderColor = 'var(--primary)';
                 azureInlineConfig.style.display = 'none';
                 showToast('Azure Speech configured!');
@@ -3955,6 +4294,7 @@
                 azureEnabled = false;
                 localStorage.removeItem('ielts_azure_config');
                 azureInlineToggle.textContent = 'Azure: OFF';
+                azureInlineToggle.setAttribute('aria-pressed', 'false');
                 azureInlineToggle.style.borderColor = 'var(--border)';
                 azureInlineConfig.style.display = 'none';
                 showToast('Azure Speech disabled');
@@ -3992,7 +4332,7 @@
             wCtx.clearRect(0, 0, w, h);
 
             // Background
-            wCtx.fillStyle = '#1a1a1a';
+            wCtx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-card').trim();
             wCtx.fillRect(0, 0, w, h);
 
             // Grid lines
@@ -4005,7 +4345,7 @@
 
             // Waveform
             wCtx.lineWidth = 2;
-            wCtx.strokeStyle = '#d97757';
+            wCtx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary').trim();
             wCtx.beginPath();
             const sliceWidth = w / bufferLength;
             let x = 0;
@@ -4124,7 +4464,7 @@
 
                 // Update mic button
                 practiceMicBtn.classList.add('recording');
-                practiceMicBtn.textContent = '⏹';
+                practiceMicBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
                 practiceInput.placeholder = 'Recording... click ⏹ to stop and analyze';
 
             } catch (e) {
@@ -4139,7 +4479,7 @@
 
             // Reset mic button
             practiceMicBtn.classList.remove('recording');
-            practiceMicBtn.textContent = '🎤';
+            practiceMicBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
             practiceInput.placeholder = 'Type your response or press the mic to speak...';
 
             if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
@@ -4311,7 +4651,7 @@
             const w = rect.width;
             const h = 160;
 
-            ctx.fillStyle = '#1a1a1a';
+            ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--bg-card').trim();
             ctx.fillRect(0, 0, w, h);
 
             // Grid
@@ -4350,7 +4690,7 @@
             }
 
             // User F0 (blue/orange)
-            ctx.strokeStyle = '#4a9eff';
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--info-bright').trim();
             ctx.lineWidth = 2;
             ctx.beginPath();
             let started = false;
@@ -4454,7 +4794,14 @@
         let chatroomDiscussion = [];  // {name, en_text, zh_text}
         let chatroomBusy = false;
 
-        const CHATROOM_COLORS = ['#5b9bd5', '#70c1b3', '#e8a838', '#c084fc', '#f472b6', '#86efac'];
+        const CHATROOM_COLORS = [
+            getComputedStyle(document.documentElement).getPropertyValue('--info').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--accent-teal').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--accent-gold').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--accent-purple').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--accent-pink').trim(),
+            getComputedStyle(document.documentElement).getPropertyValue('--accent-green').trim()
+        ];
 
         function getExpertColor(index) {
             return CHATROOM_COLORS[index % CHATROOM_COLORS.length];
