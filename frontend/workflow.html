@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>流程可视化系统 - Live in English</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #7c6aef;
+            --primary-dark: #6b56d9;
+            --primary-light: #9b8af4;
+            --primary-soft: rgba(124, 106, 239, 0.12);
+            --bg-dark: #0f0f11;
+            --bg-card: #18181b;
+            --bg-input: #1e1e22;
+            --bg-elevated: #27272a;
+            --text-primary: #ededef;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --border: #2e2e33;
+            --border-hover: #3f3f46;
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --success-bright: #4ade80;
+            --warning: #f59e0b;
+            --warning-bright: #fbbf24;
+            --error: #ef4444;
+            --error-bright: #f87171;
+            --info: #3b82f6;
+            --info-bright: #60a5fa;
+            --accent-teal: #2dd4bf;
+            --accent-gold: #fbbf24;
+            --accent-purple: #a78bfa;
+            --accent-pink: #f472b6;
+            --accent-green: #4ade80;
+            --gradient-chatroom: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-primary: linear-gradient(135deg, #7c6aef 0%, #6366f1 100%);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #08080a;
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: -30%;
+            left: -15%;
+            width: 70%;
+            height: 70%;
+            background: radial-gradient(circle, rgba(124, 106, 239, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(60px);
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -20%;
+            right: -10%;
+            width: 50%;
+            height: 50%;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(50px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .logo span {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-btn {
+            padding: 0.75rem 1.5rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+
+        .mode-btn.active {
+            background: var(--gradient-primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .mode-panel {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-panel.hidden {
+            display: none;
+        }
+
+        .panel-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .panel-header p {
+            color: var(--text-secondary);
+        }
+
+        .config-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-family: inherit;
+        }
+
+        .function-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .function-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+
+        .function-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .function-card .form-select {
+            margin-bottom: 1rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(124, 106, 239, 0.3);
+        }
+
+        .btn-secondary {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+        }
+
+        .workflow-visualization {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .workflow-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .workflow-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .workflow-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+        }
+
+        .status-ready {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .status-running {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-completed {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .workflow-canvas {
+            position: relative;
+            min-height: 400px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background: var(--bg-input);
+            overflow: auto;
+        }
+
+        .workflow-node {
+            position: absolute;
+            width: 200px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem;
+            cursor: move;
+            transition: all 0.2s;
+        }
+
+        .workflow-node:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(124, 106, 239, 0.2);
+        }
+
+        .workflow-node.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(124, 106, 239, 0.3);
+        }
+
+        .node-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .node-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .node-model {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .node-status {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+        }
+
+        .node-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .node-status.running {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--info);
+        }
+
+        .node-status.completed {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .node-content {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .workflow-edge {
+            position: absolute;
+            background: var(--border);
+            height: 2px;
+            z-index: 1;
+        }
+
+        .workflow-edge.active {
+            background: var(--primary);
+        }
+
+        .workflow-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .history-section {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+            padding: 2rem;
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .history-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .history-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .history-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary);
+        }
+
+        .history-item.selected {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(124, 106, 239, 0.3);
+        }
+
+        .history-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .history-item-name {
+            font-weight: 600;
+        }
+
+        .history-item-date {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .history-item-details {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .config-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .function-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .workflow-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🔄</div>
+                <span>Live in English</span>
+            </div>
+            <h1>流程可视化系统</h1>
+            <p>设计、配置和监控多模型协作流程，优化 AI 资源使用</p>
+        </header>
+
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="custom">自定义模式</button>
+            <button class="mode-btn" data-mode="preset">方案选择模式</button>
+            <button class="mode-btn" data-mode="visualization">流程可视化</button>
+        </div>
+
+        <div id="customMode" class="mode-panel">
+            <div class="panel-header">
+                <h2>自定义模型配置</h2>
+                <p>灵活配置模型与功能板块的对应关系</p>
+            </div>
+
+            <div class="config-grid">
+                <div>
+                    <div class="form-group">
+                        <label class="form-label">配置名称</label>
+                        <input type="text" class="form-input" id="configName" placeholder="输入配置名称">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">配置描述</label>
+                        <input type="text" class="form-input" id="configDescription" placeholder="描述此配置的用途">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">全局模型设置</label>
+                        <select class="form-select" id="globalModel">
+                            <option value="">选择全局模型（可选）</option>
+                            <option value="deepseek-chat">DeepSeek Chat (V3.2)</option>
+                            <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                            <option value="gpt-4o">GPT-4o</option>
+                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                            <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                            <option value="claude-3-haiku">Claude 3 Haiku</option>
+                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="form-group">
+                        <label class="form-label">配置类型</label>
+                        <select class="form-select" id="configType">
+                            <option value="single">单个模型对应所有功能板块</option>
+                            <option value="multiple">为不同板块指定不同模型</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">保存配置</label>
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="saveConfig">
+                            <label for="saveConfig">保存为预设方案</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="functionConfigs" class="function-grid">
+                <div class="function-card">
+                    <h3>写作评估</h3>
+                    <select class="form-select" data-function="writing">
+                        <option value="">使用全局模型</option>
+                        <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                        <option value="deepseek-chat">DeepSeek Chat (V3.2)</option>
+                    </select>
+                </div>
+
+                <div class="function-card">
+                    <h3>口语评估</h3>
+                    <select class="form-select" data-function="speaking">
+                        <option value="">使用全局模型</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                        <option value="deepseek-chat">DeepSeek Chat (V3.2)</option>
+                        <option value="gpt-4o-mini">GPT-4o Mini</option>
+                    </select>
+                </div>
+
+                <div class="function-card">
+                    <h3>短输入扩写</h3>
+                    <select class="form-select" data-function="expansion">
+                        <option value="">使用全局模型</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                        <option value="deepseek-chat">DeepSeek Chat (V3.2)</option>
+                    </select>
+                </div>
+
+                <div class="function-card">
+                    <h3>聊天室专家</h3>
+                    <select class="form-select" data-function="chatroom">
+                        <option value="">使用全局模型</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                        <option value="claude-3-haiku">Claude 3 Haiku</option>
+                        <option value="deepseek-chat">DeepSeek Chat (V3.2)</option>
+                    </select>
+                </div>
+
+                <div class="function-card">
+                    <h3>语音练习</h3>
+                    <select class="form-select" data-function="practice">
+                        <option value="">使用全局模型</option>
+                        <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="deepseek-chat">DeepSeek Chat (V3.2)</option>
+                    </select>
+                </div>
+
+                <div class="function-card">
+                    <h3>质量审核</h3>
+                    <select class="form-select" data-function="quality">
+                        <option value="">使用全局模型</option>
+                        <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                        <option value="gpt-4o">GPT-4o</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="previewConfig">预览流程</button>
+                <button class="btn btn-primary" id="saveConfigBtn">保存配置</button>
+                <button class="btn btn-primary" id="applyConfigBtn">应用配置</button>
+            </div>
+        </div>
+
+        <div id="presetMode" class="mode-panel hidden">
+            <div class="panel-header">
+                <h2>方案选择模式</h2>
+                <p>选择并应用之前保存的模型配置方案</p>
+            </div>
+
+            <div class="history-section">
+                <div class="history-header">
+                    <h2>保存的方案</h2>
+                    <button class="btn btn-secondary" id="refreshPresets">刷新</button>
+                </div>
+
+                <div id="presetList" class="history-list">
+                    <!-- 预设方案将通过 JavaScript 动态添加 -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h3>暂无保存的方案</h3>
+                        <p>请在自定义模式中创建并保存配置方案</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="deletePresetBtn">删除方案</button>
+                <button class="btn btn-primary" id="loadPresetBtn">加载方案</button>
+            </div>
+        </div>
+
+        <div id="visualizationMode" class="mode-panel hidden">
+            <div class="workflow-visualization">
+                <div class="workflow-header">
+                    <h2>流程可视化</h2>
+                    <div class="workflow-status status-ready" id="workflowStatus">
+                        <span>✅</span>
+                        <span>准备就绪</span>
+                    </div>
+                </div>
+
+                <div class="workflow-canvas" id="workflowCanvas">
+                    <!-- 流程节点将通过 JavaScript 动态添加 -->
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎯</div>
+                        <h3>流程未配置</h3>
+                        <p>请在自定义模式中配置模型，或在方案选择模式中加载预设方案</p>
+                    </div>
+                </div>
+
+                <div class="workflow-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalModels">0</div>
+                        <div class="stat-label">总模型数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="strongModels">0</div>
+                        <div class="stat-label">强模型数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="weakModels">0</div>
+                        <div class="stat-label">弱模型数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="estimatedCost">$0.00</div>
+                        <div class="stat-label">预估成本</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn btn-secondary" id="testWorkflow">测试流程</button>
+                <button class="btn btn-primary" id="exportWorkflow">导出配置</button>
+                <button class="btn btn-primary" id="runWorkflow">运行流程</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 模型成本数据
+        const MODEL_COSTS = {
+            'deepseek-chat': 0.0005,      // $0.5/1K tokens
+            'deepseek-reasoner': 0.002,    // $2.0/1K tokens
+            'gpt-4o': 0.005,              // $5.0/1K tokens
+            'gpt-4o-mini': 0.00015,        // $0.15/1K tokens
+            'claude-3-sonnet': 0.003,      // $3.0/1K tokens
+            'claude-3-haiku': 0.00025,     // $0.25/1K tokens
+            'gemini-2.5-pro': 0.004,       // $4.0/1K tokens
+            'gemini-2.0-flash': 0.00015    // $0.15/1K tokens
+        };
+
+        // 模型类型
+        const MODEL_TYPES = {
+            'deepseek-reasoner': 'strong',
+            'gpt-4o': 'strong',
+            'claude-3-sonnet': 'strong',
+            'gemini-2.5-pro': 'strong',
+            'deepseek-chat': 'weak',
+            'gpt-4o-mini': 'weak',
+            'claude-3-haiku': 'weak',
+            'gemini-2.0-flash': 'weak'
+        };
+
+        // 功能模块信息
+        const FUNCTIONS = {
+            'writing': {
+                name: '写作评估',
+                tokens: 4000,
+                description: '评估雅思写作，包括语法错误标注、词汇建议等'
+            },
+            'speaking': {
+                name: '口语评估',
+                tokens: 3000,
+                description: '评估口语回答，包括流利度、发音等'
+            },
+            'expansion': {
+                name: '短输入扩写',
+                tokens: 5000,
+                description: '将短文本扩写为Band 8.0质量'
+            },
+            'chatroom': {
+                name: '聊天室专家',
+                tokens: 3500,
+                description: '多专家对话系统'
+            },
+            'practice': {
+                name: '语音练习',
+                tokens: 2500,
+                description: '口语练习和TTS功能'
+            },
+            'quality': {
+                name: '质量审核',
+                tokens: 2000,
+                description: '审核弱模型输出质量'
+            }
+        };
+
+        let currentConfig = {
+            name: '',
+            description: '',
+            type: 'single',
+            globalModel: '',
+            functions: {}
+        };
+
+        let selectedPreset = null;
+
+        // 模式切换
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const mode = btn.dataset.mode;
+                
+                // 更新按钮状态
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // 显示对应面板
+                document.querySelectorAll('.mode-panel').forEach(panel => panel.classList.add('hidden'));
+                document.getElementById(mode + 'Mode').classList.remove('hidden');
+                
+                // 如果切换到可视化模式，更新可视化
+                if (mode === 'visualization') {
+                    updateVisualization();
+                }
+                
+                // 如果切换到方案选择模式，加载预设
+                if (mode === 'preset') {
+                    loadPresets();
+                }
+            });
+        });
+
+        // 配置类型切换
+        document.getElementById('configType').addEventListener('change', function() {
+            const type = this.value;
+            const functionCards = document.querySelectorAll('.function-card select');
+            
+            functionCards.forEach(select => {
+                if (type === 'single') {
+                    select.disabled = true;
+                    select.style.opacity = '0.5';
+                } else {
+                    select.disabled = false;
+                    select.style.opacity = '1';
+                }
+            });
+        });
+
+        // 保存配置
+        document.getElementById('saveConfigBtn').addEventListener('click', () => {
+            const configName = document.getElementById('configName').value.trim();
+            const configDescription = document.getElementById('configDescription').value.trim();
+            const configType = document.getElementById('configType').value;
+            const globalModel = document.getElementById('globalModel').value;
+            const saveConfig = document.getElementById('saveConfig').checked;
+            
+            if (!configName) {
+                alert('请输入配置名称');
+                return;
+            }
+            
+            const functions = {};
+            document.querySelectorAll('[data-function]').forEach(select => {
+                functions[select.dataset.function] = select.value;
+            });
+            
+            currentConfig = {
+                name: configName,
+                description: configDescription,
+                type: configType,
+                globalModel: globalModel,
+                functions: functions,
+                createdAt: new Date().toISOString()
+            };
+            
+            if (saveConfig) {
+                savePreset(currentConfig);
+                alert('配置已保存');
+            } else {
+                alert('配置已更新');
+            }
+            
+            // 更新可视化
+            updateVisualization();
+        });
+
+        // 应用配置
+        document.getElementById('applyConfigBtn').addEventListener('click', () => {
+            if (!currentConfig.name) {
+                alert('请先保存配置');
+                return;
+            }
+            
+            // 这里可以添加应用配置的逻辑
+            // 例如，将配置保存到localStorage或发送到后端
+            localStorage.setItem('currentWorkflowConfig', JSON.stringify(currentConfig));
+            alert('配置已应用');
+        });
+
+        // 预览配置
+        document.getElementById('previewConfig').addEventListener('click', () => {
+            // 切换到可视化模式
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                if (btn.dataset.mode === 'visualization') {
+                    btn.click();
+                }
+            });
+        });
+
+        // 保存预设
+        function savePreset(config) {
+            const presets = JSON.parse(localStorage.getItem('workflowPresets') || '[]');
+            
+            // 检查是否已存在同名配置
+            const existingIndex = presets.findIndex(p => p.name === config.name);
+            if (existingIndex >= 0) {
+                presets[existingIndex] = config;
+            } else {
+                presets.push(config);
+            }
+            
+            localStorage.setItem('workflowPresets', JSON.stringify(presets));
+        }
+
+        // 加载预设
+        function loadPresets() {
+            const presets = JSON.parse(localStorage.getItem('workflowPresets') || '[]');
+            const presetList = document.getElementById('presetList');
+            
+            if (presets.length === 0) {
+                presetList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📋</div>
+                        <h3>暂无保存的方案</h3>
+                        <p>请在自定义模式中创建并保存配置方案</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            presetList.innerHTML = presets.map((preset, index) => `
+                <div class="history-item" data-index="${index}">
+                    <div class="history-item-header">
+                        <div class="history-item-name">${preset.name}</div>
+                        <div class="history-item-date">${new Date(preset.createdAt).toLocaleString()}</div>
+                    </div>
+                    <div class="history-item-details">
+                        ${preset.description || '无描述'}
+                    </div>
+                </div>
+            `).join('');
+            
+            // 添加点击事件
+            document.querySelectorAll('.history-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.history-item').forEach(i => i.classList.remove('selected'));
+                    item.classList.add('selected');
+                    selectedPreset = parseInt(item.dataset.index);
+                });
+            });
+        }
+
+        // 刷新预设
+        document.getElementById('refreshPresets').addEventListener('click', loadPresets);
+
+        // 加载预设
+        document.getElementById('loadPresetBtn').addEventListener('click', () => {
+            if (selectedPreset === null) {
+                alert('请选择一个预设方案');
+                return;
+            }
+            
+            const presets = JSON.parse(localStorage.getItem('workflowPresets') || '[]');
+            const preset = presets[selectedPreset];
+            
+            currentConfig = preset;
+            
+            // 切换到自定义模式并填充表单
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                if (btn.dataset.mode === 'custom') {
+                    btn.click();
+                }
+            });
+            
+            // 填充表单
+            document.getElementById('configName').value = preset.name;
+            document.getElementById('configDescription').value = preset.description;
+            document.getElementById('configType').value = preset.type;
+            document.getElementById('globalModel').value = preset.globalModel;
+            
+            // 填充功能配置
+            Object.keys(preset.functions).forEach(func => {
+                const select = document.querySelector(`[data-function="${func}"]`);
+                if (select) {
+                    select.value = preset.functions[func];
+                }
+            });
+            
+            // 更新配置类型相关的UI
+            document.getElementById('configType').dispatchEvent(new Event('change'));
+            
+            alert('方案已加载');
+        });
+
+        // 删除预设
+        document.getElementById('deletePresetBtn').addEventListener('click', () => {
+            if (selectedPreset === null) {
+                alert('请选择一个预设方案');
+                return;
+            }
+            
+            if (confirm('确定要删除这个方案吗？')) {
+                const presets = JSON.parse(localStorage.getItem('workflowPresets') || '[]');
+                presets.splice(selectedPreset, 1);
+                localStorage.setItem('workflowPresets', JSON.stringify(presets));
+                loadPresets();
+                selectedPreset = null;
+                alert('方案已删除');
+            }
+        });
+
+        // 更新可视化
+        function updateVisualization() {
+            const canvas = document.getElementById('workflowCanvas');
+            
+            if (!currentConfig.name) {
+                canvas.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🎯</div>
+                        <h3>流程未配置</h3>
+                        <p>请在自定义模式中配置模型，或在方案选择模式中加载预设方案</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // 计算模型使用情况
+            let totalModels = 0;
+            let strongModels = 0;
+            let weakModels = 0;
+            let estimatedCost = 0;
+            
+            const nodes = [];
+            
+            Object.keys(FUNCTIONS).forEach((func, index) => {
+                const funcInfo = FUNCTIONS[func];
+                let model = currentConfig.functions[func] || currentConfig.globalModel;
+                
+                if (model) {
+                    totalModels++;
+                    if (MODEL_TYPES[model] === 'strong') {
+                        strongModels++;
+                    } else {
+                        weakModels++;
+                    }
+                    
+                    // 估算成本
+                    const cost = (funcInfo.tokens / 1000) * MODEL_COSTS[model];
+                    estimatedCost += cost;
+                    
+                    nodes.push({
+                        id: func,
+                        name: funcInfo.name,
+                        model: model,
+                        description: funcInfo.description,
+                        x: 100 + (index % 3) * 250,
+                        y: 100 + Math.floor(index / 3) * 150
+                    });
+                }
+            });
+            
+            // 更新统计信息
+            document.getElementById('totalModels').textContent = totalModels;
+            document.getElementById('strongModels').textContent = strongModels;
+            document.getElementById('weakModels').textContent = weakModels;
+            document.getElementById('estimatedCost').textContent = `$${estimatedCost.toFixed(2)}`;
+            
+            // 生成可视化内容
+            canvas.innerHTML = nodes.map(node => `
+                <div class="workflow-node" style="left: ${node.x}px; top: ${node.y}px;">
+                    <div class="node-header">
+                        <div class="node-title">${node.name}</div>
+                        <div class="node-status pending">待执行</div>
+                    </div>
+                    <div class="node-model">${node.model}</div>
+                    <div class="node-content">${node.description}</div>
+                </div>
+            `).join('') + 
+            // 添加连接线
+            nodes.map((node, index) => {
+                if (index < nodes.length - 1) {
+                    const nextNode = nodes[index + 1];
+                    return `
+                        <div class="workflow-edge" style="
+                            left: ${node.x + 200}px;
+                            top: ${node.y + 40}px;
+                            width: ${nextNode.x - (node.x + 200)}px;
+                            transform: rotate(0deg);
+                        "></div>
+                    `;
+                }
+                return '';
+            }).join('');
+            
+            // 添加节点拖动功能
+            makeNodesDraggable();
+        }
+
+        // 使节点可拖动
+        function makeNodesDraggable() {
+            const nodes = document.querySelectorAll('.workflow-node');
+            
+            nodes.forEach(node => {
+                let isDragging = false;
+                let offsetX = 0;
+                let offsetY = 0;
+                
+                node.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    offsetX = e.clientX - node.getBoundingClientRect().left;
+                    offsetY = e.clientY - node.getBoundingClientRect().top;
+                    node.classList.add('selected');
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        const canvas = document.getElementById('workflowCanvas');
+                        const canvasRect = canvas.getBoundingClientRect();
+                        
+                        let x = e.clientX - canvasRect.left - offsetX;
+                        let y = e.clientY - canvasRect.top - offsetY;
+                        
+                        // 限制在画布内
+                        x = Math.max(0, Math.min(x, canvasRect.width - node.offsetWidth));
+                        y = Math.max(0, Math.min(y, canvasRect.height - node.offsetHeight));
+                        
+                        node.style.left = x + 'px';
+                        node.style.top = y + 'px';
+                    }
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                    node.classList.remove('selected');
+                });
+            });
+        }
+
+        // 测试流程
+        document.getElementById('testWorkflow').addEventListener('click', () => {
+            if (!currentConfig.name) {
+                alert('请先配置流程');
+                return;
+            }
+            
+            const status = document.getElementById('workflowStatus');
+            status.className = 'workflow-status status-running';
+            status.innerHTML = '<span>⏳</span><span>测试中...</span>';
+            
+            // 模拟测试过程
+            setTimeout(() => {
+                status.className = 'workflow-status status-completed';
+                status.innerHTML = '<span>✅</span><span>测试完成</span>';
+                
+                // 更新节点状态
+                const nodes = document.querySelectorAll('.workflow-node');
+                nodes.forEach((node, index) => {
+                    setTimeout(() => {
+                        const statusEl = node.querySelector('.node-status');
+                        statusEl.className = 'node-status running';
+                        statusEl.textContent = '运行中';
+                        
+                        setTimeout(() => {
+                            statusEl.className = 'node-status completed';
+                            statusEl.textContent = '已完成';
+                        }, 500);
+                    }, index * 300);
+                });
+            }, 1000);
+        });
+
+        // 导出配置
+        document.getElementById('exportWorkflow').addEventListener('click', () => {
+            if (!currentConfig.name) {
+                alert('请先配置流程');
+                return;
+            }
+            
+            const configStr = JSON.stringify(currentConfig, null, 2);
+            const blob = new Blob([configStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentConfig.name}_workflow.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        // 运行流程
+        document.getElementById('runWorkflow').addEventListener('click', () => {
+            if (!currentConfig.name) {
+                alert('请先配置流程');
+                return;
+            }
+            
+            alert('流程已启动！实际应用中这里会调用后端API执行流程');
+        });
+
+        // 初始化
+        function init() {
+            // 加载当前配置
+            const savedConfig = localStorage.getItem('currentWorkflowConfig');
+            if (savedConfig) {
+                currentConfig = JSON.parse(savedConfig);
+                
+                // 填充表单
+                if (document.getElementById('configName')) {
+                    document.getElementById('configName').value = currentConfig.name;
+                    document.getElementById('configDescription').value = currentConfig.description;
+                    document.getElementById('configType').value = currentConfig.type;
+                    document.getElementById('globalModel').value = currentConfig.globalModel;
+                    
+                    // 填充功能配置
+                    Object.keys(currentConfig.functions).forEach(func => {
+                        const select = document.querySelector(`[data-function="${func}"]`);
+                        if (select) {
+                            select.value = currentConfig.functions[func];
+                        }
+                    });
+                    
+                    // 更新配置类型相关的UI
+                    document.getElementById('configType').dispatchEvent(new Event('change'));
+                }
+            }
+        }
+
+        // 初始化应用
+        init();
+    </script>
+</body>
+</html>
