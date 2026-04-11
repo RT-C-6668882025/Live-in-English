@@ -9,35 +9,51 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #d97757;
-            --primary-dark: #c46849;
-            --primary-light: #e8956f;
-            --bg-dark: #141413;
-            --bg-card: #1a1a19;
-            --bg-input: #242422;
-            --bg-elevated: #2a2a28;
-            --text-primary: #f0eee6;
-            --text-secondary: #b0aea5;
-            --text-muted: #87867f;
-            --border: #3d3d3a;
-            --success: #5a9b5a;
-            --success-dark: #4a8a4a;
-            --success-bright: #4caf50;
-            --warning: #d9a557;
-            --warning-bright: #ff9800;
-            --error: #df6666;
-            --error-bright: #f44336;
-            --info: #5b9bd5;
-            --info-bright: #4a9eff;
-            --accent-teal: #70c1b3;
-            --accent-gold: #e8a838;
-            --accent-purple: #c084fc;
+            /* AI-Native Core: Purple primary + neutral dark */
+            --primary: #7c6aef;
+            --primary-dark: #6b56d9;
+            --primary-light: #9b8af4;
+            --primary-soft: rgba(124, 106, 239, 0.12);
+
+            /* Backgrounds: cool neutral dark */
+            --bg-dark: #0f0f11;
+            --bg-card: #18181b;
+            --bg-input: #1e1e22;
+            --bg-elevated: #27272a;
+
+            /* Text: neutral cool tones */
+            --text-primary: #ededef;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+
+            /* Borders: subtle cool */
+            --border: #2e2e33;
+            --border-hover: #3f3f46;
+
+            /* Semantic */
+            --success: #22c55e;
+            --success-dark: #16a34a;
+            --success-bright: #4ade80;
+            --warning: #f59e0b;
+            --warning-bright: #fbbf24;
+            --error: #ef4444;
+            --error-bright: #f87171;
+            --info: #3b82f6;
+            --info-bright: #60a5fa;
+
+            /* Accents */
+            --accent-teal: #2dd4bf;
+            --accent-gold: #fbbf24;
+            --accent-purple: #a78bfa;
             --accent-pink: #f472b6;
-            --accent-green: #86efac;
-            --gradient-chatroom: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-green: #4ade80;
+
+            /* Effects */
+            --gradient-chatroom: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-primary: linear-gradient(135deg, #7c6aef 0%, #6366f1 100%);
             --radius: 12px;
             --radius-sm: 8px;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
         }
 
         /* Utility classes */
@@ -423,7 +439,7 @@
         .followup-target-select:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.1);
+            box-shadow: 0 0 0 3px rgba(124, 106, 239, 0.15);
         }
 
         /* Focus-visible for keyboard-only users */
@@ -443,7 +459,7 @@
         .form-input.error,
         .form-select.error {
             border-color: var(--error);
-            box-shadow: 0 0 0 3px rgba(223, 102, 102, 0.1);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
         }
 
         .form-textarea {
@@ -526,12 +542,12 @@
         }
 
         .test-result.success {
-            background: rgba(90, 155, 90, 0.1);
+            background: rgba(34, 197, 94, 0.1);
             border-color: var(--success);
         }
 
         .test-result.error {
-            background: rgba(223, 102, 102, 0.1);
+            background: rgba(239, 68, 68, 0.1);
             border-color: var(--error);
         }
 
@@ -588,7 +604,7 @@
 
         .btn-primary:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(217, 119, 87, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 106, 239, 0.2);
         }
 
         .btn-secondary {
@@ -609,7 +625,7 @@
 
         .btn-success:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(90, 155, 90, 0.3);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.2);
         }
 
         .btn:disabled {
@@ -715,7 +731,7 @@
 
         .evaluate-btn:hover:not(:disabled) {
             transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(217, 119, 87, 0.3);
+            box-shadow: 0 8px 24px rgba(124, 106, 239, 0.2);
         }
 
         .evaluate-btn:disabled {
@@ -883,7 +899,7 @@
 
         /* Error Display */
         .error-message {
-            background: rgba(223, 102, 102, 0.1);
+            background: rgba(239, 68, 68, 0.1);
             border: 1px solid var(--error);
             border-radius: var(--radius-sm);
             padding: 1rem;
@@ -945,7 +961,7 @@
         .live-transcript.active {
             display: block;
             border-color: var(--error);
-            box-shadow: 0 0 0 1px rgba(223, 102, 102, 0.2);
+            box-shadow: 0 0 0 1px rgba(239, 68, 68, 0.2);
         }
 
         .live-transcript .t-final {
@@ -1011,7 +1027,7 @@
         .mic-btn:hover {
             border-color: var(--primary);
             color: var(--primary);
-            background: rgba(217, 119, 87, 0.1);
+            background: rgba(124, 106, 239, 0.15);
         }
 
         .mic-btn.recording {
@@ -1022,8 +1038,8 @@
         }
 
         @keyframes micPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(223, 102, 102, 0.4); }
-            50% { box-shadow: 0 0 0 12px rgba(223, 102, 102, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
         }
 
         .recording-info {
@@ -1083,7 +1099,7 @@
         .tts-btn.playing {
             border-color: var(--success);
             color: var(--success);
-            background: rgba(90, 155, 90, 0.1);
+            background: rgba(34, 197, 94, 0.1);
         }
 
         .tts-speed {
@@ -1291,7 +1307,7 @@
 
         .part-dot.active {
             background: var(--primary);
-            box-shadow: 0 0 8px rgba(217, 119, 87, 0.5);
+            box-shadow: 0 0 8px rgba(124, 106, 239, 0.4);
         }
 
         .part-dot.completed {
@@ -1376,8 +1392,8 @@
         }
 
         .chat-msg.candidate .chat-bubble {
-            background: rgba(217, 119, 87, 0.15);
-            border: 1px solid rgba(217, 119, 87, 0.3);
+            background: rgba(124, 106, 239, 0.12);
+            border: 1px solid rgba(124, 106, 239, 0.2);
             border-top-right-radius: 4px;
         }
 
@@ -1519,7 +1535,7 @@
         }
 
         .record-btn:hover {
-            background: rgba(217, 119, 87, 0.1);
+            background: rgba(124, 106, 239, 0.15);
         }
 
         .record-btn.recording {
@@ -1530,8 +1546,8 @@
         }
 
         @keyframes recordPulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(223, 102, 102, 0.4); }
-            50% { box-shadow: 0 0 0 12px rgba(223, 102, 102, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
         }
 
         .send-btn {
@@ -1602,7 +1618,7 @@
         }
 
         .practice-actions button.danger-action:hover {
-            background: rgba(223, 102, 102, 0.1);
+            background: rgba(239, 68, 68, 0.1);
         }
 
         /* Live STT in practice mode */
@@ -1611,7 +1627,7 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.5rem 0.75rem;
-            background: rgba(223, 102, 102, 0.1);
+            background: rgba(239, 68, 68, 0.1);
             border-radius: var(--radius-sm);
             font-size: 0.8125rem;
             color: var(--error);
@@ -2058,7 +2074,7 @@
             color: var(--text-primary);
         }
         .expert-tag.selected {
-            background: rgba(217, 119, 87, 0.15);
+            background: rgba(124, 106, 239, 0.12);
             border-color: var(--primary);
             color: var(--primary);
         }
@@ -2076,11 +2092,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 2px 8px rgba(124, 106, 239, 0.2);
         }
         .chatroom-recommend-btn:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 12px rgba(124, 106, 239, 0.3);
         }
         .chatroom-recommend-btn:active {
             transform: translateY(0);
@@ -5139,10 +5155,10 @@
             const qMsg = document.createElement('div');
             qMsg.className = 'chatroom-msg';
             qMsg.innerHTML = `
-                <div class="chatroom-msg-avatar" style="background:rgba(217,119,87,0.3);color:var(--primary);">You</div>
+                <div class="chatroom-msg-avatar" style="background:var(--primary-soft);color:var(--primary);">You</div>
                 <div class="chatroom-msg-body">
                     <div class="chatroom-msg-name" style="color:var(--primary);">You</div>
-                    <div class="chatroom-msg-bubble" style="border-left-color:var(--primary);background:rgba(217,119,87,0.08);">
+                    <div class="chatroom-msg-bubble" style="border-left-color:var(--primary);background:var(--primary-soft);">
                         <p class="expert-text-en">${escapeHtml(question)}</p>
                     </div>
                 </div>`;
