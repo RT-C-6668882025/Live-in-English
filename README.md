@@ -1,4 +1,4 @@
-# Live in English: The Atomic Tutor
+# 一分钱学英语 / Learn English for one cent
 
 > "Everything is possible in the AI era."
 
@@ -26,14 +26,15 @@ Human time is limited; AI never sleeps. In this space, language barriers don't j
 
 ### 🎭 Multi-Expert Chatroom
 Debate with historical figures, philosophers, scientists, and thinkers:
-- **Socrates** - Question everything through the Socratic method
-- **Marie Curie** - Precision and scientific mindset
-- **Alan Turing** - Logical reasoning and computational thinking
+- **Feynman** - Break down complex concepts into simple terms
+- **Einstein** - Thought experiments and imagination
+- **Kahneman** - Cognitive bias detection and System 1/2 thinking
 - **And more...**
 
-### 🎯 IELTS Evaluation (Legacy Mode)
+### 🎯 IELTS Evaluation
 - Writing assessment with band scoring
 - Speaking evaluation with pronunciation analysis
+- Short input expansion with structural layering
 - Detailed feedback and improvement suggestions
 
 ### 🗣️ AI-Powered Conversation Practice
@@ -48,6 +49,11 @@ Bring your own API key:
 - **OpenAI** (GPT-4 / GPT-4o / GPT-3.5)
 - **Anthropic** (Claude 3 Opus / Sonnet / Haiku)
 - **Google** (Gemini 2.5 Pro / Flash)
+
+### ⚡ Layered Model Config
+- Configure different models for different sections
+- Per-section API key support
+- Priority: Layered config > Global config
 
 ---
 
@@ -78,7 +84,7 @@ python main.py
 2. Select your AI model
 3. Enter your API key
 4. Test connection
-5. Start living in English
+5. Start learning English for one cent
 
 ---
 
@@ -87,8 +93,9 @@ python main.py
 | Endpoint | Description |
 |----------|-------------|
 | `POST /evaluate` | IELTS writing/speaking assessment |
-| `POST /chat` | AI examiner conversation |
-| `POST /chatroom` | Multi-expert discussion |
+| `POST /practice/chat` | AI examiner conversation |
+| `POST /chatroom/discuss` | Multi-expert discussion |
+| `POST /chatroom/followup` | Follow-up discussion |
 | `POST /tts` | Text-to-speech |
 | `POST /analyze-pronunciation` | Azure Speech pronunciation analysis |
 
@@ -131,4 +138,4 @@ Copyright 2025 RT-C-6668882025
 
 > *"The limits of my language mean the limits of my world."* — Ludwig Wittgenstein
 
-**Live in English. Expand your world.**
+**一分钱学英语。Learn English for one cent.**

@@ -1,6 +1,6 @@
 """
-英语即日常 - FastAPI 后端服务
-Live in English Backend Service
+一分钱学英语 - FastAPI 后端服务
+Learn English for one cent Backend Service
 """
 
 from fastapi import FastAPI, HTTPException, File, UploadFile, Form
@@ -15,7 +15,7 @@ import asyncio
 from typing import Literal, Optional, Dict, Any, List
 from datetime import datetime
 
-app = FastAPI(title="Live in English API", version="1.1.0")
+app = FastAPI(title="一分钱学英语 API", version="1.1.0")
 
 # 配置 CORS
 app.add_middleware(
@@ -836,7 +836,7 @@ async def root():
     """根路径 - 服务状态检查"""
     return {
         "status": "ok",
-        "service": "Live in English API",
+        "service": "一分钱学英语 API",
         "version": "1.1.0",
         "supported_models": len(SUPPORTED_MODELS)
     }

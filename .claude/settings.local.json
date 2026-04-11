@@ -76,7 +76,10 @@
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"material design google clean\" --domain style)",
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"AI platform chatbot\" --domain product)",
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"AI native minimal\" --domain style)",
-      "Bash(PYTHONIOENCODING=utf-8 python search.py \"neutral purple dark\" --domain color)"
+      "Bash(PYTHONIOENCODING=utf-8 python search.py \"neutral purple dark\" --domain color)",
+      "Bash(PYTHONIOENCODING=utf-8 python search.py \"glassmorphism\" --domain prompt)",
+      "Bash(PYTHONIOENCODING=utf-8 python search.py \"accessibility contrast\" --domain ux)",
+      "Bash(PYTHONIOENCODING=utf-8 python search.py \"hover interaction\" --domain ux)"
     ]
   },
   "enableAllProjectMcpServers": true,
