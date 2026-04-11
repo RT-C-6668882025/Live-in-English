@@ -2630,6 +2630,141 @@
         }
 
         /* ========================================
+           Eval Type Toggle - Writing/Speaking 切换
+           ======================================== */
+        .eval-type-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+        .eval-type-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .eval-type-switch {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 3px;
+            gap: 2px;
+        }
+        .eval-type-btn {
+            padding: 0.35rem 0.9rem;
+            border: none;
+            border-radius: 18px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+        .eval-type-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .eval-type-btn.active {
+            background: linear-gradient(135deg, rgba(124,106,239,0.4), rgba(99,102,241,0.3));
+            color: white;
+            box-shadow: 0 2px 8px rgba(124, 106, 239, 0.2);
+
+        /* ========================================
+           Prank Mode Toggle - 恶搞模式
+           ======================================== */
+        .prank-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-left: auto;
+            padding: 0.35rem 0.75rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease-out;
+            user-select: none;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+        .prank-toggle:hover {
+            border-color: rgba(251, 146, 60, 0.4);
+            background: rgba(251, 146, 60, 0.06);
+        }
+        .prank-toggle.active {
+            border-color: rgba(251, 146, 60, 0.5);
+            background: rgba(251, 146, 60, 0.1);
+            box-shadow: 0 0 12px rgba(251, 146, 60, 0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+        }
+        .prank-toggle-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.02em;
+            transition: color 0.2s;
+        }
+        .prank-toggle.active .prank-toggle-label {
+            color: #fb923c;
+        }
+        .prank-toggle-track {
+            position: relative;
+            width: 34px;
+            height: 18px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 9px;
+            transition: background 0.25s;
+        }
+        .prank-toggle.active .prank-toggle-track {
+            background: rgba(251, 146, 60, 0.35);
+        }
+        .prank-toggle-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .prank-toggle.active .prank-toggle-thumb {
+            left: 18px;
+            background: #fb923c;
+            box-shadow: 0 0 6px rgba(251, 146, 60, 0.5);
+        }
+        .prank-toggle-icon {
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+        .prank-toggle.active .prank-toggle-icon {
+            color: #fb923c;
+        }
+        }
+        .eval-type-btn.active.speaking {
+            background: linear-gradient(135deg, rgba(45,212,191,0.4), rgba(20,184,166,0.3));
+            box-shadow: 0 2px 8px rgba(45, 212, 191, 0.2);
+        }
+        .eval-type-hint {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* ========================================
            Layered Model Config - 分层算力配置
            ======================================== */
         .layered-config-bar {
@@ -2974,11 +3109,8 @@
     <main class="container" role="main">
         <!-- Mode Selector -->
         <div class="mode-selector" role="tablist" aria-label="Application mode">
-            <button class="mode-btn active" data-mode="writing" role="tab" aria-selected="true" aria-controls="evalMode" id="tab-writing">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Writing
-            </button>
-            <button class="mode-btn" data-mode="speaking" role="tab" aria-selected="false" aria-controls="evalMode" id="tab-speaking">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg> Speaking
+            <button class="mode-btn active" data-mode="eval" role="tab" aria-selected="true" aria-controls="evalMode" id="tab-eval">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Evaluate
             </button>
             <button class="mode-btn" data-mode="practice" role="tab" aria-selected="false" aria-controls="practiceMode" id="tab-practice">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Practice
@@ -2988,9 +3120,24 @@
             </button>
         </div>
 
-        <!-- Writing/Speaking Mode -->
-        <div class="eval-mode" id="evalMode" role="tabpanel" aria-labelledby="tab-writing">
-        <!-- Layered Config Bar - Writing/Speaking -->
+        <!-- Eval Mode -->
+        <div class="eval-mode" id="evalMode" role="tabpanel" aria-labelledby="tab-eval">
+        <!-- Eval Type Toggle - Writing/Speaking 切换 -->
+        <div class="eval-type-toggle" role="radiogroup" aria-label="Evaluation type">
+            <span class="eval-type-label">Type:</span>
+            <div class="eval-type-switch">
+                <button class="eval-type-btn active" data-eval-type="writing" id="evalTypeWriting" role="radio" aria-checked="true">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                    Writing
+                </button>
+                <button class="eval-type-btn" data-eval-type="speaking" id="evalTypeSpeaking" role="radio" aria-checked="false">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    Speaking
+                </button>
+            </div>
+            <span class="eval-type-hint" id="evalTypeHint">Writing (TR/CC/LR/GRA)</span>
+        </div>
+        <!-- Layered Config Bar - Eval -->
         <div class="layered-config-bar" id="layeredBarEval">
             <span class="layered-config-indicator global" id="layeredIndicatorEval">🌐 Global</span>
             <span class="layered-config-model" id="layeredModelEval">deepseek-chat</span>
@@ -3000,7 +3147,7 @@
         </div>
         <div class="layered-config-panel" id="layeredPanelEval">
             <div class="layered-config-panel-header">
-                <div class="layered-config-panel-title">⚡ Writing/Speaking Model Config</div>
+                <div class="layered-config-panel-title">⚡ 评估 Model Config</div>
                 <div class="layered-config-panel-hint">Overrides global config for this section only</div>
             </div>
             <div class="layered-config-row">
@@ -3521,7 +3668,8 @@
         const apiUrlGroup = document.getElementById('apiUrlGroup');
 
         // State
-        let currentMode = 'writing';
+        let currentMode = 'eval';  // 当前页面模式：eval, practice, chatroom
+        let evalType = 'writing';  // 评估类型：writing 或 speaking
         // 新的配置格式：为每个模型保存独立的 API Key
         let apiConfig = {
             model: 'deepseek-chat',  // 当前选择的模型
@@ -4291,7 +4439,7 @@
                 const wordCount = response.trim().split(/\s+/).filter(w => w.length > 0).length;
                 
                 const requestBody = {
-                    mode: currentMode,
+                    mode: evalType,  // 使用 evalType (writing/speaking) 而不是 currentMode
                     task_prompt: taskPrompt,
                     response: response,
                     word_count: wordCount,
@@ -4365,6 +4513,33 @@
         evaluateBtn.addEventListener('click', evaluate);
         copyBtn.addEventListener('click', copyResults);
 
+        // Eval Type Toggle - Writing/Speaking 切换
+        const evalTypeHint = document.getElementById('evalTypeHint');
+        document.querySelectorAll('.eval-type-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // 更新按钮状态和 ARIA
+                document.querySelectorAll('.eval-type-btn').forEach(b => {
+                    b.classList.remove('active', 'speaking');
+                    b.setAttribute('aria-checked', 'false');
+                });
+                btn.classList.add('active');
+                btn.setAttribute('aria-checked', 'true');
+                if (btn.dataset.evalType === 'speaking') {
+                    btn.classList.add('speaking');
+                }
+                // 更新 evalType 状态
+                evalType = btn.dataset.evalType;
+                // 更新提示文字
+                if (evalType === 'writing') {
+                    evalTypeHint.textContent = 'Writing (TR/CC/LR/GRA)';
+                } else {
+                    evalTypeHint.textContent = 'Speaking (FC/LR/GRA/P)';
+                }
+                // 更新语音按钮显示
+                updateVoiceUI();
+            });
+        });
+
         // Initialize
         loadConfig();
         loadLayeredConfig();
@@ -4413,9 +4588,10 @@
         // Check TTS support
         const ttsSupported = 'speechSynthesis' in window;
 
-        // Show mic button only in speaking mode
+        // Show mic button only in speaking eval type
         function updateVoiceUI() {
-            if (sttSupported && currentMode === 'speaking') {
+            // 语音输入只在 eval 模式下的 speaking 类型中显示
+            if (sttSupported && currentMode === 'eval' && evalType === 'speaking') {
                 micBtn.style.display = 'flex';
                 voiceHint.style.display = 'block';
             } else {
@@ -4606,6 +4782,7 @@
         // ==========================================
         const evalMode = document.getElementById('evalMode');
         const practiceMode = document.getElementById('practiceMode');
+        const chatroomMode = document.getElementById('chatroomMode');
         const chatArea = document.getElementById('chatArea');
         const chatEmpty = document.getElementById('chatEmpty');
         const typingIndicator = document.getElementById('typingIndicator');
@@ -5590,7 +5767,6 @@
         // ==========================================
         // Chatroom Mode - Multi-Expert Discussion
         // ==========================================
-        const chatroomMode = document.getElementById('chatroomMode');
         const chatroomTopic = document.getElementById('chatroomTopic');
         const chatroomLang = document.getElementById('chatroomLang');
         const expertTags = document.getElementById('expertTags');
