@@ -2628,6 +2628,200 @@
                 scroll-behavior: auto !important;
             }
         }
+
+        /* ========================================
+           Layered Model Config - 分层算力配置
+           ======================================== */
+        .layered-config-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 1rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            font-size: 0.8125rem;
+            transition: all 0.2s;
+        }
+        .layered-config-bar:hover {
+            border-color: var(--border-hover);
+        }
+        .layered-config-bar.has-custom {
+            border-color: var(--primary);
+            background: var(--primary-soft);
+        }
+        .layered-config-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+        .layered-config-indicator.global {
+            background: rgba(161, 161, 170, 0.15);
+            color: var(--text-secondary);
+        }
+        .layered-config-indicator.custom {
+            background: var(--primary-soft);
+            color: var(--primary);
+        }
+        .layered-config-model {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+        }
+        .layered-config-divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border);
+        }
+        .layered-config-toggle {
+            margin-left: auto;
+            background: none;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            padding: 0.25rem 0.6rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .layered-config-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .layered-config-toggle.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .layered-config-panel {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 0 0 1px rgba(124, 106, 239, 0.1), var(--shadow);
+        }
+        .layered-config-panel.show {
+            display: block;
+        }
+        .layered-config-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .layered-config-panel-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .layered-config-panel-hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        .layered-config-row {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .layered-config-field {
+            flex: 1;
+            min-width: 160px;
+        }
+        .layered-config-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.35rem;
+        }
+        .layered-config-field select,
+        .layered-config-field input {
+            width: 100%;
+            padding: 0.5rem 0.65rem;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 0.8125rem;
+            font-family: inherit;
+            transition: border-color 0.15s;
+        }
+        .layered-config-field select:focus,
+        .layered-config-field input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .layered-config-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .layered-config-actions button {
+            padding: 0.4rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: 1px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+        }
+        .layered-config-actions button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .layered-config-actions .btn-apply {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .layered-config-actions .btn-apply:hover {
+            background: var(--primary-dark);
+        }
+        .layered-config-actions .btn-reset {
+            color: var(--error);
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+        .layered-config-actions .btn-reset:hover {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error);
+        }
+        .layered-config-test-result {
+            margin-top: 0.75rem;
+            padding: 0.6rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            display: none;
+        }
+        .layered-config-test-result.success {
+            display: block;
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .layered-config-test-result.error {
+            display: block;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -2792,13 +2986,64 @@
             <button class="mode-btn" data-mode="chatroom" role="tab" aria-selected="false" aria-controls="chatroomMode" id="tab-chatroom">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg> Chatroom
             </button>
-            <button class="mode-btn" data-mode="workflow" role="tab" aria-selected="false" onclick="window.location.href='workflow.html'">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Workflow
-            </button>
         </div>
 
         <!-- Writing/Speaking Mode -->
         <div class="eval-mode" id="evalMode" role="tabpanel" aria-labelledby="tab-writing">
+        <!-- Layered Config Bar - Writing/Speaking -->
+        <div class="layered-config-bar" id="layeredBarEval">
+            <span class="layered-config-indicator global" id="layeredIndicatorEval">🌐 Global</span>
+            <span class="layered-config-model" id="layeredModelEval">deepseek-chat</span>
+            <span class="layered-config-divider"></span>
+            <span style="color:var(--text-muted);font-size:0.7rem;" id="layeredHintEval">Using global config</span>
+            <button class="layered-config-toggle" id="layeredToggleEval" title="Configure a dedicated model for this section">⚙️ Custom Model</button>
+        </div>
+        <div class="layered-config-panel" id="layeredPanelEval">
+            <div class="layered-config-panel-header">
+                <div class="layered-config-panel-title">⚡ Writing/Speaking Model Config</div>
+                <div class="layered-config-panel-hint">Overrides global config for this section only</div>
+            </div>
+            <div class="layered-config-row">
+                <div class="layered-config-field">
+                    <label>Model</label>
+                    <select id="layeredModelSelectEval">
+                        <optgroup label="DeepSeek">
+                            <option value="deepseek-chat">DeepSeek Chat (V3)</option>
+                            <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                        </optgroup>
+                        <optgroup label="OpenAI">
+                            <option value="gpt-4o">GPT-4o</option>
+                            <option value="gpt-4o-mini">GPT-4o Mini</option>
+                        </optgroup>
+                        <optgroup label="Anthropic">
+                            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                            <option value="claude-3-haiku">Claude 3 Haiku</option>
+                        </optgroup>
+                        <optgroup label="Google Gemini">
+                            <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                            <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="layered-config-field">
+                    <label>API Key</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="layeredApiKeyEval" placeholder="Leave empty to use global key">
+                        <button type="button" class="password-toggle" onclick="const i=document.getElementById('layeredApiKeyEval');i.type=i.type==='password'?'text':'password'">👁️</button>
+                    </div>
+                </div>
+                <div class="layered-config-field" style="max-width:200px;">
+                    <label>Custom API URL (optional)</label>
+                    <input type="url" id="layeredApiUrlEval" placeholder="Auto-detected">
+                </div>
+            </div>
+            <div class="layered-config-test-result" id="layeredTestResultEval"></div>
+            <div class="layered-config-actions">
+                <button class="btn-apply" id="layeredApplyEval">Apply</button>
+                <button id="layeredTestEval">🔍 Test</button>
+                <button class="btn-reset" id="layeredResetEval">Reset to Global</button>
+            </div>
+        </div>
         <!-- Input Section -->
         <!-- Empty State Guide -->
         <div class="empty-state" id="evalEmptyState">
@@ -2877,6 +3122,61 @@
 
         <!-- Practice Mode -->
         <div class="practice-container" id="practiceMode" role="tabpanel" aria-labelledby="tab-practice">
+            <!-- Layered Config Bar - Practice -->
+            <div class="layered-config-bar" id="layeredBarPractice">
+                <span class="layered-config-indicator global" id="layeredIndicatorPractice">🌐 Global</span>
+                <span class="layered-config-model" id="layeredModelPractice">deepseek-chat</span>
+                <span class="layered-config-divider"></span>
+                <span style="color:var(--text-muted);font-size:0.7rem;" id="layeredHintPractice">Using global config</span>
+                <button class="layered-config-toggle" id="layeredTogglePractice" title="Configure a dedicated model for this section">⚙️ Custom Model</button>
+            </div>
+            <div class="layered-config-panel" id="layeredPanelPractice">
+                <div class="layered-config-panel-header">
+                    <div class="layered-config-panel-title">🎤 Practice Model Config</div>
+                    <div class="layered-config-panel-hint">Overrides global config for this section only</div>
+                </div>
+                <div class="layered-config-row">
+                    <div class="layered-config-field">
+                        <label>Model</label>
+                        <select id="layeredModelSelectPractice">
+                            <optgroup label="DeepSeek">
+                                <option value="deepseek-chat">DeepSeek Chat (V3)</option>
+                                <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                            </optgroup>
+                            <optgroup label="OpenAI">
+                                <option value="gpt-4o">GPT-4o</option>
+                                <option value="gpt-4o-mini">GPT-4o Mini</option>
+                            </optgroup>
+                            <optgroup label="Anthropic">
+                                <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                                <option value="claude-3-haiku">Claude 3 Haiku</option>
+                            </optgroup>
+                            <optgroup label="Google Gemini">
+                                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="layered-config-field">
+                        <label>API Key</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="layeredApiKeyPractice" placeholder="Leave empty to use global key">
+                            <button type="button" class="password-toggle" onclick="const i=document.getElementById('layeredApiKeyPractice');i.type=i.type==='password'?'text':'password'">👁️</button>
+                        </div>
+                    </div>
+                    <div class="layered-config-field" style="max-width:200px;">
+                        <label>Custom API URL (optional)</label>
+                        <input type="url" id="layeredApiUrlPractice" placeholder="Auto-detected">
+                    </div>
+                </div>
+                <div class="layered-config-test-result" id="layeredTestResultPractice"></div>
+                <div class="layered-config-actions">
+                    <button class="btn-apply" id="layeredApplyPractice">Apply</button>
+                    <button id="layeredTestPractice">🔍 Test</button>
+                    <button class="btn-reset" id="layeredResetPractice">Reset to Global</button>
+                </div>
+            </div>
+
             <div class="practice-header">
                 <h3>IELTS Speaking Practice</h3>
                 <p>Record your voice for pronunciation analysis (phoneme scoring, pitch curve) or chat with AI examiner.</p>
@@ -3039,6 +3339,61 @@
 
         <!-- Chatroom Mode -->
         <div class="chatroom-container" id="chatroomMode" role="tabpanel" aria-labelledby="tab-chatroom">
+            <!-- Layered Config Bar - Chatroom -->
+            <div class="layered-config-bar" id="layeredBarChatroom">
+                <span class="layered-config-indicator global" id="layeredIndicatorChatroom">🌐 Global</span>
+                <span class="layered-config-model" id="layeredModelChatroom">deepseek-chat</span>
+                <span class="layered-config-divider"></span>
+                <span style="color:var(--text-muted);font-size:0.7rem;" id="layeredHintChatroom">Using global config</span>
+                <button class="layered-config-toggle" id="layeredToggleChatroom" title="Configure a dedicated model for this section">⚙️ Custom Model</button>
+            </div>
+            <div class="layered-config-panel" id="layeredPanelChatroom">
+                <div class="layered-config-panel-header">
+                    <div class="layered-config-panel-title">💬 Chatroom Model Config</div>
+                    <div class="layered-config-panel-hint">Overrides global config for this section only</div>
+                </div>
+                <div class="layered-config-row">
+                    <div class="layered-config-field">
+                        <label>Model</label>
+                        <select id="layeredModelSelectChatroom">
+                            <optgroup label="DeepSeek">
+                                <option value="deepseek-chat">DeepSeek Chat (V3)</option>
+                                <option value="deepseek-reasoner">DeepSeek R1 (Reasoner)</option>
+                            </optgroup>
+                            <optgroup label="OpenAI">
+                                <option value="gpt-4o">GPT-4o</option>
+                                <option value="gpt-4o-mini">GPT-4o Mini</option>
+                            </optgroup>
+                            <optgroup label="Anthropic">
+                                <option value="claude-3-5-sonnet">Claude 3.5 Sonnet</option>
+                                <option value="claude-3-haiku">Claude 3 Haiku</option>
+                            </optgroup>
+                            <optgroup label="Google Gemini">
+                                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
+                                <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="layered-config-field">
+                        <label>API Key</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" id="layeredApiKeyChatroom" placeholder="Leave empty to use global key">
+                            <button type="button" class="password-toggle" onclick="const i=document.getElementById('layeredApiKeyChatroom');i.type=i.type==='password'?'text':'password'">👁️</button>
+                        </div>
+                    </div>
+                    <div class="layered-config-field" style="max-width:200px;">
+                        <label>Custom API URL (optional)</label>
+                        <input type="url" id="layeredApiUrlChatroom" placeholder="Auto-detected">
+                    </div>
+                </div>
+                <div class="layered-config-test-result" id="layeredTestResultChatroom"></div>
+                <div class="layered-config-actions">
+                    <button class="btn-apply" id="layeredApplyChatroom">Apply</button>
+                    <button id="layeredTestChatroom">🔍 Test</button>
+                    <button class="btn-reset" id="layeredResetChatroom">Reset to Global</button>
+                </div>
+            </div>
+
             <!-- Control Bar -->
             <div class="chatroom-controls">
                 <div class="chatroom-topic-row">
@@ -3194,6 +3549,246 @@
         function getCurrentApiKey() {
             const provider = getProvider(apiConfig.model);
             return apiConfig.apiKeys[provider] || '';
+        }
+
+        // ==========================================
+        // Layered Config - 分层算力配置系统
+        // ==========================================
+        // 分层配置数据结构：按板块存储独立的模型和API Key
+        let layeredConfig = {
+            eval: { model: null, apiKey: null, apiUrl: null },
+            practice: { model: null, apiKey: null, apiUrl: null },
+            chatroom: { model: null, apiKey: null, apiUrl: null }
+        };
+
+        // 获取板块的有效配置（分层优先，回退全局）
+        function getEffectiveConfig(sectionId) {
+            const layered = layeredConfig[sectionId];
+            if (layered && layered.model) {
+                // 分层配置生效：API Key 优先使用分层，回退全局
+                const provider = getProvider(layered.model);
+                const effectiveKey = layered.apiKey || apiConfig.apiKeys[provider] || '';
+                return {
+                    api_key: effectiveKey,
+                    model: layered.model,
+                    api_url: layered.apiUrl || null,
+                    _source: 'layered',
+                    _section: sectionId
+                };
+            }
+            // 回退全局配置
+            const provider = getProvider(apiConfig.model);
+            const apiKey = apiConfig.apiKeys[provider] || '';
+            return {
+                api_key: apiKey,
+                model: apiConfig.model,
+                api_url: apiConfig.apiUrl || null,
+                custom_model: apiConfig.customModel || null,
+                _source: 'global',
+                _section: sectionId
+            };
+        }
+
+        // 加载分层配置
+        function loadLayeredConfig() {
+            const saved = localStorage.getItem('ieltsLayeredConfig');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    layeredConfig = {
+                        eval: parsed.eval || { model: null, apiKey: null, apiUrl: null },
+                        practice: parsed.practice || { model: null, apiKey: null, apiUrl: null },
+                        chatroom: parsed.chatroom || { model: null, apiKey: null, apiUrl: null }
+                    };
+                } catch (e) {
+                    console.error('Error loading layered config:', e);
+                }
+            }
+            updateAllLayeredBars();
+        }
+
+        // 保存分层配置
+        function saveLayeredConfig() {
+            localStorage.setItem('ieltsLayeredConfig', JSON.stringify(layeredConfig));
+        }
+
+        // 更新所有板块的配置状态栏
+        function updateAllLayeredBars() {
+            ['eval', 'practice', 'chatroom'].forEach(section => {
+                updateLayeredBar(section);
+            });
+        }
+
+        // 更新单个板块的配置状态栏
+        function updateLayeredBar(section) {
+            const bar = document.getElementById('layeredBar' + capitalize(section));
+            const indicator = document.getElementById('layeredIndicator' + capitalize(section));
+            const modelSpan = document.getElementById('layeredModel' + capitalize(section));
+            const hint = document.getElementById('layeredHint' + capitalize(section));
+            const toggle = document.getElementById('layeredToggle' + capitalize(section));
+            if (!bar) return;
+
+            const layered = layeredConfig[section];
+            if (layered && layered.model) {
+                bar.classList.add('has-custom');
+                indicator.className = 'layered-config-indicator custom';
+                indicator.textContent = '⚡ Custom';
+                modelSpan.textContent = layered.model;
+                hint.textContent = 'Using custom model for this section';
+                hint.style.color = 'var(--primary)';
+                toggle.classList.add('active');
+                toggle.textContent = '✓ Custom Active';
+            } else {
+                bar.classList.remove('has-custom');
+                indicator.className = 'layered-config-indicator global';
+                indicator.textContent = '🌐 Global';
+                modelSpan.textContent = apiConfig.model || 'deepseek-chat';
+                hint.textContent = 'Using global config';
+                hint.style.color = 'var(--text-muted)';
+                toggle.classList.remove('active');
+                toggle.textContent = '⚙️ Custom Model';
+            }
+        }
+
+        function capitalize(s) {
+            return s.charAt(0).toUpperCase() + s.slice(1);
+        }
+
+        // 初始化分层配置面板的交互
+        function initLayeredConfigUI() {
+            const sections = ['eval', 'practice', 'chatroom'];
+            sections.forEach(section => {
+                const id = capitalize(section);
+                const toggle = document.getElementById('layeredToggle' + id);
+                const panel = document.getElementById('layeredPanel' + id);
+                const applyBtn = document.getElementById('layeredApply' + id);
+                const testBtn = document.getElementById('layeredTest' + id);
+                const resetBtn = document.getElementById('layeredReset' + id);
+                const modelSelect = document.getElementById('layeredModelSelect' + id);
+                const apiKeyInput = document.getElementById('layeredApiKey' + id);
+                const apiUrlInput = document.getElementById('layeredApiUrl' + id);
+
+                if (!toggle || !panel) return;
+
+                // 展开/折叠面板
+                toggle.addEventListener('click', () => {
+                    panel.classList.toggle('show');
+                    if (panel.classList.contains('show')) {
+                        // 填充当前值
+                        const layered = layeredConfig[section];
+                        modelSelect.value = layered.model || apiConfig.model || 'deepseek-chat';
+                        apiKeyInput.value = layered.apiKey || '';
+                        apiUrlInput.value = layered.apiUrl || '';
+                    }
+                });
+
+                // 应用配置
+                if (applyBtn) {
+                    applyBtn.addEventListener('click', () => {
+                        const model = modelSelect.value;
+                        const apiKey = apiKeyInput.value.trim();
+                        const apiUrl = apiUrlInput.value.trim();
+
+                        // 验证：如果填了 API Key，格式检查
+                        if (apiKey && apiKey.length < 8) {
+                            showLayeredTestResult(section, 'error', 'API Key seems too short. Please check.');
+                            return;
+                        }
+
+                        // 验证：如果填了 API URL，格式检查
+                        if (apiUrl && !apiUrl.startsWith('http')) {
+                            showLayeredTestResult(section, 'error', 'API URL must start with http:// or https://');
+                            return;
+                        }
+
+                        layeredConfig[section] = {
+                            model: model,
+                            apiKey: apiKey || null,
+                            apiUrl: apiUrl || null
+                        };
+                        saveLayeredConfig();
+                        updateLayeredBar(section);
+                        panel.classList.remove('show');
+                        showToast(`${section === 'eval' ? 'Writing/Speaking' : section === 'practice' ? 'Practice' : 'Chatroom'} model set to ${model}`);
+                    });
+                }
+
+                // 测试连接
+                if (testBtn) {
+                    testBtn.addEventListener('click', async () => {
+                        const model = modelSelect.value;
+                        const apiKey = apiKeyInput.value.trim();
+                        const apiUrl = apiUrlInput.value.trim();
+
+                        // API Key 优先使用分层，回退全局
+                        const provider = getProvider(model);
+                        const effectiveKey = apiKey || apiConfig.apiKeys[provider] || '';
+
+                        if (!effectiveKey) {
+                            showLayeredTestResult(section, 'error', 'No API key available. Fill in the key or configure global settings.');
+                            return;
+                        }
+
+                        showLayeredTestResult(section, 'info', 'Testing connection...');
+                        testBtn.disabled = true;
+
+                        try {
+                            const response = await fetch(`${API_BASE_URL}/test-api`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({
+                                    api_url: apiUrl || null,
+                                    api_key: effectiveKey,
+                                    model: model
+                                })
+                            });
+                            const data = await response.json();
+                            if (data.status === 'success') {
+                                showLayeredTestResult(section, 'success', data.message);
+                            } else {
+                                showLayeredTestResult(section, 'error', data.message);
+                            }
+                        } catch (e) {
+                            showLayeredTestResult(section, 'error', 'Connection test failed: ' + e.message);
+                        } finally {
+                            testBtn.disabled = false;
+                        }
+                    });
+                }
+
+                // 重置为全局
+                if (resetBtn) {
+                    resetBtn.addEventListener('click', () => {
+                        layeredConfig[section] = { model: null, apiKey: null, apiUrl: null };
+                        saveLayeredConfig();
+                        updateLayeredBar(section);
+                        modelSelect.value = apiConfig.model || 'deepseek-chat';
+                        apiKeyInput.value = '';
+                        apiUrlInput.value = '';
+                        panel.classList.remove('show');
+                        showToast(`${section === 'eval' ? 'Writing/Speaking' : section === 'practice' ? 'Practice' : 'Chatroom'} reset to global config`);
+                    });
+                }
+            });
+        }
+
+        // 显示分层配置测试结果
+        function showLayeredTestResult(section, type, message) {
+            const id = capitalize(section);
+            const el = document.getElementById('layeredTestResult' + id);
+            if (!el) return;
+            el.className = 'layered-config-test-result ' + (type === 'success' ? 'success' : type === 'error' ? 'error' : '');
+            if (type === 'info') {
+                el.style.display = 'block';
+                el.style.background = 'rgba(59, 130, 246, 0.1)';
+                el.style.color = 'var(--info)';
+                el.style.border = '1px solid rgba(59, 130, 246, 0.2)';
+            } else {
+                el.style.background = '';
+                el.style.color = '';
+                el.style.border = '';
+            }
+            el.textContent = message;
         }
 
         // Load saved config from localStorage
@@ -3553,6 +4148,7 @@
                 closeModalFunc();
                 showToast('Configuration saved successfully!');
                 checkApiStatus();
+                updateAllLayeredBars();
                 if (typeof updatePracticeApiStatus === 'function') updatePracticeApiStatus();
             }
         });
@@ -3664,10 +4260,9 @@
                 return;
             }
 
-            // Check if API config exists
-            const currentProvider = getProvider(apiConfig.model);
-            const currentApiKey = apiConfig.apiKeys[currentProvider];
-            if (!currentApiKey || currentApiKey.trim() === '') {
+            // Check if API config exists - 使用分层配置
+            const effectiveConfig = getEffectiveConfig('eval');
+            if (!effectiveConfig.api_key || effectiveConfig.api_key.trim() === '') {
                 showError('Please configure your API settings first. Click the Settings button.');
                 openModal();
                 return;
@@ -3680,18 +4275,16 @@
 
 
             try {
-                // 构建 api_config，只包含非空值
+                // 构建请求，使用分层配置
                 const apiConfigData = {
-                    api_key: currentApiKey,
-                    model: apiConfig.model
+                    api_key: effectiveConfig.api_key,
+                    model: effectiveConfig.model
                 };
-                // 只有在有自定义 API URL 时才添加
-                if (apiConfig.apiUrl) {
-                    apiConfigData.api_url = apiConfig.apiUrl;
+                if (effectiveConfig.api_url) {
+                    apiConfigData.api_url = effectiveConfig.api_url;
                 }
-                // 只有在有自定义模型时才添加
-                if (apiConfig.customModel && apiConfig.customModel.trim()) {
-                    apiConfigData.custom_model = apiConfig.customModel.trim();
+                if (effectiveConfig.custom_model && effectiveConfig.custom_model.trim()) {
+                    apiConfigData.custom_model = effectiveConfig.custom_model.trim();
                 }
                 
                 // 计算字数
@@ -3774,6 +4367,8 @@
 
         // Initialize
         loadConfig();
+        loadLayeredConfig();
+        initLayeredConfigUI();
         checkApiStatus();
         setInterval(checkApiStatus, 30000);
 
@@ -4256,10 +4851,9 @@
         async function sendPracticeMessage(text) {
             if (!text.trim() || !practiceActive) return;
 
-            // Check API config
-            const currentProvider = getProvider(apiConfig.model);
-            const currentApiKey = apiConfig.apiKeys[currentProvider];
-            if (!currentApiKey || !currentApiKey.trim()) {
+            // Check API config - 使用分层配置
+            const effectiveConfig = getEffectiveConfig('practice');
+            if (!effectiveConfig.api_key || !effectiveConfig.api_key.trim()) {
                 showToast('Please configure your API key first.');
                 openModal();
                 return;
@@ -4275,8 +4869,8 @@
             chatArea.scrollTop = chatArea.scrollHeight;
 
             // Build api config for request
-            const apiConfigData = { api_key: currentApiKey, model: apiConfig.model };
-            if (apiConfig.apiUrl) apiConfigData.api_url = apiConfig.apiUrl;
+            const apiConfigData = { api_key: effectiveConfig.api_key, model: effectiveConfig.model };
+            if (effectiveConfig.api_url) apiConfigData.api_url = effectiveConfig.api_url;
             if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
 
             try {
@@ -4346,16 +4940,15 @@
             endPracticeBtn.disabled = true;
             endPracticeBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Evaluating...';
 
-            const currentProvider = getProvider(apiConfig.model);
-            const currentApiKey = apiConfig.apiKeys[currentProvider];
-            if (!currentApiKey || !currentApiKey.trim()) {
+            const effectiveConfig = getEffectiveConfig('practice');
+            if (!effectiveConfig.api_key || !effectiveConfig.api_key.trim()) {
                 showToast('API key not configured.');
                 openModal();
                 return;
             }
-            const apiConfigData = { api_key: currentApiKey, model: apiConfig.model };
-            if (apiConfig.apiUrl) apiConfigData.api_url = apiConfig.apiUrl;
-            if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
+            const apiConfigData = { api_key: effectiveConfig.api_key, model: effectiveConfig.model };
+            if (effectiveConfig.api_url) apiConfigData.api_url = effectiveConfig.api_url;
+            if (effectiveConfig.custom_model) apiConfigData.custom_model = effectiveConfig.custom_model;
 
             try {
                 const response = await fetch(`${API_BASE_URL}/practice/evaluate`, {
@@ -5179,9 +5772,8 @@
             if (!topic) { showToast('Please enter a topic'); return; }
             if (chatroomExperts.length < 2) { showToast('Please select at least 2 experts'); return; }
 
-            const currentProvider = getProvider(apiConfig.model);
-            const currentApiKey = apiConfig.apiKeys[currentProvider];
-            if (!currentApiKey || !currentApiKey.trim()) {
+            const effectiveConfig = getEffectiveConfig('chatroom');
+            if (!effectiveConfig.api_key || !effectiveConfig.api_key.trim()) {
                 showToast('Please configure your API key first.');
                 openModal();
                 return;
@@ -5209,10 +5801,10 @@
                         experts: chatroomExperts.map(ex => ({ name: ex.name, description: ex.description })),
                         language: chatroomLang.value,
                         api_config: {
-                            api_key: currentApiKey,
-                            model: apiConfig.model,
-                            api_url: apiConfig.apiUrl || undefined,
-                            custom_model: apiConfig.customModel || undefined
+                            api_key: effectiveConfig.api_key,
+                            model: effectiveConfig.model,
+                            api_url: effectiveConfig.api_url || undefined,
+                            custom_model: effectiveConfig.custom_model || undefined
                         }
                     })
                 });
@@ -5399,10 +5991,10 @@
                         target_expert: targetName,
                         language: chatroomLang.value,
                         api_config: {
-                            api_key: currentApiKey,
-                            model: apiConfig.model,
-                            api_url: apiConfig.apiUrl || undefined,
-                            custom_model: apiConfig.customModel || undefined
+                            api_key: getEffectiveConfig('chatroom').api_key,
+                            model: getEffectiveConfig('chatroom').model,
+                            api_url: getEffectiveConfig('chatroom').api_url || undefined,
+                            custom_model: getEffectiveConfig('chatroom').custom_model || undefined
                         }
                     })
                 });
