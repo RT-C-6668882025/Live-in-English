@@ -79,7 +79,10 @@
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"neutral purple dark\" --domain color)",
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"glassmorphism\" --domain prompt)",
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"accessibility contrast\" --domain ux)",
-      "Bash(PYTHONIOENCODING=utf-8 python search.py \"hover interaction\" --domain ux)"
+      "Bash(PYTHONIOENCODING=utf-8 python search.py \"hover interaction\" --domain ux)",
+      "Bash(python3 \"C:/Users/Administrator/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"glassmorphism dark mode AI\" --domain style)",
+      "Bash(python \"C:/Users/Administrator/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"glassmorphism dark mode AI\" --domain style)",
+      "Bash(PYTHONIOENCODING=utf-8 python:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
