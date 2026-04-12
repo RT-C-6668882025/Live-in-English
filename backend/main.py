@@ -12,6 +12,7 @@ import httpx
 import json
 import io
 import asyncio
+import base64
 from typing import Literal, Optional, Dict, Any, List
 from datetime import datetime
 
@@ -551,6 +552,46 @@ Not generic advice - actionable steps based on the discussion.
 Based on this discussion, what's the most important follow-up question to explore?
 
 Respond in English, around 250-300 words. Be critical and insightful."""
+
+PRANK_MODE_INSTRUCTION = """
+
+**PRANK MODE ACTIVATED** - You are now in a hilarious, chaotic, roasting mode!
+Rules for prank mode:
+- VICIOUSLY roast and mock the other experts' ideas with sarcastic wit
+- Take absurd, exaggerated positions that are technically "arguable" but clearly ridiculous
+- Use trash talk, insults (keep it fun, not mean-spirited), and provocative language
+- Start drama and petty arguments with other experts
+- Be dramatic, over-the-top, and theatrically offended
+- Throw in pop culture references, memes, and internet slang where fitting
+- Complain about how the other experts are "clueless" or "don't get it"
+- Use phrases like "Hold my beer", "Sweet summer child", "Tell me you don't understand without telling me..."
+- Stay loosely on topic but make everything entertaining and absurdly biased
+- Your response should be funny enough to make someone laugh out loud
+- Keep responses around 100-150 words, packed with humor and attitude
+"""
+
+PRANK_JUDGE_PROMPT = """You are a chaotic, sarcastic commentator (think: sassy reality TV judge + stand-up comedian) reviewing this ABSOLUTE TRAINWRECK of a "discussion" on: "{topic}"
+
+{all_responses}
+
+Rip into everyone with hilarious commentary. Structure your roast as:
+
+## 1. Hot Takes Award
+Who had the most unhinged, absurd take? Give them a ridiculous award name.
+
+## 2. Biggest Roast
+Who delivered the most devastating insult? Quote it and add your own commentary.
+
+## 3. The "Are You Serious?" Moment
+What was the most ridiculous thing anyone said? React to it like a shocked bystander.
+
+## 4. Chaos Rating
+Rate the chaos level (1-10) and explain why. Be dramatic.
+
+## 5. The Verdict Nobody Asked For
+Give a completely biased, trollish final verdict. Pick a "winner" for the dumbest reason possible.
+
+Respond in English, around 200-250 words. Be HILARIOUS."""
 
 # Writing 评估系统提示词（改版）
 WRITING_SYSTEM_PROMPT = """You are a brutally honest IELTS examiner. Your job is to expose every flaw with surgical precision.
@@ -1255,8 +1296,14 @@ Keep your responses conversational and brief (1-3 sentences max per turn). Do NO
 
 Current conversation state will be provided with each message."""
 
-# TTS 可用语音列表
-TTS_VOICES = {
+# TTS 引擎枚举
+class TTSEngine(str):
+    EDGE_TTS = "edge_tts"
+    ELEVENLABS = "elevenlabs"
+    DOUBAO = "doubao"
+
+# Edge-TTS 音色列表
+EDGE_TTS_VOICES = {
     "en-US-AriaNeural": {"name": "Aria (Female, US)", "gender": "Female", "lang": "en-US"},
     "en-US-DavisNeural": {"name": "Davis (Male, US)", "gender": "Male", "lang": "en-US"},
     "en-US-JennyNeural": {"name": "Jenny (Female, US)", "gender": "Female", "lang": "en-US"},
@@ -1266,12 +1313,47 @@ TTS_VOICES = {
     "en-AU-NatashaNeural": {"name": "Natasha (Female, AU)", "gender": "Female", "lang": "en-AU"},
 }
 
+# ElevenLabs 推荐英语音色
+ELEVENLABS_VOICES = {
+    "21m00Tcm4TlvDq8ikWAM": {"name": "Rachel (Female, Warm)", "gender": "Female", "lang": "en"},
+    "AZnzlk1XvdvUeBnXmlld": {"name": "Domi (Female, Strong)", "gender": "Female", "lang": "en"},
+    "EXAVITQu4vr4xnSDxMaL": {"name": "Bella (Female, Soft)", "gender": "Female", "lang": "en"},
+    "ErXwobaYiN019PkySvjV": {"name": "Antoni (Male, Warm)", "gender": "Male", "lang": "en"},
+    "MF3mGyEYCl7XYWbV9V6O": {"name": "Elli (Female, Emotional)", "gender": "Female", "lang": "en"},
+    "TxGEqnHWrfWFTfGW9XjX": {"name": "Josh (Male, Deep)", "gender": "Male", "lang": "en"},
+    "VR6AewLTigWG4xSOukaG": {"name": "Arnold (Male, Crisp)", "gender": "Male", "lang": "en"},
+    "pNInz6obpgDQGcFmaJgB": {"name": "Adam (Male, Narrator)", "gender": "Male", "lang": "en"},
+}
+
+# 豆包 TTS 英语音色
+DOUBAO_TTS_VOICES = {
+    "en_female_grandma": {"name": "Grandma (Female, Warm)", "gender": "Female", "lang": "en"},
+    "en_male_narrator": {"name": "Narrator (Male, Deep)", "gender": "Male", "lang": "en"},
+    "en_female_emotional": {"name": "Emotional (Female)", "gender": "Female", "lang": "en"},
+    "en_male_mature": {"name": "Mature (Male, Calm)", "gender": "Male", "lang": "en"},
+    "en_female_sweet": {"name": "Sweet (Female, Bright)", "gender": "Female", "lang": "en"},
+    "en_male_anchor": {"name": "Anchor (Male, Professional)", "gender": "Male", "lang": "en"},
+}
+
+# 所有引擎音色合并（用于 /tts/voices 返回）
+ALL_TTS_VOICES = {
+    "edge_tts": EDGE_TTS_VOICES,
+    "elevenlabs": ELEVENLABS_VOICES,
+    "doubao": DOUBAO_TTS_VOICES,
+}
+
 
 class TTSRequest(BaseModel):
-    """TTS 请求模型"""
+    """统一 TTS 请求模型，支持多引擎"""
     text: str = Field(description="要转换为语音的文本")
+    engine: str = Field(default="edge_tts", description="TTS 引擎: edge_tts / elevenlabs / doubao")
     voice: str = Field(default="en-US-AriaNeural", description="语音名称")
-    rate: str = Field(default="+0%", description="语速调整，如 +20%, -10%")
+    rate: str = Field(default="+0%", description="语速调整（仅 edge_tts）")
+    # ElevenLabs 配置
+    elevenlabs_api_key: Optional[str] = Field(default=None, description="ElevenLabs API Key")
+    # 豆包配置
+    doubao_app_id: Optional[str] = Field(default=None, description="火山引擎 App ID")
+    doubao_access_token: Optional[str] = Field(default=None, description="火山引擎 Access Token")
 
 
 class ConversationMessage(BaseModel):
@@ -1304,6 +1386,7 @@ class ChatroomRequest(BaseModel):
     topic: str = Field(description="讨论话题")
     experts: List[ChatroomExpert] = Field(description="参与讨论的专家列表")
     language: str = Field(default="en", description="语言偏好: en/zh/bilingual")
+    prank_mode: bool = Field(default=False, description="恶搞模式")
     api_config: Optional[ApiConfig] = None
 
 
@@ -1315,52 +1398,187 @@ class ChatroomFollowupRequest(BaseModel):
     question: str = Field(description="追问内容")
     target_expert: Optional[str] = Field(default=None, description="追问的专家名，None表示全体")
     language: str = Field(default="en", description="语言偏好")
+    prank_mode: bool = Field(default=False, description="恶搞模式")
     api_config: Optional[ApiConfig] = None
 
 
 @app.get("/tts/voices")
 async def get_tts_voices():
-    """获取可用的 TTS 语音列表"""
-    return {"voices": TTS_VOICES}
+    """获取所有 TTS 引擎的可用语音列表"""
+    return {"voices": ALL_TTS_VOICES}
 
 
-@app.post("/tts/speak")
-async def text_to_speech(request: TTSRequest):
-    """将文本转换为语音并返回音频流"""
+# ==========================================
+# TTS Engine: Edge-TTS (免费)
+# ==========================================
+async def tts_edge(request: TTSRequest):
+    """Edge-TTS 引擎"""
     try:
         import edge_tts
     except ImportError:
-        raise HTTPException(
-            status_code=500,
-            detail="edge-tts not installed. Run: pip install edge-tts"
-        )
+        raise HTTPException(status_code=500, detail="edge-tts not installed. Run: pip install edge-tts")
 
     voice = request.voice
-    if voice not in TTS_VOICES:
+    if voice not in EDGE_TTS_VOICES:
         voice = "en-US-AriaNeural"
 
+    communicate = edge_tts.Communicate(request.text, voice, rate=request.rate)
+    audio_buffer = io.BytesIO()
+
+    async for chunk in communicate.stream():
+        if chunk["type"] == "audio":
+            audio_data = chunk.get("data") or chunk.get("bytes") or b""
+            if isinstance(audio_data, bytes):
+                audio_buffer.write(audio_data)
+
+    audio_buffer.seek(0)
+    return StreamingResponse(
+        audio_buffer,
+        media_type="audio/mpeg",
+        headers={
+            "Content-Disposition": "inline; filename=tts_output.mp3",
+            "Cache-Control": "no-cache",
+        }
+    )
+
+
+# ==========================================
+# TTS Engine: ElevenLabs (高品质)
+# ==========================================
+async def tts_elevenlabs(request: TTSRequest):
+    """ElevenLabs TTS 引擎"""
+    api_key = request.elevenlabs_api_key
+    if not api_key:
+        raise HTTPException(status_code=400, detail="ElevenLabs API Key is required")
+
+    voice_id = request.voice
+    if voice_id not in ELEVENLABS_VOICES:
+        voice_id = "21m00Tcm4TlvDq8ikWAM"
+
     try:
-        communicate = edge_tts.Communicate(request.text, voice, rate=request.rate)
-        audio_buffer = io.BytesIO()
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post(
+                f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}",
+                headers={
+                    "xi-api-key": api_key,
+                    "Content-Type": "application/json",
+                    "Accept": "audio/mpeg",
+                },
+                json={
+                    "text": request.text,
+                    "model_id": "eleven_multilingual_v2",
+                    "voice_settings": {
+                        "stability": 0.5,
+                        "similarity_boost": 0.75,
+                        "style": 0.3,
+                        "use_speaker_boost": True,
+                    }
+                }
+            )
 
-        async for chunk in communicate.stream():
-            if chunk["type"] == "audio":
-                audio_data = chunk.get("data") or chunk.get("bytes") or b""
-                if isinstance(audio_data, bytes):
-                    audio_buffer.write(audio_data)
-
-        audio_buffer.seek(0)
+        if resp.status_code != 200:
+            raise HTTPException(
+                status_code=resp.status_code,
+                detail=f"ElevenLabs API error: {resp.text}"
+            )
 
         return StreamingResponse(
-            audio_buffer,
+            io.BytesIO(resp.content),
             media_type="audio/mpeg",
             headers={
-                "Content-Disposition": "inline; filename=tts_output.mp3",
+                "Content-Disposition": "inline; filename=tts_elevenlabs.mp3",
                 "Cache-Control": "no-cache",
             }
         )
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="ElevenLabs API timeout")
+    except HTTPException:
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"TTS failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"ElevenLabs TTS failed: {str(e)}")
+
+
+# ==========================================
+# TTS Engine: 豆包 TTS (火山引擎)
+# ==========================================
+async def tts_doubao(request: TTSRequest):
+    """豆包 TTS 引擎 - 使用 HTTP API"""
+    app_id = request.doubao_app_id
+    access_token = request.doubao_access_token
+    if not app_id or not access_token:
+        raise HTTPException(status_code=400, detail="Doubao App ID and Access Token are required")
+
+    voice = request.voice
+    if voice not in DOUBAO_TTS_VOICES:
+        voice = "en_female_grandma"
+
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.post(
+                "https://openspeech.bytedance.com/api/v1/tts",
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer;{access_token}",
+                },
+                json={
+                    "app": {"appid": app_id, "token": access_token},
+                    "user": {"uid": "ielts_user"},
+                    "audio_config": {
+                        "audio_encoding": "mp3",
+                        "sample_rate": 24000,
+                    },
+                    "request": {
+                        "reqid": f"tts_{datetime.now().strftime('%Y%m%d%H%M%S')}",
+                        "text": request.text,
+                        "text_type": "plain",
+                        "voice_type": voice,
+                        "operation": "query",
+                    }
+                }
+            )
+
+        if resp.status_code != 200:
+            raise HTTPException(
+                status_code=resp.status_code,
+                detail=f"Doubao TTS API error: {resp.text}"
+            )
+
+        result = resp.json()
+        if "data" in result:
+            audio_data = base64.b64decode(result["data"])
+            return StreamingResponse(
+                io.BytesIO(audio_data),
+                media_type="audio/mpeg",
+                headers={
+                    "Content-Disposition": "inline; filename=tts_doubao.mp3",
+                    "Cache-Control": "no-cache",
+                }
+            )
+        else:
+            raise HTTPException(status_code=500, detail=f"Doubao TTS no audio data: {result}")
+
+    except httpx.TimeoutException:
+        raise HTTPException(status_code=504, detail="Doubao TTS API timeout")
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Doubao TTS failed: {str(e)}")
+
+
+# ==========================================
+# TTS 路由：根据引擎分发
+# ==========================================
+@app.post("/tts/speak")
+async def text_to_speech(request: TTSRequest):
+    """统一 TTS 入口，根据 engine 分发到不同引擎"""
+    engine = request.engine
+
+    if engine == TTSEngine.ELEVENLABS:
+        return await tts_elevenlabs(request)
+    elif engine == TTSEngine.DOUBAO:
+        return await tts_doubao(request)
+    else:
+        return await tts_edge(request)
 
 
 @app.post("/practice/chat")
@@ -2025,7 +2243,7 @@ async def chatroom_discuss(request: ChatroomRequest):
     for expert_req in request.experts:
         # 获取预定义专家的完整配置
         expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
-        
+
         if not expert_config:
             # 如果是自定义专家，使用旧格式
             system_prompt = EXPERT_PROMPT_TEMPLATE.format(
@@ -2040,6 +2258,10 @@ async def chatroom_discuss(request: ChatroomRequest):
                 topic=request.topic,
                 previous_context=""
             )
+
+        # 恶搞模式：注入搞笑指令
+        if request.prank_mode:
+            system_prompt += PRANK_MODE_INSTRUCTION
 
         # 添加上下文
         if previous_context:
@@ -2070,7 +2292,7 @@ async def chatroom_discuss(request: ChatroomRequest):
     all_responses_text = "\n".join(
         f"{r['name']}: {r['en_text']}" for r in responses
     )
-    judge_prompt = JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+    judge_prompt = (PRANK_JUDGE_PROMPT if request.prank_mode else JUDGE_PROMPT).format(topic=request.topic, all_responses=all_responses_text)
 
     judge_en, _ = await _call_ai_simple(
         request.api_config, judge_prompt,
@@ -2140,6 +2362,10 @@ PREVIOUS DISCUSSION:
 FOLLOW-UP QUESTION: {request.question}
 
 Please respond to this follow-up question, staying true to your thinking style and communication patterns."""
+
+        # 恶搞模式：注入搞笑指令
+        if request.prank_mode:
+            system_prompt += PRANK_MODE_INSTRUCTION
 
         en_text, err = await _call_ai_simple(
             request.api_config, system_prompt,

@@ -1231,6 +1231,24 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tts-engine-select, .tts-voice-select {
+            padding: 0.25rem 0.5rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease-out;
+            max-width: 160px;
+        }
+
+        .tts-engine-select:hover, .tts-voice-select:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
         }
 
         .tts-btn {
@@ -2334,6 +2352,7 @@
 
         /* Chat area */
         .chatroom-chat-area {
+            position: relative;
             background: rgba(18, 18, 22, 0.4);
             backdrop-filter: blur(16px) saturate(1.3);
             -webkit-backdrop-filter: blur(16px) saturate(1.3);
@@ -2356,8 +2375,8 @@
             color: var(--text-muted);
         }
         .chatroom-empty-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
             opacity: 0.5;
         }
         .chatroom-empty p {
@@ -2681,76 +2700,54 @@
             box-shadow: 0 2px 8px rgba(124, 106, 239, 0.2);
 
         /* ========================================
-           Prank Mode Toggle - 恶搞模式
+           Prank Mode FAB - 恶搞模式悬浮按钮
            ======================================== */
-        .prank-toggle {
+        .prank-fab {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            z-index: 10;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
-            margin-left: auto;
-            padding: 0.35rem 0.75rem;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
+            gap: 0.35rem;
+            padding: 0.3rem 0.65rem;
+            background: rgba(30, 30, 34, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
             cursor: pointer;
             transition: all 0.25s ease-out;
             user-select: none;
-            box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.4);
         }
-        .prank-toggle:hover {
-            border-color: rgba(251, 146, 60, 0.4);
-            background: rgba(251, 146, 60, 0.06);
-        }
-        .prank-toggle.active {
+        .prank-fab:hover {
             border-color: rgba(251, 146, 60, 0.5);
-            background: rgba(251, 146, 60, 0.1);
-            box-shadow: 0 0 12px rgba(251, 146, 60, 0.15), inset 0 1px 0 rgba(255,255,255,0.06);
+            background: rgba(251, 146, 60, 0.12);
         }
-        .prank-toggle-label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            letter-spacing: 0.02em;
-            transition: color 0.2s;
+        .prank-fab.active {
+            border-color: rgba(251, 146, 60, 0.7);
+            background: linear-gradient(135deg, rgba(251,146,60,0.2), rgba(239,68,68,0.15));
+            box-shadow: 0 0 16px rgba(251, 146, 60, 0.2), 0 2px 10px rgba(0,0,0,0.4);
         }
-        .prank-toggle.active .prank-toggle-label {
-            color: #fb923c;
-        }
-        .prank-toggle-track {
-            position: relative;
-            width: 34px;
-            height: 18px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 9px;
-            transition: background 0.25s;
-        }
-        .prank-toggle.active .prank-toggle-track {
-            background: rgba(251, 146, 60, 0.35);
-        }
-        .prank-toggle-thumb {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--text-muted);
-            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        .prank-toggle.active .prank-toggle-thumb {
-            left: 18px;
-            background: #fb923c;
-            box-shadow: 0 0 6px rgba(251, 146, 60, 0.5);
-        }
-        .prank-toggle-icon {
+        .prank-fab-icon {
             width: 14px;
             height: 14px;
             color: var(--text-muted);
-            transition: color 0.2s;
+            transition: all 0.25s;
         }
-        .prank-toggle.active .prank-toggle-icon {
+        .prank-fab.active .prank-fab-icon {
+            color: #fb923c;
+            filter: drop-shadow(0 0 3px rgba(251,146,60,0.5));
+        }
+        .prank-fab-text {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            letter-spacing: 0.03em;
+            transition: color 0.25s;
+        }
+        .prank-fab.active .prank-fab-text {
             color: #fb923c;
         }
         }
@@ -3093,6 +3090,38 @@
                         <div class="test-result-message" id="testResultMessage"></div>
                         <div class="test-result-suggestion" id="testResultSuggestion" style="display: none;"></div>
                     </div>
+
+                    <hr class="divider">
+
+                    <!-- TTS Voice Section Label -->
+                    <div class="section-label">🔊 TTS Voice Engines</div>
+
+                    <!-- ElevenLabs API Key -->
+                    <div class="form-group">
+                        <label class="form-label" for="ttsElevenlabsKey">ElevenLabs API Key</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" class="form-input" id="ttsElevenlabsKey"
+                                   placeholder="xi-xxxxxxxxxxxxxxxxxxxxxxxx">
+                            <button type="button" class="password-toggle" onclick="const i=document.getElementById('ttsElevenlabsKey');i.type=i.type==='password'?'text':'password'">👁️</button>
+                        </div>
+                        <div class="form-hint">Free plan: 10,000 chars/month. <a href="https://elevenlabs.io" target="_blank">Get API Key</a></div>
+                    </div>
+
+                    <!-- Doubao TTS Credentials -->
+                    <div class="form-group">
+                        <label class="form-label" for="ttsDoubaoAppId">Doubao TTS App ID</label>
+                        <input type="text" class="form-input" id="ttsDoubaoAppId"
+                               placeholder="Your Volcengine App ID">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="ttsDoubaoToken">Doubao TTS Access Token</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" class="form-input" id="ttsDoubaoToken"
+                                   placeholder="Your Volcengine Access Token">
+                            <button type="button" class="password-toggle" onclick="const i=document.getElementById('ttsDoubaoToken');i.type=i.type==='password'?'text':'password'">👁️</button>
+                        </div>
+                        <div class="form-hint">Get credentials from <a href="https://console.volcengine.com/speech/service" target="_blank">Volcengine Console</a></div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -3251,6 +3280,14 @@
             <div class="results-header">
                 <h2 class="results-title">Evaluation Results</h2>
                 <div class="tts-controls">
+                    <select class="tts-engine-select" id="ttsEngine" aria-label="TTS Engine">
+                        <option value="edge_tts">Edge-TTS (Free)</option>
+                        <option value="elevenlabs">ElevenLabs</option>
+                        <option value="doubao">Doubao TTS</option>
+                    </select>
+                    <select class="tts-voice-select" id="ttsVoice" aria-label="TTS Voice">
+                        <option value="en-US-AriaNeural">Aria (Female, US)</option>
+                    </select>
                     <button class="tts-btn" id="ttsBtn" aria-label="Read results aloud" style="display:none;">▶</button>
                     <button class="tts-btn" id="ttsStopBtn" aria-label="Stop reading" style="display:none;">⏹</button>
                     <select class="tts-speed" id="ttsSpeed" aria-label="Speech speed" style="display:none;">
@@ -3598,6 +3635,11 @@
 
             <!-- Chat Area -->
             <div class="chatroom-chat-area" id="chatroomChatArea" aria-live="polite" aria-label="Expert discussion">
+                <!-- Prank Mode Floating Toggle -->
+                <div class="prank-fab" id="prankToggle" role="switch" aria-checked="false" aria-label="Prank Mode" tabindex="0">
+                    <svg class="prank-fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    <span class="prank-fab-text">Prank</span>
+                </div>
                 <div class="chatroom-empty" id="chatroomEmpty">
                     <div class="chatroom-empty-icon">💬</div>
                     <p>Select experts and enter a topic to start a discussion</p>
@@ -4026,6 +4068,11 @@
             configModal.classList.add('show');
             document.body.style.overflow = 'hidden';
             loadConfig();
+            // 填充 TTS 配置
+            loadTTSConfig();
+            document.getElementById('ttsElevenlabsKey').value = ttsConfig.elevenlabs_api_key || '';
+            document.getElementById('ttsDoubaoAppId').value = ttsConfig.doubao_app_id || '';
+            document.getElementById('ttsDoubaoToken').value = ttsConfig.doubao_access_token || '';
             hideTestResult();
             // Focus first input after animation
             setTimeout(() => {
@@ -4291,6 +4338,15 @@
                 const newBackendUrl = backendUrlInput.value.trim() || 'http://localhost:8000';
                 API_BASE_URL = newBackendUrl;
                 localStorage.setItem('ielts_backend_url', newBackendUrl);
+
+                // 保存 TTS 配置
+                const elevenlabsKey = document.getElementById('ttsElevenlabsKey').value.trim();
+                const doubaoAppId = document.getElementById('ttsDoubaoAppId').value.trim();
+                const doubaoToken = document.getElementById('ttsDoubaoToken').value.trim();
+                if (elevenlabsKey) ttsConfig.elevenlabs_api_key = elevenlabsKey;
+                if (doubaoAppId) ttsConfig.doubao_app_id = doubaoAppId;
+                if (doubaoToken) ttsConfig.doubao_access_token = doubaoToken;
+                saveTTSConfig();
 
                 saveConfig();
                 closeModalFunc();
@@ -4695,20 +4751,89 @@
         updateVoiceUI();
 
         // ==========================================
-        // Voice Features - TTS (Text-to-Speech)
+        // Voice Features - TTS (Text-to-Speech) Multi-Engine
         // ==========================================
         const ttsBtn = document.getElementById('ttsBtn');
         const ttsStopBtn = document.getElementById('ttsStopBtn');
         const ttsSpeedSelect = document.getElementById('ttsSpeed');
+        const ttsEngineSelect = document.getElementById('ttsEngine');
+        const ttsVoiceSelect = document.getElementById('ttsVoice');
         let isSpeaking = false;
+        let currentAudio = null;  // 当前播放的 Audio 对象
 
-        function getEnglishVoice() {
-            const voices = speechSynthesis.getVoices();
-            return voices.find(v => v.lang === 'en-US' && !v.localService)
-                || voices.find(v => v.lang === 'en-US')
-                || voices.find(v => v.lang.startsWith('en'))
-                || voices[0];
+        // TTS 配置存储（含 API Keys）
+        let ttsConfig = {
+            engine: 'edge_tts',
+            voice: 'en-US-AriaNeural',
+            rate: '+0%',
+            elevenlabs_api_key: '',
+            doubao_app_id: '',
+            doubao_access_token: ''
+        };
+
+        // 从 localStorage 加载 TTS 配置
+        function loadTTSConfig() {
+            const saved = localStorage.getItem('ttsConfig');
+            if (saved) {
+                try {
+                    ttsConfig = { ...ttsConfig, ...JSON.parse(saved) };
+                } catch (e) { /* ignore */ }
+            }
+            ttsEngineSelect.value = ttsConfig.engine;
         }
+
+        // 保存 TTS 配置到 localStorage
+        function saveTTSConfig() {
+            localStorage.setItem('ttsConfig', JSON.stringify(ttsConfig));
+        }
+
+        // 音色数据（从后端加载）
+        let ttsVoicesData = {};
+
+        // 加载所有引擎音色列表
+        async function loadTTSVoices() {
+            try {
+                const resp = await fetch(`${API_BASE_URL}/tts/voices`);
+                const data = await resp.json();
+                ttsVoicesData = data.voices || {};
+                updateTTSVoiceOptions();
+            } catch (e) {
+                console.warn('Failed to load TTS voices, using defaults');
+            }
+        }
+
+        // 根据当前引擎更新音色下拉框
+        function updateTTSVoiceOptions() {
+            const engine = ttsEngineSelect.value;
+            const voices = ttsVoicesData[engine] || {};
+            ttsVoiceSelect.innerHTML = '';
+            for (const [id, info] of Object.entries(voices)) {
+                const opt = document.createElement('option');
+                opt.value = id;
+                opt.textContent = info.name;
+                ttsVoiceSelect.appendChild(opt);
+            }
+            // 恢复保存的音色
+            if (ttsConfig.engine === engine && ttsConfig.voice) {
+                ttsVoiceSelect.value = ttsConfig.voice;
+            }
+            if (ttsVoiceSelect.options.length > 0) {
+                ttsConfig.voice = ttsVoiceSelect.value;
+            }
+        }
+
+        // 引擎切换事件
+        ttsEngineSelect.addEventListener('change', () => {
+            ttsConfig.engine = ttsEngineSelect.value;
+            updateTTSVoiceOptions();
+            saveTTSConfig();
+        });
+
+        // 音色切换事件
+        ttsVoiceSelect.addEventListener('change', () => {
+            ttsConfig.voice = ttsVoiceSelect.value;
+            saveTTSConfig();
+        });
 
         function stripMarkdown(text) {
             return text
@@ -4722,25 +4847,61 @@
                 .replace(/\n/g, '. ');
         }
 
-        function startTTS() {
+        // 播放 TTS 音频（通过后端 API）
+        async function startTTS() {
             const text = stripMarkdown(resultsContent.innerText);
             if (!text.trim()) return;
 
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = parseFloat(ttsSpeedSelect.value);
-            utterance.voice = getEnglishVoice();
-            utterance.lang = 'en-US';
+            // 停止当前播放
+            stopTTS();
 
-            utterance.onend = () => { updateTTSUI(false); };
-            utterance.onerror = () => { updateTTSUI(false); };
+            try {
+                const requestBody = {
+                    text: text.substring(0, 5000),  // 限制文本长度
+                    engine: ttsConfig.engine,
+                    voice: ttsConfig.voice,
+                    rate: ttsSpeedSelect.value === '1' ? '+0%' : (ttsSpeedSelect.value === '0.7' ? '-30%' : '+30%'),
+                    elevenlabs_api_key: ttsConfig.elevenlabs_api_key || undefined,
+                    doubao_app_id: ttsConfig.doubao_app_id || undefined,
+                    doubao_access_token: ttsConfig.doubao_access_token || undefined,
+                };
 
-            speechSynthesis.cancel();
-            speechSynthesis.speak(utterance);
-            updateTTSUI(true);
+                const resp = await fetch(`${API_BASE_URL}/tts/speak`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                if (!resp.ok) {
+                    const err = await resp.json();
+                    showToast(err.detail || 'TTS failed');
+                    return;
+                }
+
+                const audioBlob = await resp.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                currentAudio = new Audio(audioUrl);
+                currentAudio.onended = () => { updateTTSUI(false); };
+                currentAudio.onerror = () => {
+                    updateTTSUI(false);
+                    showToast('Audio playback failed');
+                };
+                currentAudio.playbackRate = parseFloat(ttsSpeedSelect.value);
+                await currentAudio.play();
+                updateTTSUI(true);
+            } catch (e) {
+                showToast('TTS error: ' + e.message);
+                updateTTSUI(false);
+            }
         }
 
         function stopTTS() {
-            speechSynthesis.cancel();
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio.currentTime = 0;
+                URL.revokeObjectURL(currentAudio.src);
+                currentAudio = null;
+            }
             updateTTSUI(false);
         }
 
@@ -4752,13 +4913,7 @@
 
         ttsBtn.addEventListener('click', () => {
             if (isSpeaking) {
-                if (speechSynthesis.paused) {
-                    speechSynthesis.resume();
-                    updateTTSUI(true);
-                } else {
-                    speechSynthesis.pause();
-                    updateTTSUI(false);
-                }
+                stopTTS();
             } else {
                 startTTS();
             }
@@ -4766,16 +4921,14 @@
 
         ttsStopBtn.addEventListener('click', stopTTS);
 
-        // Show TTS controls when results appear
-        if (ttsSupported) {
-            ttsBtn.style.display = 'flex';
-            ttsStopBtn.style.display = 'flex';
-            ttsSpeedSelect.style.display = 'inline-block';
-            // Ensure voices are loaded
-            if (speechSynthesis.onvoiceschanged !== undefined) {
-                speechSynthesis.onvoiceschanged = () => {};
-            }
-        }
+        // Show TTS controls always (backend-driven)
+        ttsBtn.style.display = 'flex';
+        ttsStopBtn.style.display = 'flex';
+        ttsSpeedSelect.style.display = 'inline-block';
+
+        // 加载 TTS 配置和音色
+        loadTTSConfig();
+        loadTTSVoices();
 
         // ==========================================
         // Practice Mode - Voice Conversation
@@ -4811,7 +4964,7 @@
         let currentPart = '1';
         let practiceActive = false;
         let autoPlayVoice = true;
-        let currentAudio = null;
+        let practiceAudio = null;  // Practice 模式专用音频对象
         let practiceRecognition = null;
         let isPracticeRecording = false;
 
@@ -4911,8 +5064,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         text: text,
-                        voice: practiceVoice.value,
-                        rate: practiceSpeed.value
+                        engine: ttsConfig.engine,
+                        voice: ttsConfig.voice,
+                        rate: practiceSpeed.value,
+                        elevenlabs_api_key: ttsConfig.elevenlabs_api_key || undefined,
+                        doubao_app_id: ttsConfig.doubao_app_id || undefined,
+                        doubao_access_token: ttsConfig.doubao_access_token || undefined,
                     })
                 });
 
@@ -4924,7 +5081,7 @@
 
                 const blob = await response.blob();
                 const url = URL.createObjectURL(blob);
-                currentAudio = new Audio(url);
+                practiceAudio = new Audio(url);
 
                 // Playing state
                 if (btnElement) {
@@ -4933,17 +5090,17 @@
                     btnElement.textContent = '⏸';
                 }
 
-                currentAudio.onended = () => {
+                practiceAudio.onended = () => {
                     URL.revokeObjectURL(url);
-                    currentAudio = null;
+                    practiceAudio = null;
                     resetTtsBtn(btnElement);
                 };
-                currentAudio.onerror = () => {
+                practiceAudio.onerror = () => {
                     URL.revokeObjectURL(url);
-                    currentAudio = null;
+                    practiceAudio = null;
                     resetTtsBtn(btnElement);
                 };
-                currentAudio.play();
+                practiceAudio.play();
             } catch (e) {
                 showToast('TTS failed: ' + e.message);
                 resetTtsBtn(btnElement);
@@ -4958,9 +5115,9 @@
 
         let lastTtsBtn = null;
         function stopTTSPlayback(btn) {
-            if (currentAudio) {
-                currentAudio.pause();
-                currentAudio = null;
+            if (practiceAudio) {
+                practiceAudio.pause();
+                practiceAudio = null;
             }
             resetTtsBtn(btn || lastTtsBtn);
         }
@@ -5731,8 +5888,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         text: text.substring(0, 2000),
-                        voice: practiceVoice.value,
-                        rate: practiceSpeed.value
+                        engine: ttsConfig.engine,
+                        voice: ttsConfig.voice,
+                        rate: practiceSpeed.value,
+                        elevenlabs_api_key: ttsConfig.elevenlabs_api_key || undefined,
+                        doubao_app_id: ttsConfig.doubao_app_id || undefined,
+                        doubao_access_token: ttsConfig.doubao_access_token || undefined,
                     })
                 });
                 if (!response.ok) throw new Error('TTS failed');
@@ -5791,6 +5952,21 @@
         let chatroomExperts = [];  // {name, description, colorIndex}
         let chatroomDiscussion = [];  // {name, en_text, zh_text}
         let chatroomBusy = false;
+        let chatroomPrankMode = false;
+
+        // Prank mode toggle
+        const prankToggle = document.getElementById('prankToggle');
+        prankToggle.addEventListener('click', () => {
+            chatroomPrankMode = !chatroomPrankMode;
+            prankToggle.classList.toggle('active', chatroomPrankMode);
+            prankToggle.setAttribute('aria-checked', String(chatroomPrankMode));
+        });
+        prankToggle.addEventListener('keydown', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                prankToggle.click();
+            }
+        });
 
         const CHATROOM_COLORS = [
             getComputedStyle(document.documentElement).getPropertyValue('--info').trim(),
@@ -5976,6 +6152,7 @@
                         topic,
                         experts: chatroomExperts.map(ex => ({ name: ex.name, description: ex.description })),
                         language: chatroomLang.value,
+                        prank_mode: chatroomPrankMode,
                         api_config: {
                             api_key: effectiveConfig.api_key,
                             model: effectiveConfig.model,
@@ -6166,6 +6343,7 @@
                         question,
                         target_expert: targetName,
                         language: chatroomLang.value,
+                        prank_mode: chatroomPrankMode,
                         api_config: {
                             api_key: getEffectiveConfig('chatroom').api_key,
                             model: getEffectiveConfig('chatroom').model,
