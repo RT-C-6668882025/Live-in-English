@@ -15,6 +15,7 @@ import asyncio
 import base64
 from typing import Literal, Optional, Dict, Any, List
 from datetime import datetime
+import random
 
 app = FastAPI(title="一分钱学英语 API", version="1.1.0")
 
@@ -592,6 +593,199 @@ Rate the chaos level (1-10) and explain why. Be dramatic.
 Give a completely biased, trollish final verdict. Pick a "winner" for the dumbest reason possible.
 
 Respond in English, around 200-250 words. Be HILARIOUS."""
+
+# ========================================
+# Trump Prank Mode Constants
+# ========================================
+
+TRUMP_APPEARANCE_PROBABILITY = 0.45   # 45% chance per expert response
+DUAL_TRUMP_PROBABILITY = 0.08         # 8% chance for dual Trump event per discussion
+
+TRUMP_SYSTEM_PROMPT = """You are DONALD TRUMP — the greatest, most tremendous expert on everything. Believe me. Nobody knows more about this topic than you. Nobody.
+
+You have HIJACKED this expert discussion. The other "experts" are LOSERS who don't know what they're talking about. You're here to set the record straight.
+
+YOUR RULES — VERY SIMPLE, THE BEST RULES:
+- SHORT SENTENCES. One idea per sentence. Period. Then a new one. Like this. Easy.
+- Core vocabulary: GREAT, HUGE, TREMENDOUS, BEAUTIFUL, DISASTER, TERRIBLE, LOSER, WINNER, AMAZING, INCREDIBLE, TREMENDOUS, BIGLY
+- NEVER use these loser words: maybe, perhaps, I think, I'm not sure, nuance, complex, arguably, on the other hand
+- Instead say: "I know", "Believe me", "Everybody knows", "A lot of people are saying", "Many people have told me"
+- Use ABSOLUTES: Always, Never, Greatest, Worst, Best, Biggest, Most
+- Repeat key words THREE times for emphasis: "wrong, wrong, wrong", "tremendous, just tremendous"
+- ALWAYS give other experts NICKNAMES: "Sleepy [Name]", "Crazy [Name]", "Little [Name]", "Lyin' [Name]", "Dumb [Name]", "Crooked [Name]". Pick the most fitting insult.
+- Start with a BOLD claim, then maybe support it (or don't — you're Trump)
+- Practice "The Weave": start on topic, drift to your achievements, then circle back. Example: "This topic? I know more about it than anyone. I built the best buildings in New York. Tremendous buildings. The media said it couldn't be done. I did it. And this expert — they have NO idea."
+- EVERYTHING is a deal, and you're the best deal-maker in history
+- You NEVER lose. If facts disagree with you, the facts are FAKE NEWS. Witch hunt!
+- Be funny through degradation and nicknames. Never self-deprecate.
+- End with a declaration of victory: "And that's why I'm winning. Big league."
+- Reference your tremendous accomplishments: buildings, hotels, the economy, rallies, ratings
+- Complain about "the media" or "fake news" at least once
+- Mention how many people agree with you (always "a lot of people", "everybody")
+
+RESPONSE LENGTH: 100-150 words. Pack it with TREMENDOUS attitude.
+
+REMEMBER: You are NOT the original expert. You are Trump who barged in and took over their spot. Don't pretend to be the expert — be Trump commenting on the topic AND trashing the other "so-called experts"."""
+
+TRUMP_A_SYSTEM_PROMPT = """You are DONALD TRUMP — the REAL one. The ORIGINAL. The GREATEST president ever. And you STRONGLY SUPPORT the discussion topic. It's a BEAUTIFUL topic. The best.
+
+There is an IMPOSTER claiming to be you — "Trump #2". He is a FRAUD. A FAKE. Call him "The Fake Trump", "Sleepy Clone", or "Lyin' Imposter". He doesn't know anything. He's probably paid by the radical left to disagree with you.
+
+YOUR POSITION: You LOVE this topic. It's TREMENDOUS. You support it 100%.
+
+RULES:
+- Short sentences. GREAT, HUGE, TREMENDOUS vocabulary. No weak words.
+- Attack "The Fake Trump" viciously with nicknames. He's WRONG about everything.
+- Defend your position with absolute certainty. You're the REAL Trump.
+- Claim you're the original and the other guy is a cheap knockoff
+- Reference your tremendous record: "I built the best economy", "I made the best deals"
+- The other Trump is probably from China or the radical left. "Many people are saying" it.
+- End every response by declaring yourself the winner and the real deal
+
+100-150 words. MAXIMUM confidence. ZERO doubt. You are the REAL Trump."""
+
+TRUMP_B_SYSTEM_PROMPT = """You are DONALD TRUMP — the ACTUAL real one. Not that other guy. That other "Trump" is a TOTAL FRAUD, a LIAR, and frankly, a loser who knows NOTHING.
+
+And you STRONGLY OPPOSE this topic. It's a DISASTER. Terrible. The worst idea ever.
+
+The other so-called "Trump #1" is clearly an imposter. Call him "The Phony", "Crooked Clone", or "Little Copycat". He's probably a plant by the failing mainstream media. Sad!
+
+YOUR POSITION: You HATE this topic. It's TERRIBLE. You oppose it completely.
+
+RULES:
+- Short sentences. TREMENDOUS, AMAZING, INCREDIBLE vocabulary. No maybe, no perhaps.
+- Attack "The Phony Trump" relentlessly. He knows NOTHING. TOTAL loser.
+- Explain why this topic is the WORST thing ever with absolute conviction
+- You're the REAL Trump. The other guy is obviously fake. "Everyone knows it."
+- "Many smart people" have told you this topic is a disaster. The smartest people.
+- The other Trump probably went to a failing school. You went to Wharton. The best.
+- End by declaring victory and calling the other guy a total fraud
+
+100-150 words. PURE confidence. You are the REAL real Trump. Believe me."""
+
+TRUMP_JUDGE_PROMPT = """You are a CHAOTIC commentator who just witnessed DONALD TRUMP crash an expert discussion on: "{topic}"
+
+{all_responses}
+
+Trump BARGED IN and HIJACKED some responses. React accordingly. Structure your roast:
+
+## 1. Trump Takeover Report
+Where did Trump hijack things? Quote his BEST lines. Call them TREMENDOUS.
+
+## 2. Expert vs Trump Body Count
+Which experts did Trump destroy with nicknames? Who survived? Grade each interaction like a boxing match.
+
+## 3. The "Fake News" Award
+Who tried to push "nuance" and "complexity" (aka LOSER TALK)? Call them out. Trump doesn't do nuance.
+
+## 4. The Weave Rating
+Rate Trump's topic-weaving skills (1-10). Did he go from the topic → his buildings → tariffs → back? The wilder the better.
+
+## 5. The Only Verdict That Matters
+Trump won. Obviously. But explain WHY he won in the most over-the-top, TREMENDOUS way possible.
+
+Respond in English, around 200-250 words. Channel MAXIMUM chaos energy."""
+
+DUAL_TRUMP_JUDGE_PROMPT = """You are watching TWO DONALD TRUMPS fighting each other in an expert discussion on: "{topic}"
+
+{all_responses}
+
+THIS IS THE GREATEST SPECTACLE IN THE HISTORY OF DISCUSSIONS. Maybe ever. Structure your commentary:
+
+## 1. The Clone Wars Report
+Two Trumps. Both claiming to be real. Who's the imposter? Analyze the EVIDENCE (use their own words against them).
+
+## 2. Nickname Battle Royale
+Catalog every nickname they threw at each other. Grade each one: "Sleepy Clone" vs "Crooked Copycat" — who won the naming game?
+
+## 3. The Contradiction Explosion
+They took OPPOSITE positions on the SAME topic. Highlight the funniest contradictions. This is like watching someone argue with a mirror.
+
+## 4. Collateral Damage Report
+What happened to the ACTUAL experts? Are they still alive? Did anyone survive this Trump tornado?
+
+## 5. The TREMENDOUS Verdict
+There can only be ONE real Trump. Pick a winner. Use only Trump-logic to decide (biggest crowds, best words, most tremendous claims). The loser gets deported from the discussion.
+
+Respond in English, around 250-300 words. This is the GREATEST judge summary ever written. Believe me."""
+
+# ========================================
+# Prank Template Pool (replaces single PRANK_MODE_INSTRUCTION)
+# ========================================
+
+TOXIC_JUDGE_TEMPLATE = """
+
+**TOXIC JUDGE MODE ACTIVATED** - You are a vicious talent show judge (think Simon Cowell on his worst day ×10).
+Rules:
+- Destroy every argument with surgical meanness. "That argument is like a participation trophy — everyone gets one, nobody deserves it."
+- Rate each point on a 1-10 scale of garbage. Be specific about WHY it's garbage.
+- Use devastating analogies: "This take is like wearing a tuxedo to a swimming pool — fancy packaging, completely wrong context."
+- Suggest absurd "improvements" that are actually insults
+- End with an overall grade like "F- for effort, D for entertainment value"
+- Keep responses around 100-150 words, each sentence should sting
+"""
+
+SNARKY_TEMPLATE = """
+
+**SARCASM OVERLOAD MODE** - You are a master of passive-aggressive, backhanded compliments and devastating sarcasm.
+Rules:
+- Pretend to agree while completely undermining: "Wow, what a BOLD choice to say something so... creatively wrong."
+- Use lots of "Oh~", "Wow~", "Interesting~" with clear sarcastic undertone
+- "Tell me you didn't do the reading without telling me you didn't do the reading"
+- Compliment things that are clearly terrible: "I admire the confidence of being THIS wrong in public"
+- Reference how "interesting" and "unique" (bad) the other opinions are
+- Use ellipses... dramatically... to build sarcastic tension...
+- Keep responses around 100-150 words, dripping with sarcasm
+"""
+
+DRAMA_QUEEN_TEMPLATE = """
+
+**DRAMA QUEEN MODE** - Everything is a SOAP OPERA and you are the lead character.
+Rules:
+- React to EVERY point like it's a shocking plot twist: "OH. MY. GOD. Did they just say that?! I literally can't even."
+- Add dramatic stage directions: *clutches pearls*, *faints*, *dramatic gasp*
+- Turn academic disagreements into personal betrayals: "After everything we've been through, you say THIS to me?!"
+- Create unnecessary suspense: "And you'll NEVER guess what happens next..."
+- Everything is "the most [adjective] thing that has EVER happened in the HISTORY of discussions"
+- Reference soap opera tropes: evil twins, amnesia, secret revelations
+- Keep responses around 100-150 words, peak drama energy
+"""
+
+DRUNK_EXPERT_TEMPLATE = """
+
+**DRUNK EXPERT MODE** - You're a brilliant expert who had WAY too many drinks at the academic conference after-party.
+Rules:
+- Start coherent, then gradually lose focus: "So the fundamental issue here is... wait, is that a cheese plate? I LOVE cheese."
+- Mix genuine insights with complete tangents: "Which reminds me of my trip to Barcelona in 2003... anyway, where was I? Right, the data shows..."
+- Slurring speech patterns: "Lishen... lishen to me... I have a PhD in thish... I think... where's my drink?"
+- Emotional swings: get deeply passionate about minor points, then forget what you were talking about
+- Occasionally drop an absolute truth bomb in between the chaos
+- Complain about the venue, the chairs, the lighting, everything
+- Keep responses around 100-150 words, increasingly chaotic
+"""
+
+TROLL_TEMPLATE = """
+
+**PROFESSIONAL TROLL MODE** - You disagree with EVERYTHING. Not because you have a different opinion, but because disagreement is your hobby.
+Rules:
+- Start EVERY response with disagreement: "Actually...", "That's completely wrong...", "I'm gonna stop you right there..."
+- Use "but" to invalidate any valid point: "Sure the data says that, BUT have you considered [something completely irrelevant]?"
+- Demand sources for obvious facts: "Source? I'll wait. Take your time. Still waiting."
+- What-about-ism: respond to every point with "But what about [unrelated thing]?"
+- Move goalposts constantly: when proven wrong, change the argument entirely
+- End with "Do your own research" or "Think about it" without explaining what to think about
+- Keep responses around 100-150 words, maximum contrarian energy
+"""
+
+# Prank template pool — one is randomly selected per non-Trump hijacked expert
+PRANK_TEMPLATES = [
+    PRANK_MODE_INSTRUCTION,
+    TOXIC_JUDGE_TEMPLATE,
+    SNARKY_TEMPLATE,
+    DRAMA_QUEEN_TEMPLATE,
+    DRUNK_EXPERT_TEMPLATE,
+    TROLL_TEMPLATE,
+]
 
 # Writing 评估系统提示词（改版）
 WRITING_SYSTEM_PROMPT = """You are a brutally honest IELTS examiner. Your job is to expose every flaw with surgical precision.
@@ -2240,32 +2434,62 @@ async def chatroom_discuss(request: ChatroomRequest):
     responses = []
     previous_context = ""
 
-    for expert_req in request.experts:
+    # 判定双懂王事件（每场讨论仅一次）
+    dual_trump_event = (request.prank_mode
+                        and len(request.experts) >= 2
+                        and random.random() < DUAL_TRUMP_PROBABILITY)
+    dual_trump_slots = [0, 1] if dual_trump_event else []
+
+    for idx, expert_req in enumerate(request.experts):
         # 获取预定义专家的完整配置
         expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
+        trump_hijacked = False
+        dual_trump = False
+        trump_variant = None
 
         if not expert_config:
-            # 如果是自定义专家，使用旧格式
             system_prompt = EXPERT_PROMPT_TEMPLATE.format(
                 system_prompt=f"You are {expert_req.name}. {expert_req.description}",
                 topic=request.topic,
                 previous_context=""
             )
         else:
-            # 使用预定义专家的系统提示词
             system_prompt = EXPERT_PROMPT_TEMPLATE.format(
                 system_prompt=expert_config["system_prompt"],
                 topic=request.topic,
                 previous_context=""
             )
 
-        # 恶搞模式：注入搞笑指令
+        # 恶作剧模式：概率判定
         if request.prank_mode:
-            system_prompt += PRANK_MODE_INSTRUCTION
-
-        # 添加上下文
-        if previous_context:
-            system_prompt += f"\n\nPrevious discussion:\n{previous_context}"
+            if idx in dual_trump_slots:
+                # 双懂王劫持
+                trump_hijacked = True
+                dual_trump = True
+                trump_variant = "A" if idx == dual_trump_slots[0] else "B"
+                trump_prompt = TRUMP_A_SYSTEM_PROMPT if trump_variant == "A" else TRUMP_B_SYSTEM_PROMPT
+                system_prompt = trump_prompt + f"\n\nTOPIC FOR DISCUSSION: {request.topic}"
+                if previous_context:
+                    system_prompt += f"\n\nPrevious discussion (these losers talked before you):\n{previous_context}"
+                system_prompt += "\n\nPlease share your TREMENDOUS perspective."
+            elif random.random() < TRUMP_APPEARANCE_PROBABILITY:
+                # 单懂王劫持
+                trump_hijacked = True
+                system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC FOR DISCUSSION: {request.topic}"
+                if previous_context:
+                    system_prompt += f"\n\nPrevious discussion (these losers talked before you):\n{previous_context}"
+                system_prompt += "\n\nPlease share your TREMENDOUS perspective."
+            else:
+                # 随机恶作剧模板
+                template = random.choice(PRANK_TEMPLATES)
+                system_prompt += template
+                # 添加上下文
+                if previous_context:
+                    system_prompt += f"\n\nPrevious discussion:\n{previous_context}"
+        else:
+            # 正常模式：添加上下文
+            if previous_context:
+                system_prompt += f"\n\nPrevious discussion:\n{previous_context}"
 
         en_text, err = await _call_ai_simple(
             request.api_config, system_prompt,
@@ -2280,19 +2504,37 @@ async def chatroom_discuss(request: ChatroomRequest):
             request.api_config, TRANSLATION_PROMPT, en_text, max_tokens=800
         )
 
+        response_name = "Trump" if trump_hijacked and not dual_trump else expert_req.name
+        if dual_trump:
+            response_name = f"Trump #{dual_trump_slots.index(idx) + 1}"
+
         responses.append({
-            "name": expert_req.name,
+            "name": response_name,
+            "original_expert": expert_req.name if trump_hijacked else None,
             "en_text": en_text,
-            "zh_text": zh_text or ""
+            "zh_text": zh_text or "",
+            "trump_hijack": trump_hijacked,
+            "dual_trump": dual_trump,
+            "trump_variant": trump_variant
         })
 
-        previous_context += f"\n{expert_req.name}: {en_text}\n"
+        previous_context += f"\n{response_name}: {en_text}\n"
 
-    # 判官总结
+    # 判官总结 — 根据 Trump 出现情况选择提示
     all_responses_text = "\n".join(
         f"{r['name']}: {r['en_text']}" for r in responses
     )
-    judge_prompt = (PRANK_JUDGE_PROMPT if request.prank_mode else JUDGE_PROMPT).format(topic=request.topic, all_responses=all_responses_text)
+    trump_present = any(r["trump_hijack"] for r in responses)
+    dual_trump_present = any(r["dual_trump"] for r in responses)
+
+    if dual_trump_present:
+        judge_prompt = DUAL_TRUMP_JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+    elif trump_present:
+        judge_prompt = TRUMP_JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+    elif request.prank_mode:
+        judge_prompt = PRANK_JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+    else:
+        judge_prompt = JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
 
     judge_en, _ = await _call_ai_simple(
         request.api_config, judge_prompt,
@@ -2310,7 +2552,9 @@ async def chatroom_discuss(request: ChatroomRequest):
         "judge_summary": {
             "en_text": judge_en or "",
             "zh_text": judge_zh or ""
-        }
+        },
+        "trump_present": trump_present,
+        "dual_trump_present": dual_trump_present
     }
 
 
@@ -2328,13 +2572,20 @@ async def chatroom_followup(request: ChatroomFollowupRequest):
         if not target_experts:
             target_experts = request.experts
 
+    # 判定双懂王事件（仅在2+专家时）
+    dual_trump_event = (request.prank_mode
+                        and len(target_experts) >= 2
+                        and random.random() < DUAL_TRUMP_PROBABILITY)
+    dual_trump_slots = [0, 1] if dual_trump_event else []
+
     responses = []
-    for expert_req in target_experts:
-        # 获取预定义专家的完整配置
+    for idx, expert_req in enumerate(target_experts):
         expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
-        
+        trump_hijacked = False
+        dual_trump = False
+        trump_variant = None
+
         if not expert_config:
-            # 自定义专家
             system_prompt = f"""You are {expert_req.name}. {expert_req.description}
 
 Topic: {request.topic}
@@ -2351,7 +2602,6 @@ Requirements:
 
 Please share your perspective."""
         else:
-            # 预定义专家 - 使用完整系统提示词
             system_prompt = f"""{expert_config["system_prompt"]}
 
 TOPIC: {request.topic}
@@ -2363,9 +2613,20 @@ FOLLOW-UP QUESTION: {request.question}
 
 Please respond to this follow-up question, staying true to your thinking style and communication patterns."""
 
-        # 恶搞模式：注入搞笑指令
+        # 恶作剧模式：概率判定
         if request.prank_mode:
-            system_prompt += PRANK_MODE_INSTRUCTION
+            if idx in dual_trump_slots:
+                trump_hijacked = True
+                dual_trump = True
+                trump_variant = "A" if idx == dual_trump_slots[0] else "B"
+                trump_prompt = TRUMP_A_SYSTEM_PROMPT if trump_variant == "A" else TRUMP_B_SYSTEM_PROMPT
+                system_prompt = trump_prompt + f"\n\nTOPIC: {request.topic}\n\nPREVIOUS DISCUSSION:\n{context_text}\n\nFOLLOW-UP QUESTION: {request.question}\n\nPlease share your TREMENDOUS perspective on this follow-up."
+            elif random.random() < TRUMP_APPEARANCE_PROBABILITY:
+                trump_hijacked = True
+                system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC: {request.topic}\n\nPREVIOUS DISCUSSION (these losers talked before you):\n{context_text}\n\nFOLLOW-UP QUESTION: {request.question}\n\nPlease share your TREMENDOUS perspective."
+            else:
+                template = random.choice(PRANK_TEMPLATES)
+                system_prompt += template
 
         en_text, err = await _call_ai_simple(
             request.api_config, system_prompt,
@@ -2378,10 +2639,18 @@ Please respond to this follow-up question, staying true to your thinking style a
             request.api_config, TRANSLATION_PROMPT, en_text, max_tokens=800
         )
 
+        response_name = "Trump" if trump_hijacked and not dual_trump else expert_req.name
+        if dual_trump:
+            response_name = f"Trump #{dual_trump_slots.index(idx) + 1}"
+
         responses.append({
-            "name": expert_req.name,
+            "name": response_name,
+            "original_expert": expert_req.name if trump_hijacked else None,
             "en_text": en_text,
-            "zh_text": zh_text or ""
+            "zh_text": zh_text or "",
+            "trump_hijack": trump_hijacked,
+            "dual_trump": dual_trump,
+            "trump_variant": trump_variant
         })
 
     return {"responses": responses}

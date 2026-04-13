@@ -82,7 +82,15 @@
       "Bash(PYTHONIOENCODING=utf-8 python search.py \"hover interaction\" --domain ux)",
       "Bash(python3 \"C:/Users/Administrator/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"glassmorphism dark mode AI\" --domain style)",
       "Bash(python \"C:/Users/Administrator/.claude/skills/ui-ux-pro-max/scripts/search.py\" \"glassmorphism dark mode AI\" --domain style)",
-      "Bash(PYTHONIOENCODING=utf-8 python:*)"
+      "Bash(PYTHONIOENCODING=utf-8 python:*)",
+      "Bash(python -m http.server 3000)",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_screenshot",
+      "mcp__chrome-devtools__take_snapshot",
+      "mcp__chrome-devtools__click",
+      "mcp__chrome-devtools__emulate",
+      "Bash(python -c \"from main import app; print\\('Backend imports OK'\\)\")",
+      "mcp__chrome-devtools__list_console_messages"
     ]
   },
   "enableAllProjectMcpServers": true,
