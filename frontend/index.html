@@ -3348,6 +3348,53 @@
             color: var(--error);
             border: 1px solid rgba(239, 68, 68, 0.2);
         }
+
+        .tts-test-result {
+            margin-top: 0.5rem;
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tts-test-result.success {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            background: rgba(34, 197, 94, 0.08);
+            color: var(--success);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+        .tts-test-result.error {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--error);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+        .tts-test-result .tts-test-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+        .tts-test-result .tts-test-body { flex: 1; }
+        .tts-test-result .tts-test-msg { line-height: 1.4; }
+        .tts-test-result .tts-test-details {
+            margin-top: 0.3rem;
+            font-size: 0.72rem;
+            opacity: 0.8;
+            color: var(--text-muted);
+        }
+        .tts-test-result .tts-test-voices {
+            margin-top: 0.3rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+        .tts-test-result .tts-voice-chip {
+            padding: 0.15rem 0.5rem;
+            background: rgba(34, 197, 94, 0.12);
+            border-radius: 10px;
+            font-size: 0.68rem;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -3499,6 +3546,12 @@
                             <button type="button" class="password-toggle" onclick="const i=document.getElementById('ttsElevenlabsKey');i.type=i.type==='password'?'text':'password'">👁️</button>
                         </div>
                         <div class="form-hint">Free plan: 10,000 chars/month. <a href="https://elevenlabs.io" target="_blank">Get API Key</a></div>
+                        <div style="display:flex;gap:0.5rem;margin-top:0.4rem;">
+                            <button type="button" class="btn btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.7rem;" id="testElevenlabsBtn">
+                                <span id="testElevenlabsBtnText">Test ElevenLabs</span>
+                            </button>
+                        </div>
+                        <div class="tts-test-result" id="elevenlabsTestResult"></div>
                     </div>
 
                     <!-- Doubao TTS Credentials -->
@@ -3515,6 +3568,12 @@
                             <button type="button" class="password-toggle" onclick="const i=document.getElementById('ttsDoubaoToken');i.type=i.type==='password'?'text':'password'">👁️</button>
                         </div>
                         <div class="form-hint">Get credentials from <a href="https://console.volcengine.com/speech/service" target="_blank">Volcengine Console</a></div>
+                        <div style="display:flex;gap:0.5rem;margin-top:0.4rem;">
+                            <button type="button" class="btn btn-secondary" style="font-size:0.75rem;padding:0.3rem 0.7rem;" id="testDoubaoBtn">
+                                <span id="testDoubaoBtnText">Test Doubao TTS</span>
+                            </button>
+                        </div>
+                        <div class="tts-test-result" id="doubaoTestResult"></div>
                     </div>
                 </form>
             </div>
@@ -4717,6 +4776,83 @@
 
         // Test button
         testBtn.addEventListener('click', testConnection);
+
+        // TTS Test buttons
+        const testElevenlabsBtn = document.getElementById('testElevenlabsBtn');
+        const testElevenlabsBtnText = document.getElementById('testElevenlabsBtnText');
+        const elevenlabsTestResult = document.getElementById('elevenlabsTestResult');
+        const testDoubaoBtn = document.getElementById('testDoubaoBtn');
+        const testDoubaoBtnText = document.getElementById('testDoubaoBtnText');
+        const doubaoTestResult = document.getElementById('doubaoTestResult');
+
+        function renderTtsTestResult(el, data) {
+            const ok = data.status === 'success';
+            el.className = 'tts-test-result ' + (ok ? 'success' : 'error');
+            const icon = ok ? '✅' : '❌';
+            let detailsHtml = '';
+            if (ok && data.details) {
+                if (data.details.voice_count !== undefined) {
+                    detailsHtml = `<div class="tts-test-details">${data.details.voice_count} voices available on your account</div>`;
+                }
+                if (data.details.voices && data.details.voices.length > 0) {
+                    detailsHtml += `<div class="tts-test-voices">${data.details.voices.map(v => `<span class="tts-voice-chip">${v}</span>`).join('')}</div>`;
+                }
+            }
+            const msg = data.message || data.detail || 'Unknown result';
+            const detailLine = (!ok && data.detail) ? `<div class="tts-test-details" style="margin-top:4px;font-size:0.7rem;opacity:0.7;word-break:break-all;">${data.detail}</div>` : '';
+            el.innerHTML = `<span class="tts-test-icon">${icon}</span><div class="tts-test-body"><div class="tts-test-msg">${msg}</div>${detailsHtml}${detailLine}</div>`;
+        }
+
+        testElevenlabsBtn.addEventListener('click', async () => {
+            const key = document.getElementById('ttsElevenlabsKey').value.trim();
+            if (!key) { renderTtsTestResult(elevenlabsTestResult, {status:'error',message:'Please enter ElevenLabs API Key first'}); return; }
+            testElevenlabsBtn.disabled = true;
+            testElevenlabsBtnText.textContent = 'Testing...';
+            try {
+                const resp = await fetch(`${API_BASE_URL}/tts/test`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ engine: 'elevenlabs', text: 'test', elevenlabs_api_key: key })
+                });
+                const data = await resp.json();
+                if (!resp.ok && !data.status) {
+                    data.status = 'error';
+                    data.message = data.message || data.detail || `HTTP ${resp.status}: ${JSON.stringify(data)}`;
+                }
+                renderTtsTestResult(elevenlabsTestResult, data);
+            } catch (e) {
+                renderTtsTestResult(elevenlabsTestResult, {status:'error',message:'Connection failed — is the backend running? (' + e.message + ')'});
+            } finally {
+                testElevenlabsBtn.disabled = false;
+                testElevenlabsBtnText.textContent = 'Test ElevenLabs';
+            }
+        });
+
+        testDoubaoBtn.addEventListener('click', async () => {
+            const appId = document.getElementById('ttsDoubaoAppId').value.trim();
+            const token = document.getElementById('ttsDoubaoToken').value.trim();
+            if (!appId || !token) { renderTtsTestResult(doubaoTestResult, {status:'error',message:'Please enter both App ID and Access Token'}); return; }
+            testDoubaoBtn.disabled = true;
+            testDoubaoBtnText.textContent = 'Testing...';
+            try {
+                const resp = await fetch(`${API_BASE_URL}/tts/test`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ engine: 'doubao', text: 'test', doubao_app_id: appId, doubao_access_token: token })
+                });
+                const data = await resp.json();
+                if (!resp.ok && !data.status) {
+                    data.status = 'error';
+                    data.message = data.message || data.detail || `HTTP ${resp.status}: ${JSON.stringify(data)}`;
+                }
+                renderTtsTestResult(doubaoTestResult, data);
+            } catch (e) {
+                renderTtsTestResult(doubaoTestResult, {status:'error',message:'Connection failed — is the backend running? (' + e.message + ')'});
+            } finally {
+                testDoubaoBtn.disabled = false;
+                testDoubaoBtnText.textContent = 'Test Doubao TTS';
+            }
+        });
 
         // Save button
         saveBtn.addEventListener('click', () => {

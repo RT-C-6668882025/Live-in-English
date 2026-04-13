@@ -90,7 +90,8 @@
       "mcp__chrome-devtools__click",
       "mcp__chrome-devtools__emulate",
       "Bash(python -c \"from main import app; print\\('Backend imports OK'\\)\")",
-      "mcp__chrome-devtools__list_console_messages"
+      "mcp__chrome-devtools__list_console_messages",
+      "Bash(python:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

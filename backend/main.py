@@ -1519,14 +1519,14 @@ ELEVENLABS_VOICES = {
     "pNInz6obpgDQGcFmaJgB": {"name": "Adam (Male, Narrator)", "gender": "Male", "lang": "en"},
 }
 
-# 豆包 TTS 英语音色
+# 豆包 TTS 英语音色 — 使用火山引擎官方 voice_type ID
 DOUBAO_TTS_VOICES = {
-    "en_female_grandma": {"name": "Grandma (Female, Warm)", "gender": "Female", "lang": "en"},
-    "en_male_narrator": {"name": "Narrator (Male, Deep)", "gender": "Male", "lang": "en"},
-    "en_female_emotional": {"name": "Emotional (Female)", "gender": "Female", "lang": "en"},
-    "en_male_mature": {"name": "Mature (Male, Calm)", "gender": "Male", "lang": "en"},
-    "en_female_sweet": {"name": "Sweet (Female, Bright)", "gender": "Female", "lang": "en"},
-    "en_male_anchor": {"name": "Anchor (Male, Professional)", "gender": "Male", "lang": "en"},
+    "BV700_V2_streaming": {"name": "Samantha (Female, Warm)", "gender": "Female", "lang": "en"},
+    "BV701_V2_streaming": {"name": "Michael (Male, Deep)", "gender": "Male", "lang": "en"},
+    "BV702_V2_streaming": {"name": "Emily (Female, Soft)", "gender": "Female", "lang": "en"},
+    "BV703_V2_streaming": {"name": "James (Male, Calm)", "gender": "Male", "lang": "en"},
+    "BV406_V2_streaming": {"name": "Luna (Female, Bright)", "gender": "Female", "lang": "en"},
+    "BV407_V2_streaming": {"name": "Alex (Male, Professional)", "gender": "Male", "lang": "en"},
 }
 
 # 所有引擎音色合并（用于 /tts/voices 返回）
@@ -1696,7 +1696,7 @@ async def tts_elevenlabs(request: TTSRequest):
 # TTS Engine: 豆包 TTS (火山引擎)
 # ==========================================
 async def tts_doubao(request: TTSRequest):
-    """豆包 TTS 引擎 - 使用 HTTP API"""
+    """豆包 TTS 引擎 - 使用火山引擎 HTTP API"""
     app_id = request.doubao_app_id
     access_token = request.doubao_access_token
     if not app_id or not access_token:
@@ -1704,52 +1704,60 @@ async def tts_doubao(request: TTSRequest):
 
     voice = request.voice
     if voice not in DOUBAO_TTS_VOICES:
-        voice = "en_female_grandma"
+        voice = "BV700_V2_streaming"
 
     try:
         async with httpx.AsyncClient(timeout=30.0) as client:
-            resp = await client.post(
-                "https://openspeech.bytedance.com/api/v1/tts",
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f"Bearer;{access_token}",
-                },
-                json={
-                    "app": {"appid": app_id, "token": access_token},
-                    "user": {"uid": "ielts_user"},
-                    "audio_config": {
-                        "audio_encoding": "mp3",
-                        "sample_rate": 24000,
+            # 尝试不同的 cluster
+            for cluster in ["volcano_tts", "volcano_mega_tts"]:
+                resp = await client.post(
+                    "https://openspeech.bytedance.com/api/v1/tts",
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f"Bearer;{access_token}",
                     },
-                    "request": {
-                        "reqid": f"tts_{datetime.now().strftime('%Y%m%d%H%M%S')}",
-                        "text": request.text,
-                        "text_type": "plain",
-                        "voice_type": voice,
-                        "operation": "query",
+                    json={
+                        "app": {
+                            "appid": app_id,
+                            "token": access_token,
+                            "cluster": cluster,
+                        },
+                        "user": {"uid": "ielts_user"},
+                        "audio": {
+                            "voice_type": voice,
+                            "encoding": "mp3",
+                            "speed_ratio": 1.0,
+                            "volume_ratio": 1.0,
+                            "pitch_ratio": 1.0,
+                        },
+                        "request": {
+                            "reqid": f"tts_{datetime.now().strftime('%Y%m%d%H%M%S%f')}",
+                            "text": request.text,
+                            "text_type": "plain",
+                            "operation": "query",
+                        }
                     }
-                }
-            )
+                )
 
-        if resp.status_code != 200:
-            raise HTTPException(
-                status_code=resp.status_code,
-                detail=f"Doubao TTS API error: {resp.text}"
-            )
+                if resp.status_code == 200:
+                    result = resp.json()
+                    code = result.get("code", -1)
+                    if code == 3000 and "data" in result:
+                        audio_data = base64.b64decode(result["data"])
+                        return StreamingResponse(
+                            io.BytesIO(audio_data),
+                            media_type="audio/mpeg",
+                            headers={
+                                "Content-Disposition": "inline; filename=tts_doubao.mp3",
+                                "Cache-Control": "no-cache",
+                            }
+                        )
+                    # code != 3000, try next cluster
+                    last_error = f"code={code}: {result.get('message', 'unknown')}"
+                else:
+                    last_error = f"HTTP {resp.status_code}: {resp.text[:200]}"
 
-        result = resp.json()
-        if "data" in result:
-            audio_data = base64.b64decode(result["data"])
-            return StreamingResponse(
-                io.BytesIO(audio_data),
-                media_type="audio/mpeg",
-                headers={
-                    "Content-Disposition": "inline; filename=tts_doubao.mp3",
-                    "Cache-Control": "no-cache",
-                }
-            )
-        else:
-            raise HTTPException(status_code=500, detail=f"Doubao TTS no audio data: {result}")
+            raise HTTPException(status_code=500, detail=f"Doubao TTS failed: {last_error}")
 
     except httpx.TimeoutException:
         raise HTTPException(status_code=504, detail="Doubao TTS API timeout")
@@ -1773,6 +1781,124 @@ async def text_to_speech(request: TTSRequest):
         return await tts_doubao(request)
     else:
         return await tts_edge(request)
+
+
+@app.post("/tts/test")
+async def test_tts_connection(request: TTSRequest):
+    """测试 TTS 引擎连接是否可用（发送极短文本）"""
+    test_text = "Hi"
+    request.text = test_text
+    timestamp = datetime.now().isoformat()
+
+    try:
+        if request.engine == TTSEngine.ELEVENLABS:
+            if not request.elevenlabs_api_key:
+                return {"status": "error", "message": "ElevenLabs API Key is required", "timestamp": timestamp}
+            try:
+                async with httpx.AsyncClient(timeout=15.0) as client:
+                    resp = await client.get(
+                        "https://api.elevenlabs.io/v1/voices",
+                        headers={"xi-api-key": request.elevenlabs_api_key}
+                    )
+                if resp.status_code == 200:
+                    voices = resp.json().get("voices", [])
+                    return {
+                        "status": "success",
+                        "message": f"ElevenLabs connected. {len(voices)} voices available.",
+                        "details": {"voice_count": len(voices), "voices": [v.get("name","") for v in voices[:5]]},
+                        "timestamp": timestamp
+                    }
+                elif resp.status_code == 401:
+                    return {"status": "error", "message": "Invalid ElevenLabs API Key", "timestamp": timestamp}
+                else:
+                    return {"status": "error", "message": f"ElevenLabs API error: HTTP {resp.status_code}", "timestamp": timestamp}
+            except httpx.TimeoutException:
+                return {"status": "error", "message": "ElevenLabs connection timeout", "timestamp": timestamp}
+            except Exception as e:
+                return {"status": "error", "message": f"ElevenLabs error: {str(e)}", "timestamp": timestamp}
+
+        elif request.engine == TTSEngine.DOUBAO:
+            if not request.doubao_app_id or not request.doubao_access_token:
+                return {"status": "error", "message": "Doubao App ID and Access Token are required", "timestamp": timestamp}
+            try:
+                import uuid
+                req_id = str(uuid.uuid4())
+
+                # 测试配置列表：不同 auth 格式 + 有/无 cluster
+                test_configs = [
+                    {"auth": f"Bearer;{request.doubao_access_token}", "cluster": "volcano_tts"},
+                    {"auth": f"Bearer {request.doubao_access_token}", "cluster": "volcano_tts"},
+                    {"auth": f"Bearer;{request.doubao_access_token}", "cluster": "volcano_mega_tts"},
+                    {"auth": f"Bearer;{request.doubao_access_token}"},  # 无 cluster
+                ]
+
+                diag_logs = []
+
+                async with httpx.AsyncClient(timeout=15.0) as client:
+                    for cfg in test_configs:
+                        auth_val = cfg["auth"]
+                        app_obj = {"appid": request.doubao_app_id, "token": request.doubao_access_token}
+                        if "cluster" in cfg:
+                            app_obj["cluster"] = cfg["cluster"]
+
+                        try:
+                            resp = await client.post(
+                                "https://openspeech.bytedance.com/api/v1/tts",
+                                headers={
+                                    "Content-Type": "application/json",
+                                    "Authorization": auth_val,
+                                },
+                                json={
+                                    "app": app_obj,
+                                    "user": {"uid": "test_user"},
+                                    "audio": {
+                                        "voice_type": "BV001_streaming",
+                                        "encoding": "mp3",
+                                        "speed_ratio": 1.0,
+                                        "volume_ratio": 1.0,
+                                        "pitch_ratio": 1.0,
+                                    },
+                                    "request": {
+                                        "reqid": req_id,
+                                        "text": test_text,
+                                        "text_type": "plain",
+                                        "operation": "query",
+                                    }
+                                }
+                            )
+                            body_preview = resp.text[:300]
+                            diag_logs.append(f"auth={auth_val[:30]}... cluster={cfg.get('cluster','none')} => HTTP {resp.status_code}: {body_preview}")
+
+                            if resp.status_code == 200:
+                                result = resp.json()
+                                code = result.get("code", -1)
+                                if code == 3000:
+                                    return {
+                                        "status": "success",
+                                        "message": f"Doubao TTS connected!",
+                                        "details": {"voice_type": "BV001_streaming", "cluster": cfg.get("cluster", "none"), "auth_format": "Bearer;" if ";" in auth_val else "Bearer "},
+                                        "timestamp": timestamp
+                                    }
+                        except Exception as e:
+                            diag_logs.append(f"auth={auth_val[:30]}... cluster={cfg.get('cluster','none')} => ERROR: {str(e)}")
+
+                return {
+                    "status": "error",
+                    "message": f"Doubao TTS: all attempts returned 403. Check if TTS service is enabled on your Volcengine account.",
+                    "detail": " | ".join(diag_logs),
+                    "timestamp": timestamp
+                }
+
+        else:
+            # Edge-TTS — always available if installed
+            try:
+                import edge_tts
+                return {"status": "success", "message": "Edge-TTS ready (free, no API key needed)", "timestamp": timestamp}
+            except ImportError:
+                return {"status": "error", "message": "edge-tts not installed. Run: pip install edge-tts", "timestamp": timestamp}
+
+    except Exception as e:
+        return {"status": "error", "message": f"Test failed: {str(e)}", "timestamp": timestamp}
 
 
 @app.post("/practice/chat")

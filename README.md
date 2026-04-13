@@ -47,6 +47,7 @@ Single interface for both assessment types:
   - **Edge-TTS** (Free) - Microsoft Neural voices
   - **ElevenLabs** (10k chars/month free) - Premium emotional voices
   - **Doubao TTS** (Volcano Engine) - Chinese-optimized voices
+- **TTS Test Buttons** - Test each engine directly in settings before using
 - Pronunciation analysis via Azure Speech Services
 
 ### 🤖 Multi-Model Support
@@ -100,7 +101,7 @@ python main.py
    - **ElevenLabs**: Enter API key from [elevenlabs.io](https://elevenlabs.io)
    - **Doubao TTS**: Enter App ID and Access Token from [Volcengine](https://console.volcengine.com/speech/service)
 3. Select voice and speed
-4. Test with the ▶ button
+4. **Test each engine** with the dedicated test buttons before saving
 
 ### Layered Model Config
 1. In each section (Evaluate/Practice/Chatroom), click **⚙️ Custom Model**
