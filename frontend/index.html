@@ -6565,7 +6565,7 @@
 
             chatroomBusy = true;
             chatroomDiscussion = [];
-            chatroomChatArea.innerHTML = '';
+            clearChatArea();
             judgeSummary.style.display = 'none';
             followupBar.style.display = 'none';
             chatroomStartBtn.disabled = true;
@@ -6602,7 +6602,7 @@
                 const data = await response.json();
 
                 // Clear loading messages
-                chatroomChatArea.innerHTML = '';
+                clearChatArea();
 
                 // Render each expert message
                 const dualTrumpPresent = data.responses.some(r => r.dual_trump);
@@ -6640,7 +6640,7 @@
                 chatroomCollapseBtn.style.display = 'inline-flex';
 
             } catch (e) {
-                chatroomChatArea.innerHTML = '';
+                clearChatArea();
                 showToast('Discussion failed: ' + e.message);
             } finally {
                 chatroomBusy = false;
@@ -6651,6 +6651,12 @@
 
         function getExpertAvatar(name) {
             return EXPERT_AVATARS[name] || null;
+        }
+
+        function clearChatArea() {
+            const preserved = chatroomChatArea.querySelectorAll('.prank-fab, .scroll-to-bottom');
+            chatroomChatArea.innerHTML = '';
+            preserved.forEach(el => chatroomChatArea.appendChild(el));
         }
 
         function applyMessageGrouping(msgEl, senderName) {
