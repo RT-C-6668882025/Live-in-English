@@ -2470,17 +2470,91 @@
             margin-top: 0.5rem;
         }
 
-        /* Chat area */
+        /* Controls collapse after discussion starts */
+        .chatroom-controls.collapsed {
+            padding: 0.6rem 1rem;
+        }
+        .chatroom-controls.collapsed .chatroom-expert-section,
+        .chatroom-controls.collapsed .chatroom-start-btn,
+        .chatroom-controls.collapsed .chatroom-topic-row select {
+            display: none;
+        }
+        .chatroom-controls.collapsed .chatroom-topic-row {
+            margin-bottom: 0;
+            align-items: center;
+        }
+        .chatroom-controls.collapsed .chatroom-topic-input {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.75rem;
+            background: transparent;
+            border-color: transparent;
+        }
+        .chatroom-controls.collapsed .chatroom-topic-input:focus {
+            border-color: var(--primary);
+            background: var(--bg-input);
+        }
+        .chatroom-collapse-toggle {
+            display: none;
+            padding: 0.3rem 0.7rem;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: var(--transition-base);
+            white-space: nowrap;
+        }
+        .chatroom-collapse-toggle:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .chatroom-controls.collapsed .chatroom-collapse-toggle {
+            display: inline-flex;
+        }
+
+        /* Scroll-to-bottom button */
+        .scroll-to-bottom {
+            position: absolute;
+            bottom: 0.75rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient-primary-shine);
+            color: var(--bg-dark);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(200,169,126,0.3);
+            display: none;
+            z-index: 5;
+            border: none;
+            transition: var(--transition-base);
+        }
+        .scroll-to-bottom:hover {
+            box-shadow: 0 4px 16px rgba(200,169,126,0.4);
+            transform: translateX(-50%) translateY(-2px);
+        }
+        .scroll-to-bottom.show {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Chat area — real chatroom feel */
         .chatroom-chat-area {
             position: relative;
             background: var(--bg-card);
+            background-image: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 30%);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1rem;
+            border-radius: var(--radius-lg);
+            padding: 1.25rem 1rem;
             min-height: 300px;
             max-height: 550px;
             overflow-y: auto;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.12);
         }
 
         .chatroom-empty {
@@ -2492,47 +2566,109 @@
             color: var(--text-muted);
         }
         .chatroom-empty-icon {
-            font-size: 1.5rem;
+            font-size: 2rem;
             margin-bottom: 0.75rem;
-            opacity: 0.5;
+            opacity: 0.4;
         }
         .chatroom-empty p {
             font-size: 0.9rem;
         }
 
-        /* Expert messages */
+        /* === Messages — chat bubble system === */
         .chatroom-msg {
             display: flex;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-            animation: fadeIn 0.3s ease;
+            gap: 0.6rem;
+            margin-bottom: 0.3rem;
+            animation: chatMsgSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 88%;
         }
+        .chatroom-msg.different-sender {
+            margin-top: 0.75rem;
+        }
+        .chatroom-msg.grouped .chatroom-msg-avatar {
+            visibility: hidden;
+        }
+        .chatroom-msg.grouped .chatroom-msg-name {
+            display: none;
+        }
+
+        /* Expert messages — left aligned */
+        .chatroom-msg.expert {
+            align-self: flex-start;
+        }
+
+        /* User messages — right aligned */
+        .chatroom-msg.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+        .chatroom-msg.user .chatroom-msg-body {
+            align-items: flex-end;
+        }
+        .chatroom-msg.user .chatroom-msg-name {
+            text-align: right;
+        }
+        .chatroom-msg.user .chatroom-msg-bubble {
+            border-radius: 16px 4px 16px 16px;
+            background: rgba(200, 169, 126, 0.08);
+            border: 1px solid rgba(200, 169, 126, 0.12);
+        }
+        .chatroom-msg.user .chatroom-msg-time {
+            text-align: right;
+        }
+
+        /* Judge summary — centered card in chat flow */
+        .chatroom-msg.judge-summary {
+            align-self: center;
+            max-width: 92%;
+            margin: 1.25rem auto;
+        }
+        .chatroom-msg.judge-summary .chatroom-msg-avatar {
+            background: linear-gradient(135deg, var(--primary), var(--accent-teal));
+        }
+        .chatroom-msg.judge-summary .chatroom-msg-bubble {
+            border-radius: var(--radius-lg);
+            background: var(--bg-card);
+            background-image: var(--gradient-card);
+            border: 1px solid rgba(200, 169, 126, 0.1);
+            box-shadow: var(--shadow-elevated), var(--shadow-glow);
+        }
+
+        @keyframes chatMsgSlideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .chatroom-msg-avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            font-weight: 700;
-            color: white;
             flex-shrink: 0;
+            transition: var(--transition-base);
         }
         .chatroom-msg-body {
             flex: 1;
             min-width: 0;
+            display: flex;
+            flex-direction: column;
         }
         .chatroom-msg-name {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             font-weight: 600;
-            margin-bottom: 0.35rem;
+            margin-bottom: 0.25rem;
+            letter-spacing: 0.01em;
         }
         .chatroom-msg-bubble {
             background: var(--bg-elevated);
-            border-radius: 0 var(--radius) var(--radius) var(--radius);
-            padding: 0.85rem 1rem;
-            border-left: 3px solid var(--primary);
+            background-image: linear-gradient(180deg, rgba(255,255,255,0.015) 0%, transparent 100%);
+            border-radius: 4px 16px 16px 16px;
+            padding: 0.75rem 1rem;
+            position: relative;
         }
 
         .expert-text-en {
@@ -2575,9 +2711,19 @@
         }
 
         .chatroom-msg-time {
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             color: var(--text-muted);
-            margin-top: 4px;
+            margin-top: 3px;
+            opacity: 0.7;
+        }
+
+        .chatroom-msg-time-inline {
+            display: block;
+            text-align: right;
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            opacity: 0.6;
+            margin-top: 6px;
         }
 
         /* Loading state */
@@ -2675,48 +2821,61 @@
             gap: 0.5rem;
             align-items: center;
             background: var(--bg-card);
+            background-image: var(--gradient-card);
             border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border-radius: var(--radius-lg);
             padding: 0.75rem;
+            box-shadow: var(--shadow-elevated);
         }
         .followup-target-select {
             background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
             color: var(--text-primary);
-            padding: 0.5rem;
+            padding: 0.55rem 0.75rem;
             font-size: 0.8rem;
             outline: none;
             cursor: pointer;
-            min-width: 140px;
+            min-width: 130px;
+            transition: var(--transition-base);
+        }
+        .followup-target-select:hover {
+            border-color: var(--border-hover);
         }
         .followup-input {
             flex: 1;
             background: var(--bg-input);
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius);
             color: var(--text-primary);
-            padding: 0.6rem 0.85rem;
+            padding: 0.65rem 1rem;
             font-size: 0.9rem;
             outline: none;
-            transition: border-color 0.2s;
+            transition: var(--transition-base);
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .followup-input:focus {
             border-color: var(--primary);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px var(--primary-soft);
         }
         .followup-send-btn {
-            background: var(--primary);
-            color: white;
+            background: var(--gradient-primary-shine);
+            color: var(--bg-dark);
             border: none;
-            border-radius: var(--radius-sm);
-            padding: 0.6rem 1.2rem;
+            border-radius: var(--radius);
+            padding: 0.65rem 1.25rem;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: var(--transition-base);
+            box-shadow: 0 2px 8px rgba(200,169,126,0.25);
         }
-        .followup-send-btn:hover {
-            opacity: 0.9;
+        .followup-send-btn:hover:not(:disabled) {
+            box-shadow: 0 4px 14px rgba(200,169,126,0.35);
+            transform: translateY(-1px);
+        }
+        .followup-send-btn:active:not(:disabled) {
+            transform: translateY(0) scale(0.97);
         }
         .followup-send-btn:disabled {
             opacity: 0.5;
@@ -3814,7 +3973,10 @@
             </div>
 
             <!-- Control Bar -->
-            <div class="chatroom-controls">
+            <div class="chatroom-controls" id="chatroomControls">
+                <button class="chatroom-collapse-toggle" id="chatroomCollapseBtn" title="Collapse / Expand settings" style="display:none;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
                 <div class="chatroom-topic-row">
                     <input type="text" id="chatroomTopic" class="chatroom-topic-input" placeholder="Enter a topic for discussion, e.g. Should AI replace teachers?">
                     <select id="chatroomLang" class="chatroom-lang-select">
@@ -6176,12 +6338,47 @@
         const chatroomChatArea = document.getElementById('chatroomChatArea');
         const chatroomEmpty = document.getElementById('chatroomEmpty');
         const judgeSummary = document.getElementById('judgeSummary');
+        const chatroomControls = document.getElementById('chatroomControls');
+        const chatroomCollapseBtn = document.getElementById('chatroomCollapseBtn');
         const followupBar = document.getElementById('followupBar');
         const followupTarget = document.getElementById('followupTarget');
         const followupInput = document.getElementById('followupInput');
         const followupSendBtn = document.getElementById('followupSendBtn');
         const addCustomExpertBtn = document.getElementById('addCustomExpertBtn');
         const recommendExpertsBtn = document.getElementById('recommendExpertsBtn');
+
+        // Expert emoji avatars
+        const EXPERT_AVATARS = {
+            'Feynman': '🎭', 'Einstein': '🧠', 'Curie': '🔬',
+            'Heisenberg': '⚛️', 'Nash': '🎲', 'Kahneman': '🧩',
+            'Darwin': '🦎', 'Munger': '💼', 'Taleb': '🦢',
+            'Altman': '🚀', 'IELTS Examiner': '🎓', 'Native Speaker': '🇬🇧',
+        };
+
+        // Scroll-to-bottom button
+        const scrollBtn = document.createElement('button');
+        scrollBtn.className = 'scroll-to-bottom';
+        scrollBtn.innerHTML = '↓ New';
+        chatroomChatArea.appendChild(scrollBtn);
+        chatroomChatArea.addEventListener('scroll', () => {
+            const atBottom = chatroomChatArea.scrollHeight - chatroomChatArea.scrollTop - chatroomChatArea.clientHeight < 60;
+            scrollBtn.classList.toggle('show', !atBottom);
+        });
+        scrollBtn.addEventListener('click', () => {
+            chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
+            scrollBtn.classList.remove('show');
+        });
+
+        // Collapse/expand toggle
+        chatroomCollapseBtn.addEventListener('click', () => {
+            chatroomControls.classList.toggle('collapsed');
+            const icon = chatroomCollapseBtn.querySelector('svg');
+            if (chatroomControls.classList.contains('collapsed')) {
+                icon.style.transform = '';
+            } else {
+                icon.style.transform = 'rotate(180deg)';
+            }
+        });
 
         // Chatroom state
         let chatroomExperts = [];  // {name, description, colorIndex}
@@ -6438,6 +6635,10 @@
                 followupBar.style.display = 'flex';
                 chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
 
+                // Collapse controls after discussion starts
+                chatroomControls.classList.add('collapsed');
+                chatroomCollapseBtn.style.display = 'inline-flex';
+
             } catch (e) {
                 chatroomChatArea.innerHTML = '';
                 showToast('Discussion failed: ' + e.message);
@@ -6448,15 +6649,35 @@
             }
         });
 
+        function getExpertAvatar(name) {
+            return EXPERT_AVATARS[name] || null;
+        }
+
+        function applyMessageGrouping(msgEl, senderName) {
+            msgEl.dataset.sender = senderName;
+            const lastMsg = chatroomChatArea.querySelector('.chatroom-msg:last-of-type:not(.loading):not(.judge-summary)');
+            const prevInArea = msgEl.previousElementSibling;
+            if (prevInArea && !prevInArea.classList.contains('loading') && !prevInArea.classList.contains('judge-summary') && prevInArea.dataset.sender === senderName) {
+                msgEl.classList.add('grouped');
+            } else {
+                msgEl.classList.add('different-sender');
+            }
+        }
+
         function addChatroomLoadingMsg(name, colorIndex) {
             const color = getExpertColor(colorIndex);
+            const emoji = getExpertAvatar(name);
             const msg = document.createElement('div');
-            msg.className = 'chatroom-msg loading';
+            msg.className = 'chatroom-msg expert loading';
+            msg.dataset.sender = name;
+            const avatarHtml = emoji
+                ? `<div class="chatroom-msg-avatar">${emoji}</div>`
+                : `<div class="chatroom-msg-avatar" style="background:${color};">${name.charAt(0).toUpperCase()}</div>`;
             msg.innerHTML = `
-                <div class="chatroom-msg-avatar" style="background:${color};">${name.charAt(0).toUpperCase()}</div>
+                ${avatarHtml}
                 <div class="chatroom-msg-body">
                     <div class="chatroom-msg-name" style="color:${color};">${name}</div>
-                    <div class="chatroom-msg-bubble" style="border-left-color:${color};">
+                    <div class="chatroom-msg-bubble">
                         <div class="chatroom-loading-dots"><span></span><span></span><span></span></div>
                     </div>
                 </div>`;
@@ -6466,27 +6687,33 @@
         function renderExpertMessage(name, enText, zhText, colorIndex) {
             const color = getExpertColor(colorIndex);
             const msg = document.createElement('div');
-            msg.className = 'chatroom-msg';
+            msg.className = 'chatroom-msg expert';
             const now = new Date();
             const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+
+            const emoji = getExpertAvatar(name);
+            const avatarHtml = emoji
+                ? `<div class="chatroom-msg-avatar">${emoji}</div>`
+                : `<div class="chatroom-msg-avatar" style="background:${color};">${name.charAt(0).toUpperCase()}</div>`;
 
             const bubbleId = 'bubble-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
 
             msg.innerHTML = `
-                <div class="chatroom-msg-avatar" style="background:${color};">${name.charAt(0).toUpperCase()}</div>
+                ${avatarHtml}
                 <div class="chatroom-msg-body">
                     <div class="chatroom-msg-name" style="color:${color};">${name}</div>
-                    <div class="chatroom-msg-bubble" style="border-left-color:${color};" id="${bubbleId}">
+                    <div class="chatroom-msg-bubble" id="${bubbleId}">
                         <div class="expert-text-en-row">
                             <p class="expert-text-en">${escapeHtml(enText)}</p>
                             <button class="play-audio-btn" title="Play audio">▶</button>
                         </div>
                         <div class="translation-toggle">点击查看中文翻译</div>
                         <p class="expert-text-zh">${escapeHtml(zhText)}</p>
+                        <span class="chatroom-msg-time-inline">${time}</span>
                     </div>
-                    <div class="chatroom-msg-time">${time}</div>
                 </div>`;
 
+            applyMessageGrouping(msg, name);
             chatroomChatArea.appendChild(msg);
 
             // Bind TTS button
@@ -6517,7 +6744,7 @@
         function renderTrumpHijackMessage(name, originalExpert, enText, zhText, variant) {
             const msg = document.createElement('div');
             const trumpClass = variant === 'A' ? 'trump-a' : variant === 'B' ? 'trump-b' : '';
-            msg.className = `chatroom-msg trump-hijack ${trumpClass}`.trim();
+            msg.className = `chatroom-msg expert trump-hijack ${trumpClass}`.trim();
             const now = new Date();
             const time = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
 
@@ -6540,8 +6767,8 @@
                         </div>
                         <div class="translation-toggle">点击查看中文翻译</div>
                         <p class="expert-text-zh">${escapeHtml(zhText)}</p>
+                        <span class="chatroom-msg-time-inline">${time}</span>
                     </div>
-                    <div class="chatroom-msg-time">${time}</div>
                 </div>`;
 
             chatroomChatArea.appendChild(msg);
@@ -6566,23 +6793,42 @@
         }
 
         function showJudgeSummary(enText, zhText, trumpMode) {
-            judgeSummary.style.display = 'block';
-            const header = trumpMode === 'dual' ? '👑⚡ DUAL TRUMP COURT — Judge Summary'
-                         : trumpMode === 'trump' ? '👑 Trump\'s Court — Judge Summary'
-                         : '🎯 Judge Summary';
-            judgeSummary.innerHTML = `
-                <h4>${header}</h4>
-                <div class="judge-summary-en">${escapeHtml(enText)}</div>
-                <div class="translation-toggle">点击查看中文翻译</div>
-                <div class="judge-summary-zh">${escapeHtml(zhText)}</div>`;
+            // Hide external judge summary if visible
+            judgeSummary.style.display = 'none';
 
-            const toggle = judgeSummary.querySelector('.translation-toggle');
-            const zhDiv = judgeSummary.querySelector('.judge-summary-zh');
+            const header = trumpMode === 'dual' ? '👑⚡ DUAL TRUMP COURT'
+                         : trumpMode === 'trump' ? '👑 Trump\'s Court'
+                         : '🎯 Judge Summary';
+
+            const msg = document.createElement('div');
+            msg.className = 'chatroom-msg judge-summary';
+            msg.dataset.sender = '__judge__';
+            msg.innerHTML = `
+                <div class="chatroom-msg-avatar" style="font-size:1.3rem;">${trumpMode ? '👑' : '🎯'}</div>
+                <div class="chatroom-msg-body" style="width:100%;">
+                    <div class="chatroom-msg-name" style="color:var(--primary);">${header}</div>
+                    <div class="chatroom-msg-bubble" style="max-width:100%;">
+                        <div class="judge-summary-en">${formatJudgeText(enText)}</div>
+                        <div class="translation-toggle">点击查看中文翻译</div>
+                        <div class="judge-summary-zh">${formatJudgeText(zhText)}</div>
+                    </div>
+                </div>`;
+
+            chatroomChatArea.appendChild(msg);
+
+            const toggle = msg.querySelector('.translation-toggle');
+            const zhDiv = msg.querySelector('.judge-summary-zh');
             toggle.addEventListener('click', () => {
                 const open = zhDiv.style.display === 'block';
                 zhDiv.style.display = open ? 'none' : 'block';
                 toggle.textContent = open ? '点击查看中文翻译' : '收起翻译 ▲';
             });
+
+            chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
+        }
+
+        function formatJudgeText(text) {
+            return escapeHtml(text).replace(/\n/g, '<br>').replace(/## /g, '<strong>').replace(/\n\n/g, '</strong><br><br>');
         }
 
         function updateFollowupTargets() {
@@ -6612,15 +6858,19 @@
             followupSendBtn.disabled = true;
             followupInput.value = '';
 
-            // Show user question
+            // Show user question (right-aligned)
+            const now = new Date();
+            const qTime = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
             const qMsg = document.createElement('div');
-            qMsg.className = 'chatroom-msg';
+            qMsg.className = 'chatroom-msg user different-sender';
+            qMsg.dataset.sender = '__user__';
             qMsg.innerHTML = `
-                <div class="chatroom-msg-avatar" style="background:var(--primary-soft);color:var(--primary);">You</div>
+                <div class="chatroom-msg-avatar" style="font-size:1rem;">🧑</div>
                 <div class="chatroom-msg-body">
                     <div class="chatroom-msg-name" style="color:var(--primary);">You</div>
-                    <div class="chatroom-msg-bubble" style="border-left-color:var(--primary);background:var(--primary-soft);">
+                    <div class="chatroom-msg-bubble">
                         <p class="expert-text-en">${escapeHtml(question)}</p>
+                        <span class="chatroom-msg-time-inline">${qTime}</span>
                     </div>
                 </div>`;
             chatroomChatArea.appendChild(qMsg);
