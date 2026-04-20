@@ -1888,6 +1888,10 @@ async def test_tts_connection(request: TTSRequest):
                     "detail": " | ".join(diag_logs),
                     "timestamp": timestamp
                 }
+            except httpx.TimeoutException:
+                return {"status": "error", "message": "Doubao TTS connection timeout", "timestamp": timestamp}
+            except Exception as e:
+                return {"status": "error", "message": f"Doubao TTS error: {str(e)}", "timestamp": timestamp}
 
         else:
             # Edge-TTS — always available if installed
