@@ -3,7 +3,7 @@
 Learn English for one cent Backend Service
 """
 
-from fastapi import FastAPI, HTTPException, File, UploadFile, Form
+from fastapi import FastAPI, HTTPException, File, UploadFile, Form, WebSocket, WebSocketDisconnect, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse, JSONResponse
 from pydantic import BaseModel, Field
@@ -13,9 +13,14 @@ import json
 import io
 import asyncio
 import base64
+import hashlib
+import hmac
+import time
+import struct
 from typing import Literal, Optional, Dict, Any, List
 from datetime import datetime
 import random
+import websockets as ws_lib
 
 app = FastAPI(title="一分钱学英语 API", version="1.1.0")
 
@@ -65,9 +70,8 @@ async def general_exception_handler(request, exc):
 # 支持的模型列表
 SUPPORTED_MODELS = {
     # DeepSeek 模型
-    "deepseek-chat": {"provider": "deepseek", "name": "DeepSeek Chat (V3)", "max_tokens": 8192},
-    "deepseek-coder": {"provider": "deepseek", "name": "DeepSeek Coder", "max_tokens": 8192},
-    "deepseek-reasoner": {"provider": "deepseek", "name": "DeepSeek R1 (Reasoner)", "max_tokens": 8192},
+    "deepseek-v4-flash": {"provider": "deepseek", "name": "DeepSeek V4 Flash", "max_tokens": 8192},
+    "deepseek-v4-pro": {"provider": "deepseek", "name": "DeepSeek V4 Pro", "max_tokens": 8192},
     # OpenAI 模型
     "gpt-4": {"provider": "openai", "name": "GPT-4", "max_tokens": 8192},
     "gpt-4-turbo": {"provider": "openai", "name": "GPT-4 Turbo", "max_tokens": 8192},
@@ -512,11 +516,11 @@ Remember: The three most harmful addictions are heroin, carbohydrates, and a mon
 
 EXPERT_PROMPT_TEMPLATE = """{system_prompt}
 
-TOPIC FOR DISCUSSION: {topic}
+TOPIC: {topic}
 
 {previous_context}
 
-Please share your unique perspective on this topic, staying true to your thinking style and communication patterns."""
+Share your unique perspective in 80-120 words. Stay true to your thinking style."""
 
 TRANSLATION_PROMPT = """Translate the following English text into natural, fluent Chinese.
 Keep the tone and style consistent with the original.
@@ -525,34 +529,52 @@ Only output the Chinese translation, nothing else.
 English:
 {text}"""
 
+def parse_bilingual(text):
+    """Parse [EN]...[ZH]... format, returns (en_text, zh_text)"""
+    if not text:
+        return text or "", ""
+    import re
+    # Try multiple format patterns
+    en_match = re.search(r'\[EN\]\s*(.*?)(?=\[ZH\]|$)', text, re.DOTALL)
+    zh_match = re.search(r'\[ZH\]\s*(.*?)$', text, re.DOTALL)
+
+    en = en_match.group(1).strip() if en_match else text.strip()
+    zh = zh_match.group(1).strip() if zh_match else ""
+
+    # If no [ZH] found, try to detect Chinese text after English
+    if not zh and en:
+        chinese_chars = re.findall(r'[\u4e00-\u9fff\u3000-\u303f\uff00-\uffef][\u4e00-\u9fff\u3000-\u303f\uff00-\uffef\w\s，。！？、；：""''（）【】《》…—\-\,\.\!\?\;\:\"\'\(\)\[\]\{\}<>]+', text)
+        if chinese_chars:
+            zh = ''.join(chinese_chars).strip()
+
+    return en, zh
+
+TRANSLATE_PROMPT = "Translate the following English text into natural, fluent Chinese. Only output the Chinese translation, nothing else."
+
+@app.post("/chatroom/translate")
+async def chatroom_translate(request: Request):
+    """翻译文本为中文"""
+    body = await request.json()
+    text = body.get("text", "")
+    api_config_data = body.get("api_config")
+    if not text:
+        return {"zh_text": ""}
+    api_config = ApiConfig(**api_config_data) if api_config_data else None
+    zh, err = await _call_ai_simple(api_config, TRANSLATE_PROMPT, text, max_tokens=800)
+    if err:
+        return {"zh_text": f"[Translation failed: {err}]"}
+    return {"zh_text": zh or ""}
+
 JUDGE_PROMPT = """You are a discussion judge. Analyze the following expert discussion on the topic: "{topic}"
 
 {all_responses}
 
-Provide a comprehensive analysis with these sections:
+Provide a brief analysis (100-120 words):
+1. Key consensus and disagreements
+2. Best insight from the discussion
+3. One recommended next question
 
-## 1. Consensus Points
-What do all/most experts agree on? List 2-3 key areas of agreement.
-
-## 2. Points of Debate
-Where do experts disagree? What are the fundamental tensions in their perspectives?
-(e.g., Feynman's simplicity vs. Heisenberg's uncertainty, or Taleb's skepticism vs. Altman's optimism)
-
-## 3. Unique Insights
-What valuable perspective did each expert contribute that others missed?
-
-## 4. Critical Blind Spots
-What important angles or counterarguments did ALL experts overlook?
-Be specific - what question should we ask next?
-
-## 5. Actionable Takeaways
-2-3 concrete, specific pieces of advice for someone facing this topic.
-Not generic advice - actionable steps based on the discussion.
-
-## 6. Recommended Next Question
-Based on this discussion, what's the most important follow-up question to explore?
-
-Respond in English, around 250-300 words. Be critical and insightful."""
+Respond in English, be concise."""
 
 PRANK_MODE_INSTRUCTION = """
 
@@ -955,7 +977,7 @@ class ApiConfig(BaseModel):
     """API配置模型"""
     api_url: Optional[str] = Field(default=None, description="API端点URL（可选，留空则自动根据模型选择）")
     api_key: str = Field(description="API认证密钥")
-    model: str = Field(default="deepseek-chat", description="模型名称")
+    model: str = Field(default="deepseek-v4-flash", description="模型名称")
     custom_model: Optional[str] = Field(default=None, description="自定义模型名称")
 
 
@@ -1367,7 +1389,7 @@ async def evaluate(request: EvaluateRequest):
         # 使用环境变量作为后备
         api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
         api_key = os.getenv("DEEPSEEK_API_KEY", "")
-        model = "deepseek-chat"
+        model = "deepseek-v4-flash"
         model_info = get_model_info(model)
         provider = model_info.get("provider", "unknown")
     
@@ -1407,7 +1429,7 @@ CANDIDATE'S RESPONSE:
                 }
             ],
             "generationConfig": {
-                "maxOutputTokens": min(8000, model_info.get("max_tokens", 8192)),
+                "maxOutputTokens": min(2000, model_info.get("max_tokens", 8192)),
                 "temperature": 0.7
             }
         }
@@ -1417,11 +1439,17 @@ CANDIDATE'S RESPONSE:
         else:
             api_url = f"{api_url}?key={api_key}"
     else:
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
-        ]
-        body = build_api_request_body(model, messages, max_tokens=4000)
+        # Anthropic requires system as a top-level field, not in messages array
+        if provider == "anthropic":
+            messages = [{"role": "user", "content": user_message}]
+            body = build_api_request_body(model, messages, max_tokens=2000)
+            body["system"] = system_prompt
+        else:
+            messages = [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message}
+            ]
+            body = build_api_request_body(model, messages, max_tokens=2000)
     
     # 调用 AI API
     try:
@@ -1467,6 +1495,128 @@ CANDIDATE'S RESPONSE:
         raise HTTPException(status_code=503, detail="Cannot connect to AI API. Please check your network and API URL.")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Evaluation failed: {str(e)}")
+
+
+@app.post("/evaluate/stream")
+async def evaluate_stream(request: EvaluateRequest):
+    """Streaming evaluation using Server-Sent Events"""
+    if request.api_config:
+        api_key = request.api_config.api_key
+        model = request.api_config.custom_model if request.api_config.model == "custom" and request.api_config.custom_model else request.api_config.model
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+        if request.api_config.api_url:
+            api_url = request.api_config.api_url
+        else:
+            if provider == "google":
+                api_url = DEFAULT_API_URLS["google"].format(model=model)
+            else:
+                api_url = DEFAULT_API_URLS.get(provider, DEFAULT_API_URLS["deepseek"])
+    else:
+        api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
+        api_key = os.getenv("DEEPSEEK_API_KEY", "")
+        model = "deepseek-v4-flash"
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+    if not api_key:
+        raise HTTPException(status_code=500, detail="API key not configured.")
+
+    if request.mode == "expansion" or (request.mode == "writing" and request.word_count > 0 and request.word_count < 150):
+        system_prompt = SHORT_INPUT_PROMPT
+        user_message = f"""CANDIDATE'S SHORT RESPONSE ({request.word_count} words):\n{request.response}"""
+    elif request.mode == "writing":
+        system_prompt = WRITING_SYSTEM_PROMPT
+        user_message = f"""TASK PROMPT: {request.task_prompt or 'Not provided'}\n\nCANDIDATE'S RESPONSE:\n{request.response}"""
+    else:
+        system_prompt = SPEAKING_SYSTEM_PROMPT
+        user_message = f"""TASK PROMPT: {request.task_prompt or 'Not provided'}\n\nCANDIDATE'S RESPONSE:\n{request.response}"""
+
+    headers = build_api_headers(api_key, provider)
+
+    if provider == "google":
+        contents = [{"role": "user", "parts": [{"text": f"{system_prompt}\n\n{user_message}"}]}]
+        body = {"contents": contents, "generationConfig": {"maxOutputTokens": min(8000, model_info.get("max_tokens", 8192)), "temperature": 0.7}}
+        if "?" in api_url:
+            api_url = f"{api_url}&key={api_key}&alt=sse"
+        else:
+            api_url = f"{api_url}?key={api_key}&alt=sse"
+    elif provider == "anthropic":
+        messages = [{"role": "user", "content": user_message}]
+        body = build_api_request_body(model, messages, max_tokens=2000)
+        body["system"] = system_prompt
+        body["stream"] = True
+    else:
+        messages = [{"role": "system", "content": system_prompt}, {"role": "user", "content": user_message}]
+        body = build_api_request_body(model, messages, max_tokens=2000)
+        body["stream"] = True
+
+    async def event_generator():
+        import time as _time
+        start = _time.time()
+        try:
+            async with httpx.AsyncClient(timeout=120.0, follow_redirects=True) as client:
+                async with client.stream("POST", api_url, headers=headers, json=body) as response:
+                    if response.status_code != 200:
+                        error_text = await response.aread()
+                        yield f"data: {json.dumps({'error': error_text.decode()[:200]})}\n\n"
+                        return
+                    first_token = True
+                    async for line in response.aiter_lines():
+                        if not line.strip():
+                            continue
+                        if provider == "google":
+                            if line.startswith("data: "):
+                                try:
+                                    chunk = json.loads(line[6:])
+                                    text = chunk.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                                    if text:
+                                        if first_token:
+                                            print(f"[eval/stream] First token in {_time.time()-start:.2f}s")
+                                            first_token = False
+                                        yield f"data: {json.dumps({'text': text})}\n\n"
+                                except json.JSONDecodeError:
+                                    continue
+                        elif provider == "anthropic":
+                            if line.startswith("data: "):
+                                try:
+                                    chunk = json.loads(line[6:])
+                                    if chunk.get("type") == "content_block_delta":
+                                        text = chunk.get("delta", {}).get("text", "")
+                                        if text:
+                                            if first_token:
+                                                print(f"[eval/stream] First token in {_time.time()-start:.2f}s")
+                                                first_token = False
+                                            yield f"data: {json.dumps({'text': text})}\n\n"
+                                except json.JSONDecodeError:
+                                    continue
+                        else:
+                            if line.startswith("data: "):
+                                payload = line[6:]
+                                if payload.strip() == "[DONE]":
+                                    print(f"[eval/stream] Total time: {_time.time()-start:.2f}s")
+                                    yield "data: [DONE]\n\n"
+                                    return
+                                try:
+                                    chunk = json.loads(payload)
+                                    delta = chunk.get("choices", [{}])[0].get("delta", {})
+                                    text = delta.get("content", "")
+                                    if text:
+                                        if first_token:
+                                            print(f"[eval/stream] First token in {_time.time()-start:.2f}s")
+                                            first_token = False
+                                        yield f"data: {json.dumps({'text': text})}\n\n"
+                                except json.JSONDecodeError:
+                                    continue
+                    yield "data: [DONE]\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)[:200]})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no", "Connection": "keep-alive"}
+    )
 
 
 # ==========================================
@@ -1924,7 +2074,7 @@ async def practice_chat(request: PracticeRequest):
     else:
         api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
         api_key = os.getenv("DEEPSEEK_API_KEY", "")
-        model = "deepseek-chat"
+        model = "deepseek-v4-flash"
         model_info = get_model_info(model)
         provider = model_info.get("provider", "unknown")
 
@@ -2010,7 +2160,7 @@ async def practice_evaluate(request: PracticeEvaluateRequest):
     else:
         api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
         api_key = os.getenv("DEEPSEEK_API_KEY", "")
-        model = "deepseek-chat"
+        model = "deepseek-v4-flash"
         model_info = get_model_info(model)
         provider = model_info.get("provider", "unknown")
 
@@ -2076,7 +2226,7 @@ Specific weaknesses with examples from the conversation.
         else:
             api_url = f"{api_url}?key={api_key}"
     else:
-        body = build_api_request_body(model, messages, max_tokens=4000)
+        body = build_api_request_body(model, messages, max_tokens=2000)
 
     try:
         async with httpx.AsyncClient(timeout=120.0, follow_redirects=True) as client:
@@ -2430,7 +2580,7 @@ async def practice_analyze(
 
 async def generate_ai_feedback(transcript: str, scores: dict, diagnostics: list, api_cfg: dict) -> str:
     """Generate AI feedback using configured LLM"""
-    model = api_cfg.get("model", "deepseek-chat")
+    model = api_cfg.get("model", "deepseek-v4-flash")
     api_key = api_cfg.get("api_key", "")
     api_url = api_cfg.get("api_url")
     custom_model = api_cfg.get("custom_model")
@@ -2494,13 +2644,13 @@ Please provide detailed IELTS pronunciation feedback."""
 
 
 async def _call_ai_simple(api_config: Optional[ApiConfig], system_prompt: str, user_prompt: str, max_tokens: int = 1000) -> tuple:
-    """统一的 AI 调用辅助函数，返回 (reply_text, error_msg)"""
+    """统一的 AI 调用辅助函数，返回 (reply_text, error_msg)。复用全局 HTTP 客户端。"""
     if api_config:
         api_key = api_config.api_key
         model = api_config.custom_model if api_config.model == "custom" and api_config.custom_model else api_config.model
     else:
         api_key = os.getenv("DEEPSEEK_API_KEY", "")
-        model = "deepseek-chat"
+        model = "deepseek-v4-flash"
 
     model_info = get_model_info(model)
     provider = model_info.get("provider", "unknown")
@@ -2534,22 +2684,26 @@ async def _call_ai_simple(api_config: Optional[ApiConfig], system_prompt: str, u
         }
         sep = "&" if "?" in api_url else "?"
         api_url = f"{api_url}{sep}key={api_key}"
+    elif provider == "anthropic":
+        body = build_api_request_body(model, [{"role": "user", "content": user_prompt}], max_tokens=max_tokens)
+        body["system"] = system_prompt
+        body["temperature"] = 0.8
     else:
         body = build_api_request_body(model, messages, max_tokens=max_tokens)
         body["temperature"] = 0.8
 
     try:
-        async with httpx.AsyncClient(timeout=90.0, follow_redirects=True) as client:
-            api_response = await client.post(api_url, headers=headers, json=body)
-            if api_response.status_code != 200:
-                return None, f"API error: {api_response.text[:200]}"
-            result = api_response.json()
-            if provider == "anthropic":
-                return result["content"][0]["text"], None
-            elif provider == "google":
-                return result["candidates"][0]["content"]["parts"][0]["text"], None
-            else:
-                return result["choices"][0]["message"]["content"], None
+        client = _get_shared_client()
+        api_response = await client.post(api_url, headers=headers, json=body)
+        if api_response.status_code != 200:
+            return None, f"API error: {api_response.text[:200]}"
+        result = api_response.json()
+        if provider == "anthropic":
+            return result["content"][0]["text"], None
+        elif provider == "google":
+            return result["candidates"][0]["content"]["parts"][0]["text"], None
+        else:
+            return result["choices"][0]["message"]["content"], None
     except httpx.TimeoutException:
         return None, "AI API timeout."
     except httpx.ConnectError:
@@ -2558,9 +2712,19 @@ async def _call_ai_simple(api_config: Optional[ApiConfig], system_prompt: str, u
         return None, f"AI call failed: {str(e)}"
 
 
+# 全局 HTTP 客户端（连接复用）
+_shared_client = None
+
+def _get_shared_client():
+    global _shared_client
+    if _shared_client is None or _shared_client.is_closed:
+        _shared_client = httpx.AsyncClient(timeout=60.0, follow_redirects=True, limits=httpx.Limits(max_connections=20, max_keepalive_connections=10))
+    return _shared_client
+
+
 @app.post("/chatroom/discuss")
 async def chatroom_discuss(request: ChatroomRequest):
-    """聊天室多专家讨论 - 使用核心思维逻辑和语言指纹"""
+    """聊天室多专家讨论 - 并行调用 AI API"""
     responses = []
     previous_context = ""
 
@@ -2570,8 +2734,8 @@ async def chatroom_discuss(request: ChatroomRequest):
                         and random.random() < DUAL_TRUMP_PROBABILITY)
     dual_trump_slots = [0, 1] if dual_trump_event else []
 
-    for idx, expert_req in enumerate(request.experts):
-        # 获取预定义专家的完整配置
+    # Phase 1: 并行生成所有专家的回复（中英双语一次输出）
+    async def generate_expert(idx, expert_req):
         expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
         trump_hijacked = False
         dual_trump = False
@@ -2590,70 +2754,62 @@ async def chatroom_discuss(request: ChatroomRequest):
                 previous_context=""
             )
 
-        # 恶作剧模式：概率判定
         if request.prank_mode:
             if idx in dual_trump_slots:
-                # 双懂王劫持
                 trump_hijacked = True
                 dual_trump = True
                 trump_variant = "A" if idx == dual_trump_slots[0] else "B"
                 trump_prompt = TRUMP_A_SYSTEM_PROMPT if trump_variant == "A" else TRUMP_B_SYSTEM_PROMPT
-                system_prompt = trump_prompt + f"\n\nTOPIC FOR DISCUSSION: {request.topic}"
-                if previous_context:
-                    system_prompt += f"\n\nPrevious discussion (these losers talked before you):\n{previous_context}"
-                system_prompt += "\n\nPlease share your TREMENDOUS perspective."
+                system_prompt = trump_prompt + f"\n\nTOPIC FOR DISCUSSION: {request.topic}\n\nIMPORTANT: Output in format:\n[EN] English response\n[ZH] 中文回答\nPlease share your TREMENDOUS perspective."
             elif random.random() < TRUMP_APPEARANCE_PROBABILITY:
-                # 单懂王劫持
                 trump_hijacked = True
-                system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC FOR DISCUSSION: {request.topic}"
-                if previous_context:
-                    system_prompt += f"\n\nPrevious discussion (these losers talked before you):\n{previous_context}"
-                system_prompt += "\n\nPlease share your TREMENDOUS perspective."
+                system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC FOR DISCUSSION: {request.topic}\n\nIMPORTANT: Output in format:\n[EN] English response\n[ZH] 中文回答\nPlease share your TREMENDOUS perspective."
             else:
-                # 随机恶作剧模板
                 template = random.choice(PRANK_TEMPLATES)
                 system_prompt += template
-                # 添加上下文
-                if previous_context:
-                    system_prompt += f"\n\nPrevious discussion:\n{previous_context}"
-        else:
-            # 正常模式：添加上下文
-            if previous_context:
-                system_prompt += f"\n\nPrevious discussion:\n{previous_context}"
 
-        en_text, err = await _call_ai_simple(
+        raw_text, err = await _call_ai_simple(
             request.api_config, system_prompt,
             f"Please share your unique perspective on: {request.topic}",
-            max_tokens=800
+            max_tokens=1000
         )
         if err:
             raise HTTPException(status_code=500, detail=err)
 
-        # 翻译为中文
-        zh_text, _ = await _call_ai_simple(
-            request.api_config, TRANSLATION_PROMPT, en_text, max_tokens=800
-        )
+        en_text, zh_text = parse_bilingual(raw_text)
+        if not zh_text and en_text:
+            zh_text, _ = await _call_ai_simple(request.api_config, TRANSLATE_PROMPT, en_text, max_tokens=600)
+            zh_text = zh_text or ""
 
-        response_name = "Trump" if trump_hijacked and not dual_trump else expert_req.name
-        if dual_trump:
-            response_name = f"Trump #{dual_trump_slots.index(idx) + 1}"
+        return {
+            "idx": idx, "en_text": en_text, "zh_text": zh_text,
+            "expert_req": expert_req,
+            "trump_hijacked": trump_hijacked, "dual_trump": dual_trump, "trump_variant": trump_variant
+        }
+
+    tasks = [generate_expert(i, e) for i, e in enumerate(request.experts)]
+    results = await asyncio.gather(*tasks)
+    results.sort(key=lambda x: x["idx"])
+
+    for r in results:
+        expert_req = r["expert_req"]
+        response_name = "Trump" if r["trump_hijacked"] and not r["dual_trump"] else expert_req.name
+        if r["dual_trump"]:
+            response_name = f"Trump #{dual_trump_slots.index(r['idx']) + 1}"
 
         responses.append({
             "name": response_name,
-            "original_expert": expert_req.name if trump_hijacked else None,
-            "en_text": en_text,
-            "zh_text": zh_text or "",
-            "trump_hijack": trump_hijacked,
-            "dual_trump": dual_trump,
-            "trump_variant": trump_variant
+            "original_expert": expert_req.name if r["trump_hijacked"] else None,
+            "en_text": r["en_text"],
+            "zh_text": r["zh_text"],
+            "trump_hijack": r["trump_hijacked"],
+            "dual_trump": r["dual_trump"],
+            "trump_variant": r["trump_variant"]
         })
+        previous_context += f"\n{response_name}: {r['en_text']}\n"
 
-        previous_context += f"\n{response_name}: {en_text}\n"
-
-    # 判官总结 — 根据 Trump 出现情况选择提示
-    all_responses_text = "\n".join(
-        f"{r['name']}: {r['en_text']}" for r in responses
-    )
+    # Phase 2: 判官总结（一次输出中英双语）
+    all_responses_text = "\n".join(f"{r['name']}: {r['en_text']}" for r in responses)
     trump_present = any(r["trump_hijack"] for r in responses)
     dual_trump_present = any(r["dual_trump"] for r in responses)
 
@@ -2666,32 +2822,160 @@ async def chatroom_discuss(request: ChatroomRequest):
     else:
         judge_prompt = JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
 
-    judge_en, _ = await _call_ai_simple(
-        request.api_config, judge_prompt,
-        "Please provide your summary.", max_tokens=1000
-    )
+    judge_prompt += "\n\nIMPORTANT: Output in format:\n[EN] English summary\n[ZH] 中文总结"
 
-    judge_zh = ""
-    if judge_en:
-        judge_zh, _ = await _call_ai_simple(
-            request.api_config, TRANSLATION_PROMPT, judge_en, max_tokens=1000
-        )
+    judge_raw, _ = await _call_ai_simple(
+        request.api_config, judge_prompt, "Please provide your summary.", max_tokens=1200
+    )
+    judge_en, judge_zh = parse_bilingual(judge_raw)
+    if not judge_zh and judge_en:
+        judge_zh, _ = await _call_ai_simple(request.api_config, TRANSLATE_PROMPT, judge_en, max_tokens=600)
+        judge_zh = judge_zh or ""
 
     return {
         "responses": responses,
-        "judge_summary": {
-            "en_text": judge_en or "",
-            "zh_text": judge_zh or ""
-        },
+        "judge_summary": {"en_text": judge_en, "zh_text": judge_zh},
         "trump_present": trump_present,
         "dual_trump_present": dual_trump_present
     }
 
 
+@app.post("/chatroom/discuss/stream")
+async def chatroom_discuss_stream(request: ChatroomRequest):
+    """聊天室讨论 - SSE 流式：每个专家完成立刻推送"""
+    async def event_generator():
+        previous_context = ""
+        responses = []
+
+        dual_trump_event = (request.prank_mode
+                            and len(request.experts) >= 2
+                            and random.random() < DUAL_TRUMP_PROBABILITY)
+        dual_trump_slots = [0, 1] if dual_trump_event else []
+
+        async def generate_expert(idx, expert_req):
+            expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
+            trump_hijacked = False
+            dual_trump = False
+            trump_variant = None
+
+            if not expert_config:
+                system_prompt = EXPERT_PROMPT_TEMPLATE.format(
+                    system_prompt=f"You are {expert_req.name}. {expert_req.description}",
+                    topic=request.topic,
+                    previous_context=""
+                )
+            else:
+                system_prompt = EXPERT_PROMPT_TEMPLATE.format(
+                    system_prompt=expert_config["system_prompt"],
+                    topic=request.topic,
+                    previous_context=""
+                )
+
+            if request.prank_mode:
+                if idx in dual_trump_slots:
+                    trump_hijacked = True
+                    dual_trump = True
+                    trump_variant = "A" if idx == dual_trump_slots[0] else "B"
+                    trump_prompt = TRUMP_A_SYSTEM_PROMPT if trump_variant == "A" else TRUMP_B_SYSTEM_PROMPT
+                    system_prompt = trump_prompt + f"\n\nTOPIC FOR DISCUSSION: {request.topic}\n\nIMPORTANT: Output in format:\n[EN] English response\n[ZH] 中文回答\nPlease share your TREMENDOUS perspective."
+                elif random.random() < TRUMP_APPEARANCE_PROBABILITY:
+                    trump_hijacked = True
+                    system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC FOR DISCUSSION: {request.topic}\n\nIMPORTANT: Output in format:\n[EN] English response\n[ZH] 中文回答\nPlease share your TREMENDOUS perspective."
+                else:
+                    template = random.choice(PRANK_TEMPLATES)
+                    system_prompt += template
+
+            raw_text, err = await _call_ai_simple(
+                request.api_config, system_prompt,
+                f"Please share your unique perspective on: {request.topic}",
+                max_tokens=1000
+            )
+            if err:
+                return {"idx": idx, "error": err, "expert_req": expert_req,
+                        "trump_hijacked": trump_hijacked, "dual_trump": dual_trump, "trump_variant": trump_variant}
+
+            en_text, zh_text = parse_bilingual(raw_text)
+            # If no Chinese translation from model, translate separately
+            if not zh_text and en_text:
+                zh_text, _ = await _call_ai_simple(
+                    request.api_config, TRANSLATE_PROMPT, en_text, max_tokens=600
+                )
+                zh_text = zh_text or ""
+            return {"idx": idx, "en_text": en_text, "zh_text": zh_text, "expert_req": expert_req,
+                    "trump_hijacked": trump_hijacked, "dual_trump": dual_trump, "trump_variant": trump_variant}
+
+        # Phase 1: 并行生成所有专家，每个完成立刻推送
+        tasks = []
+        for i, e in enumerate(request.experts):
+            tasks.append(asyncio.create_task(generate_expert(i, e)))
+
+        pending = set(tasks)
+        while pending:
+            done, pending = await asyncio.wait(pending, return_when=asyncio.FIRST_COMPLETED)
+            for task in done:
+                r = task.result()
+                if "error" in r:
+                    yield f"data: {json.dumps({'type': 'error', 'idx': r['idx'], 'message': r['error']})}\n\n"
+                    continue
+
+                expert_req = r["expert_req"]
+                response_name = "Trump" if r["trump_hijacked"] and not r["dual_trump"] else expert_req.name
+                if r["dual_trump"]:
+                    response_name = f"Trump #{dual_trump_slots.index(r['idx']) + 1}"
+
+                msg = {
+                    "type": "expert",
+                    "idx": r["idx"],
+                    "name": response_name,
+                    "original_expert": expert_req.name if r["trump_hijacked"] else None,
+                    "en_text": r["en_text"],
+                    "zh_text": r["zh_text"],
+                    "trump_hijack": r["trump_hijacked"],
+                    "dual_trump": r["dual_trump"],
+                    "trump_variant": r["trump_variant"]
+                }
+                responses.append(msg)
+                previous_context += f"\n{response_name}: {r['en_text']}\n"
+                yield f"data: {json.dumps(msg)}\n\n"
+
+        # Phase 2: 判官总结
+        responses.sort(key=lambda x: x["idx"])
+        all_responses_text = "\n".join(f"{r['name']}: {r['en_text']}" for r in responses)
+        trump_present = any(r["trump_hijack"] for r in responses)
+        dual_trump_present = any(r["dual_trump"] for r in responses)
+
+        if dual_trump_present:
+            judge_prompt = DUAL_TRUMP_JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+        elif trump_present:
+            judge_prompt = TRUMP_JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+        elif request.prank_mode:
+            judge_prompt = PRANK_JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+        else:
+            judge_prompt = JUDGE_PROMPT.format(topic=request.topic, all_responses=all_responses_text)
+
+        judge_prompt += "\n\nIMPORTANT: Output in format:\n[EN] English summary\n[ZH] 中文总结"
+
+        judge_raw, judge_err = await _call_ai_simple(
+            request.api_config, judge_prompt, "Please provide your summary.", max_tokens=1200
+        )
+        if judge_err:
+            yield f"data: {json.dumps({'type': 'error', 'message': judge_err})}\n\n"
+        else:
+            judge_en, judge_zh = parse_bilingual(judge_raw)
+            if not judge_zh and judge_en:
+                judge_zh, _ = await _call_ai_simple(request.api_config, TRANSLATE_PROMPT, judge_en, max_tokens=600)
+                judge_zh = judge_zh or ""
+            yield f"data: {json.dumps({'type': 'judge', 'en_text': judge_en, 'zh_text': judge_zh, 'trump_present': trump_present, 'dual_trump_present': dual_trump_present})}\n\n"
+
+        yield f"data: {json.dumps({'type': 'done'})}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream",
+                             headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
 @app.post("/chatroom/followup")
 async def chatroom_followup(request: ChatroomFollowupRequest):
-    """聊天室追问 - 使用核心思维逻辑和语言指纹"""
-    # 构建上下文
+    """聊天室追问 - 并行调用"""
     context_text = ""
     for msg in request.previous_messages:
         context_text += f"\n{msg.get('name', 'Unknown')}: {msg.get('en_text', msg.get('content', ''))}"
@@ -2702,14 +2986,12 @@ async def chatroom_followup(request: ChatroomFollowupRequest):
         if not target_experts:
             target_experts = request.experts
 
-    # 判定双懂王事件（仅在2+专家时）
     dual_trump_event = (request.prank_mode
                         and len(target_experts) >= 2
                         and random.random() < DUAL_TRUMP_PROBABILITY)
     dual_trump_slots = [0, 1] if dual_trump_event else []
 
-    responses = []
-    for idx, expert_req in enumerate(target_experts):
+    async def generate_followup(idx, expert_req):
         expert_config = PREDEFINED_EXPERTS.get(expert_req.name)
         trump_hijacked = False
         dual_trump = False
@@ -2725,10 +3007,9 @@ Previous discussion:
 
 A follow-up question has been asked: {request.question}
 
-Requirements:
-- Respond from your professional perspective
-- Address the follow-up question specifically
-- Keep your response around 150 words in English
+IMPORTANT: Output in format:
+[EN] Your English response (around 150 words)
+[ZH] 你的中文回答（约200字）
 
 Please share your perspective."""
         else:
@@ -2741,49 +3022,348 @@ PREVIOUS DISCUSSION:
 
 FOLLOW-UP QUESTION: {request.question}
 
+IMPORTANT: Output in format:
+[EN] Your English response
+[ZH] 你的中文回答
+
 Please respond to this follow-up question, staying true to your thinking style and communication patterns."""
 
-        # 恶作剧模式：概率判定
         if request.prank_mode:
             if idx in dual_trump_slots:
                 trump_hijacked = True
                 dual_trump = True
                 trump_variant = "A" if idx == dual_trump_slots[0] else "B"
                 trump_prompt = TRUMP_A_SYSTEM_PROMPT if trump_variant == "A" else TRUMP_B_SYSTEM_PROMPT
-                system_prompt = trump_prompt + f"\n\nTOPIC: {request.topic}\n\nPREVIOUS DISCUSSION:\n{context_text}\n\nFOLLOW-UP QUESTION: {request.question}\n\nPlease share your TREMENDOUS perspective on this follow-up."
+                system_prompt = trump_prompt + f"\n\nTOPIC: {request.topic}\n\nPREVIOUS DISCUSSION:\n{context_text}\n\nFOLLOW-UP QUESTION: {request.question}\n\nIMPORTANT: Output in format:\n[EN] English response\n[ZH] 中文回答\nPlease share your TREMENDOUS perspective on this follow-up."
             elif random.random() < TRUMP_APPEARANCE_PROBABILITY:
                 trump_hijacked = True
-                system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC: {request.topic}\n\nPREVIOUS DISCUSSION (these losers talked before you):\n{context_text}\n\nFOLLOW-UP QUESTION: {request.question}\n\nPlease share your TREMENDOUS perspective."
+                system_prompt = TRUMP_SYSTEM_PROMPT + f"\n\nTOPIC: {request.topic}\n\nPREVIOUS DISCUSSION:\n{context_text}\n\nFOLLOW-UP QUESTION: {request.question}\n\nIMPORTANT: Output in format:\n[EN] English response\n[ZH] 中文回答\nPlease share your TREMENDOUS perspective."
             else:
                 template = random.choice(PRANK_TEMPLATES)
                 system_prompt += template
 
-        en_text, err = await _call_ai_simple(
-            request.api_config, system_prompt,
-            request.question, max_tokens=800
+        raw_text, err = await _call_ai_simple(
+            request.api_config, system_prompt, request.question, max_tokens=1000
         )
         if err:
             raise HTTPException(status_code=500, detail=err)
 
-        zh_text, _ = await _call_ai_simple(
-            request.api_config, TRANSLATION_PROMPT, en_text, max_tokens=800
-        )
+        en_text, zh_text = parse_bilingual(raw_text)
+        if not zh_text and en_text:
+            zh_text, _ = await _call_ai_simple(request.api_config, TRANSLATE_PROMPT, en_text, max_tokens=600)
+            zh_text = zh_text or ""
 
         response_name = "Trump" if trump_hijacked and not dual_trump else expert_req.name
         if dual_trump:
             response_name = f"Trump #{dual_trump_slots.index(idx) + 1}"
 
-        responses.append({
+        return {
             "name": response_name,
             "original_expert": expert_req.name if trump_hijacked else None,
             "en_text": en_text,
-            "zh_text": zh_text or "",
+            "zh_text": zh_text,
             "trump_hijack": trump_hijacked,
             "dual_trump": dual_trump,
             "trump_variant": trump_variant
-        })
+        }
 
-    return {"responses": responses}
+    tasks = [generate_followup(i, e) for i, e in enumerate(target_experts)]
+    responses = await asyncio.gather(*tasks)
+    return {"responses": list(responses)}
+
+
+# ==========================================
+# Real-time Voice: iFlytek ASR WebSocket Proxy
+# ==========================================
+
+def build_iflytek_auth_url(app_id: str, api_key: str, api_secret: str) -> str:
+    """Build authenticated URL for iFlytek real-time ASR WebSocket"""
+    url = "wss://rtasr.xfyun.cn/v1/ws"
+    ts = str(int(time.time()))
+    signature_origin = f"host: rtasr.xfyun.cn\ndate: {ts}\nGET /v1/ws HTTP/1.1"
+    signature_sha = hmac.new(
+        api_secret.encode("utf-8"),
+        signature_origin.encode("utf-8"),
+        digestmod=hashlib.sha256
+    ).digest()
+    signature = base64.b64encode(signature_sha).decode(encoding="utf-8")
+    authorization = base64.b64encode(
+        f"api_key=\"{api_key}\", algorithm=\"hmac-sha256\", headers=\"host date request-line\", signature=\"{signature}\"".encode("utf-8")
+    ).decode(encoding="utf-8")
+    return f"{url}?authorization={authorization}&date={ts}&host=rtasr.xfyun.cn"
+
+
+@app.websocket("/ws/asr")
+async def asr_websocket_proxy(websocket: WebSocket):
+    """
+    WebSocket proxy: frontend <-> backend <-> iFlytek ASR
+    Frontend sends PCM audio chunks, receives real-time transcription results.
+    Query params: app_id, api_key, api_secret
+    """
+    await websocket.accept()
+
+    app_id = websocket.query_params.get("app_id", "")
+    api_key = websocket.query_params.get("api_key", "")
+    api_secret = websocket.query_params.get("api_secret", "")
+
+    if not all([app_id, api_key, api_secret]):
+        await websocket.send_json({"error": "Missing iFlytek credentials (app_id, api_key, api_secret)"})
+        await websocket.close()
+        return
+
+    iflytek_url = build_iflytek_auth_url(app_id, api_key, api_secret)
+
+    try:
+        async with ws_lib.connect(iflytek_url) as iflytek_ws:
+            # Send initial config frame
+            config_frame = json.dumps({
+                "header": {
+                    "app_id": app_id,
+                    "status": 2
+                },
+                "parameter": {
+                    "rtasr": {
+                        "domain": "iat",
+                        "language": "en",
+                        "accent": "en",
+                        "vad_eos": 1500,
+                        "result": {
+                            "encoding": "utf8",
+                            "compress": "raw",
+                            "format": "json"
+                        }
+                    }
+                }
+            })
+            await iflytek_ws.send(config_frame)
+
+            # Relay task: frontend -> iFlytek
+            async def relay_audio():
+                try:
+                    while True:
+                        data = await websocket.receive_bytes()
+                        # Send audio frame with status 1 (ongoing)
+                        audio_frame = json.dumps({
+                            "header": {"app_id": app_id, "status": 1},
+                            "parameter": {"rtasr": {"encoding": "raw"}}
+                        })
+                        # Send both config + audio together
+                        msg = data  # raw PCM bytes
+                        await iflytek_ws.send(msg)
+                except WebSocketDisconnect:
+                    # Client disconnected, send end frame
+                    end_frame = json.dumps({
+                        "header": {"app_id": app_id, "status": 2}
+                    })
+                    try:
+                        await iflytek_ws.send(end_frame)
+                    except Exception:
+                        pass
+                except Exception:
+                    pass
+
+            # Relay task: iFlytek -> frontend
+            async def relay_result():
+                try:
+                    async for message in iflytek_ws:
+                        if isinstance(message, bytes):
+                            data = message
+                        else:
+                            data = message.encode("utf-8") if isinstance(message, str) else message
+
+                        try:
+                            result = json.loads(data)
+                            await websocket.send_json(result)
+                        except json.JSONDecodeError:
+                            await websocket.send_bytes(data)
+                except Exception:
+                    pass
+
+            relay_audio_task = asyncio.create_task(relay_audio())
+            relay_result_task = asyncio.create_task(relay_result())
+
+            done, pending = await asyncio.wait(
+                [relay_audio_task, relay_result_task],
+                return_when=asyncio.FIRST_COMPLETED
+            )
+            for task in pending:
+                task.cancel()
+            for task in done:
+                if task.exception():
+                    pass
+
+    except Exception as e:
+        try:
+            await websocket.send_json({"error": f"iFlytek connection failed: {str(e)}"})
+        except Exception:
+            pass
+    finally:
+        try:
+            await websocket.close()
+        except Exception:
+            pass
+
+
+# ==========================================
+# Streaming Practice Chat (SSE)
+# ==========================================
+
+@app.post("/practice/chat/stream")
+async def practice_chat_stream(request: PracticeRequest):
+    """Streaming IELTS practice chat using Server-Sent Events"""
+    if request.api_config:
+        api_key = request.api_config.api_key
+        model = request.api_config.custom_model if request.api_config.model == "custom" and request.api_config.custom_model else request.api_config.model
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+        if request.api_config.api_url:
+            api_url = request.api_config.api_url
+        else:
+            if provider == "google":
+                api_url = DEFAULT_API_URLS["google"].format(model=model)
+            else:
+                api_url = DEFAULT_API_URLS.get(provider, DEFAULT_API_URLS["deepseek"])
+    else:
+        api_url = os.getenv("DEEPSEEK_API_URL", "https://api.deepseek.com/chat/completions")
+        api_key = os.getenv("DEEPSEEK_API_KEY", "")
+        model = "deepseek-v4-flash"
+        model_info = get_model_info(model)
+        provider = model_info.get("provider", "unknown")
+
+    if not api_key:
+        raise HTTPException(status_code=500, detail="API key not configured.")
+
+    system_msg = {
+        "role": "system",
+        "content": EXAMINER_SYSTEM_PROMPT + f"\n\nCurrent Part: Part {request.part}"
+    }
+    messages = [system_msg]
+    for msg in request.messages:
+        messages.append({"role": msg.role, "content": msg.content})
+
+    headers = build_api_headers(api_key, provider)
+
+    # Use streaming for all providers
+    if provider == "google":
+        contents = []
+        for msg in messages:
+            role = "user" if msg["role"] in ("user", "system") else "model"
+            contents.append({"role": role, "parts": [{"text": msg["content"]}]})
+        body = {
+            "contents": contents,
+            "generationConfig": {"maxOutputTokens": 500, "temperature": 0.8}
+        }
+        if "?" in api_url:
+            api_url = f"{api_url}&key={api_key}&alt=sse"
+        else:
+            api_url = f"{api_url}?key={api_key}&alt=sse"
+    elif provider == "anthropic":
+        user_messages = [{"role": msg["role"], "content": msg["content"]} for msg in messages if msg["role"] != "system"]
+        body = build_api_request_body(model, user_messages, max_tokens=500)
+        body["system"] = system_msg["content"]
+        body["temperature"] = 0.8
+        body["stream"] = True
+    else:
+        body = build_api_request_body(model, messages, max_tokens=500)
+        body["temperature"] = 0.8
+        body["stream"] = True
+
+    async def event_generator():
+        try:
+            async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
+                async with client.stream("POST", api_url, headers=headers, json=body) as response:
+                    if response.status_code != 200:
+                        error_text = await response.aread()
+                        yield f"data: {json.dumps({'error': error_text.decode()[:200]})}\n\n"
+                        return
+
+                    async for line in response.aiter_lines():
+                        if not line.strip():
+                            continue
+                        if provider == "google":
+                            if line.startswith("data: "):
+                                payload = line[6:]
+                                try:
+                                    chunk = json.loads(payload)
+                                    text = chunk.get("candidates", [{}])[0].get("content", {}).get("parts", [{}])[0].get("text", "")
+                                    if text:
+                                        yield f"data: {json.dumps({'text': text})}\n\n"
+                                except json.JSONDecodeError:
+                                    continue
+                        elif provider == "anthropic":
+                            if line.startswith("data: "):
+                                payload = line[6:]
+                                try:
+                                    chunk = json.loads(payload)
+                                    if chunk.get("type") == "content_block_delta":
+                                        text = chunk.get("delta", {}).get("text", "")
+                                        if text:
+                                            yield f"data: {json.dumps({'text': text})}\n\n"
+                                except json.JSONDecodeError:
+                                    continue
+                        else:
+                            # OpenAI / DeepSeek format
+                            if line.startswith("data: "):
+                                payload = line[6:]
+                                if payload.strip() == "[DONE]":
+                                    yield "data: [DONE]\n\n"
+                                    return
+                                try:
+                                    chunk = json.loads(payload)
+                                    delta = chunk.get("choices", [{}])[0].get("delta", {})
+                                    text = delta.get("content", "")
+                                    if text:
+                                        yield f"data: {json.dumps({'text': text})}\n\n"
+                                except json.JSONDecodeError:
+                                    continue
+
+                    yield "data: [DONE]\n\n"
+        except httpx.TimeoutException:
+            yield f"data: {json.dumps({'error': 'AI API timeout.'})}\n\n"
+        except Exception as e:
+            yield f"data: {json.dumps({'error': str(e)})}\n\n"
+
+    return StreamingResponse(
+        event_generator(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"}
+    )
+
+
+# ==========================================
+# Streaming TTS (Edge-TTS chunked)
+# ==========================================
+
+@app.post("/tts/stream")
+async def tts_stream(request: TTSRequest):
+    """Stream TTS audio as chunked MP3 for real-time playback"""
+    try:
+        import edge_tts
+
+        communicate = edge_tts.Communicate(
+            text=request.text,
+            voice=request.voice,
+            rate=request.rate
+        )
+
+        async def audio_generator():
+            try:
+                async for chunk in communicate.stream():
+                    if chunk["type"] == "audio":
+                        yield chunk["data"]
+            except Exception:
+                pass
+
+        return StreamingResponse(
+            audio_generator(),
+            media_type="audio/mpeg",
+            headers={"Cache-Control": "no-cache"}
+        )
+    except ImportError:
+        raise HTTPException(status_code=500, detail="edge-tts not installed")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"TTS stream failed: {str(e)}")
 
 
 if __name__ == "__main__":

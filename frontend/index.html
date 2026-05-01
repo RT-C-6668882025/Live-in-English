@@ -1,69 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一分钱学英语 - Learn English for one cent</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@400&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Dark Editorial: Stone + Warm gold accent */
-            --primary: #c8a97e;
-            --primary-dark: #b8956a;
-            --primary-light: #dcc4a4;
-            --primary-soft: rgba(200, 169, 126, 0.10);
-            --primary-glow: rgba(200, 169, 126, 0.25);
+            /* Build Studio: Warm Gold Monochrome */
+            --primary: #D4A574;
+            --primary-dark: #C49464;
+            --primary-light: #E4C0A0;
+            --primary-soft: rgba(212, 165, 116, 0.08);
+            --primary-glow: rgba(212, 165, 116, 0.12);
 
-            /* Backgrounds: warm dark stone */
-            --bg-dark: #111110;
-            --bg-card: #1a1a18;
-            --bg-input: #212120;
-            --bg-elevated: #2a2a27;
+            /* Backgrounds: deep charcoal, glass-ready */
+            --bg-dark: #0A0A0A;
+            --bg-card: rgba(18, 18, 18, 0.6);
+            --bg-input: rgba(24, 24, 24, 0.7);
+            --bg-elevated: rgba(30, 30, 30, 0.65);
 
-            /* Text: warm neutral */
-            --text-primary: #eae6e0;
-            --text-secondary: #a09a90;
-            --text-muted: #6e6a62;
+            /* Text: cleaner neutrals */
+            --text-primary: #F0EDE8;
+            --text-secondary: #8A8580;
+            --text-muted: #555250;
 
-            /* Borders: warm subtle */
-            --border: #2e2d2a;
-            --border-hover: #3f3e3a;
-            --border-light: rgba(200, 169, 126, 0.15);
+            /* Borders: hairline invisible */
+            --border: rgba(255, 255, 255, 0.04);
+            --border-hover: rgba(255, 255, 255, 0.08);
+            --border-light: rgba(212, 165, 116, 0.10);
 
-            /* Semantic */
-            --success: #5fa87a;
-            --success-dark: #4a8d63;
-            --success-bright: #7ec494;
-            --warning: #d4a04a;
-            --warning-bright: #e4b862;
-            --error: #c45454;
-            --error-bright: #d47070;
-            --info: #6a9ec4;
-            --info-bright: #84b4d4;
+            /* Semantic: desaturated */
+            --success: #6B9E80;
+            --success-dark: #5A8D6F;
+            --success-bright: #8BB89E;
+            --warning: #C49850;
+            --warning-bright: #D4AC68;
+            --error: #B05454;
+            --error-bright: #C47070;
+            --info: #6A8EB4;
+            --info-bright: #84A4C4;
 
-            /* Accents */
-            --accent-teal: #6aada0;
-            --accent-gold: #c8a97e;
-            --accent-purple: #9a8ab4;
-            --accent-pink: #c47a8a;
-            --accent-green: #7ec494;
+            /* Accents: minimal use */
+            --accent-teal: #7AADA2;
+            --accent-gold: #D4A574;
+            --accent-purple: #8A7AA4;
+            --accent-pink: #B47A8A;
+            --accent-green: #7EB494;
 
-            /* Effects */
-            --gradient-chatroom: linear-gradient(135deg, #2a2a27 0%, #1a1a18 100%);
-            --gradient-primary: linear-gradient(135deg, #c8a97e 0%, #b8956a 100%);
-            --gradient-primary-shine: linear-gradient(135deg, #dcc4a4 0%, #c8a97e 40%, #b8956a 100%);
-            --gradient-card: linear-gradient(165deg, rgba(200, 169, 126, 0.04) 0%, transparent 40%);
-            --gradient-card-hover: linear-gradient(165deg, rgba(200, 169, 126, 0.07) 0%, transparent 50%);
-            --radius: 12px;
-            --radius-sm: 8px;
-            --radius-lg: 16px;
-            --shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-            --shadow-elevated: 0 4px 24px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
-            --shadow-glow: 0 0 30px rgba(200, 169, 126, 0.08);
-            --transition-base: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-bounce: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            /* Effects: glass + hairline */
+            --gradient-chatroom: linear-gradient(135deg, rgba(30,30,30,0.5) 0%, rgba(18,18,18,0.5) 100%);
+            --gradient-primary: linear-gradient(135deg, #D4A574 0%, #C49464 100%);
+            --gradient-primary-shine: linear-gradient(135deg, #E4C0A0 0%, #D4A574 40%, #C49464 100%);
+            --gradient-card: linear-gradient(165deg, rgba(212, 165, 116, 0.02) 0%, transparent 30%);
+            --gradient-card-hover: linear-gradient(165deg, rgba(212, 165, 116, 0.04) 0%, transparent 40%);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-lg: 24px;
+            --shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            --shadow-elevated: 0 8px 40px rgba(0, 0, 0, 0.2);
+            --shadow-glow: 0 0 60px rgba(212, 165, 116, 0.04);
+            --transition-base: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* Utility classes */
@@ -102,11 +105,11 @@
             cursor: pointer;
             white-space: nowrap;
             transition: var(--transition-base);
-            box-shadow: 0 2px 6px rgba(200, 169, 126, 0.2);
+            box-shadow: 0 2px 6px rgba(212, 165, 116, 0.2);
         }
 
         .compact-btn:hover {
-            box-shadow: 0 3px 10px rgba(200, 169, 126, 0.3);
+            box-shadow: 0 3px 10px rgba(212, 165, 116, 0.3);
             transform: translateY(-1px);
         }
 
@@ -161,7 +164,7 @@
             text-align: center;
             padding: 3rem 1.5rem;
             background: var(--bg-card);
-            background-image: radial-gradient(ellipse at 50% 0%, rgba(200, 169, 126, 0.04) 0%, transparent 60%);
+            background-image: radial-gradient(ellipse at 50% 0%, rgba(212, 165, 116, 0.04) 0%, transparent 60%);
             border: 1px dashed var(--border);
             border-radius: var(--radius-lg);
             margin-bottom: 1.5rem;
@@ -173,7 +176,7 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: linear-gradient(180deg, rgba(200, 169, 126, 0.02) 0%, transparent 40%);
+            background: linear-gradient(180deg, rgba(212, 165, 116, 0.02) 0%, transparent 40%);
             pointer-events: none;
         }
 
@@ -232,13 +235,14 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #0e0e0c;
+            font-weight: 300;
+            background: #0A0A0A;
             background-image:
-                radial-gradient(ellipse at 20% 50%, rgba(200, 169, 126, 0.015) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 20%, rgba(106, 173, 160, 0.01) 0%, transparent 40%),
-                radial-gradient(ellipse at 50% 100%, rgba(200, 169, 126, 0.01) 0%, transparent 40%);
+                radial-gradient(ellipse at 30% 20%, rgba(212, 165, 116, 0.02) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(212, 165, 116, 0.015) 0%, transparent 50%);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.7;
+            letter-spacing: 0.01em;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
@@ -255,8 +259,8 @@
             width: 70%;
             height: 70%;
             background:
-                radial-gradient(ellipse at 30% 40%, rgba(200, 169, 126, 0.035) 0%, transparent 50%),
-                radial-gradient(ellipse at 70% 60%, rgba(200, 169, 126, 0.015) 0%, transparent 40%);
+                radial-gradient(ellipse at 30% 40%, rgba(212, 165, 116, 0.018) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 60%, rgba(212, 165, 116, 0.008) 0%, transparent 40%);
             pointer-events: none;
             z-index: 0;
         }
@@ -269,8 +273,8 @@
             width: 65%;
             height: 65%;
             background:
-                radial-gradient(ellipse at 40% 50%, rgba(106, 173, 160, 0.025) 0%, transparent 50%),
-                radial-gradient(ellipse at 80% 30%, rgba(200, 169, 126, 0.015) 0%, transparent 45%);
+                radial-gradient(ellipse at 40% 50%, rgba(212, 165, 116, 0.012) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 30%, rgba(212, 165, 116, 0.008) 0%, transparent 45%);
             pointer-events: none;
             z-index: 0;
         }
@@ -303,34 +307,38 @@
         /* Standard panel */
         .glass {
             background: var(--bg-card);
-            background-image: var(--gradient-card);
+            backdrop-filter: blur(20px) saturate(1.2);
+            -webkit-backdrop-filter: blur(20px) saturate(1.2);
             border: 1px solid var(--border);
-            box-shadow: var(--shadow), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+            box-shadow: var(--shadow);
             transition: var(--transition-base);
         }
 
         /* Strong - modals, overlays */
         .glass-strong {
-            background: rgba(17, 17, 16, 0.92);
-            backdrop-filter: blur(16px) saturate(1.4);
-            -webkit-backdrop-filter: blur(16px) saturate(1.4);
-            border: 1px solid rgba(200, 169, 126, 0.1);
-            box-shadow: var(--shadow-elevated), var(--shadow-glow);
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(24px) saturate(1.3);
+            -webkit-backdrop-filter: blur(24px) saturate(1.3);
+            border: 1px solid rgba(212, 165, 116, 0.06);
+            box-shadow: var(--shadow-elevated);
         }
 
         /* Input fields */
         .glass-input {
             background: var(--bg-input);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border: 1px solid var(--border);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+            box-shadow: none;
         }
 
         /* Highlighted cards */
         .glass-highlight {
             background: var(--bg-card);
-            background-image: var(--gradient-card);
-            border: 1px solid rgba(200, 169, 126, 0.12);
-            box-shadow: var(--shadow), var(--shadow-glow);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 165, 116, 0.06);
+            box-shadow: var(--shadow);
         }
 
         /* Ensure all interactive elements show pointer cursor */
@@ -344,20 +352,20 @@
 
         /* Header - frosted glass premium */
         .header {
-            background: rgba(17, 17, 16, 0.75);
-            backdrop-filter: blur(20px) saturate(1.5);
-            -webkit-backdrop-filter: blur(20px) saturate(1.5);
-            border-bottom: 1px solid rgba(200, 169, 126, 0.08);
-            padding: 0.75rem 0;
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(30px) saturate(1.3);
+            -webkit-backdrop-filter: blur(30px) saturate(1.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 0.6rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
         .header-content {
-            max-width: 1200px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: 0 1.5rem;
+            padding: 0 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -367,21 +375,21 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            font-size: 1.25rem;
-            font-weight: 700;
+            font-size: 1.125rem;
+            font-weight: 400;
             color: var(--text-primary);
-            letter-spacing: -0.01em;
+            letter-spacing: 0.05em;
         }
 
         .logo-icon {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             background: var(--gradient-primary-shine);
-            border-radius: var(--radius-sm);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.25);
+            box-shadow: 0 1px 4px rgba(212, 165, 116, 0.15);
         }
 
         .logo-icon svg {
@@ -439,11 +447,12 @@
 
         .settings-btn {
             padding: 0.5rem 1rem;
-            background: var(--bg-input);
+            background: transparent;
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.8rem;
+            font-weight: 400;
             cursor: pointer;
             transition: var(--transition-base);
             display: flex;
@@ -452,26 +461,24 @@
         }
 
         .settings-btn:hover {
-            border-color: var(--primary);
+            border-color: rgba(212, 165, 116, 0.15);
             color: var(--primary);
-            box-shadow: 0 0 12px rgba(200, 169, 126, 0.1);
-            transform: translateY(-1px);
         }
 
         /* Main Container */
         .container {
-            max-width: 1200px;
+            max-width: 960px;
             margin: 0 auto;
-            padding: 2rem 1.5rem;
+            padding: 3rem 2rem;
         }
 
         /* API Config Modal */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -484,27 +491,27 @@
         }
 
         .modal {
-            background: rgba(17, 17, 16, 0.95);
-            backdrop-filter: blur(20px) saturate(1.5);
-            -webkit-backdrop-filter: blur(20px) saturate(1.5);
-            border: 1px solid rgba(200, 169, 126, 0.1);
+            background: rgba(14, 14, 14, 0.92);
+            backdrop-filter: blur(24px) saturate(1.3);
+            -webkit-backdrop-filter: blur(24px) saturate(1.3);
+            border: 1px solid rgba(255, 255, 255, 0.04);
             border-radius: var(--radius-lg);
             width: 100%;
             max-width: 600px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 60px rgba(200, 169, 126, 0.06);
-            animation: modalSlideIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 16px 64px rgba(0, 0, 0, 0.4);
+            animation: modalSlideIn 0.45s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-24px) scale(0.97);
+                transform: translateY(-12px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
 
@@ -578,14 +585,18 @@
             width: 100%;
             padding: 0.875rem 1rem;
             background: var(--bg-input);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             border: 1px solid var(--border);
             border-radius: var(--radius-sm);
             color: var(--text-primary);
-            font-size: 0.9375rem;
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 0.01em;
             font-family: inherit;
             transition: var(--transition-base);
             resize: vertical;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12);
+            box-shadow: none;
         }
 
         .form-input:focus,
@@ -594,8 +605,8 @@
         .followup-input:focus,
         .followup-target-select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 0 3px var(--primary-soft), 0 0 20px rgba(200, 169, 126, 0.08);
+            border-color: rgba(212, 165, 116, 0.2);
+            box-shadow: 0 0 0 3px var(--primary-soft);
         }
 
         /* Focus-visible for keyboard-only users */
@@ -759,17 +770,17 @@
             background: var(--gradient-primary-shine);
             color: var(--bg-dark);
             font-weight: 600;
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.3);
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
         }
 
         .btn-primary:hover:not(:disabled) {
-            box-shadow: 0 4px 16px rgba(200, 169, 126, 0.4);
+            box-shadow: 0 4px 16px rgba(212, 165, 116, 0.4);
             transform: translateY(-1px);
         }
 
         .btn-primary:active:not(:disabled) {
             transform: translateY(0) scale(0.98);
-            box-shadow: 0 1px 4px rgba(200, 169, 126, 0.2);
+            box-shadow: 0 1px 4px rgba(212, 165, 116, 0.2);
         }
 
         .btn-secondary {
@@ -781,7 +792,7 @@
         .btn-secondary:hover {
             border-color: var(--primary);
             color: var(--primary);
-            box-shadow: 0 0 12px rgba(200, 169, 126, 0.08);
+            box-shadow: 0 0 12px rgba(212, 165, 116, 0.08);
             transform: translateY(-1px);
         }
 
@@ -831,26 +842,26 @@
         /* Mode Selector - premium pill tabs */
         .mode-selector {
             display: flex;
-            gap: 2px;
-            margin-bottom: 1.5rem;
-            background: var(--bg-card);
-            background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            gap: 4px;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.02);
             padding: 4px;
-            border-radius: var(--radius);
+            border-radius: 999px;
             border: 1px solid var(--border);
             width: fit-content;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.15);
+            box-shadow: none;
         }
 
         .mode-btn {
-            padding: 0.5rem 1.125rem;
+            padding: 0.5rem 1.25rem;
             border: none;
             background: transparent;
             color: var(--text-muted);
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.8rem;
+            font-weight: 400;
+            letter-spacing: 0.02em;
             cursor: pointer;
-            border-radius: calc(var(--radius) - 3px);
+            border-radius: 999px;
             transition: var(--transition-base);
             display: flex;
             align-items: center;
@@ -859,31 +870,32 @@
 
         .mode-btn:hover {
             color: var(--text-primary);
-            background: rgba(200, 169, 126, 0.06);
+            background: rgba(212, 165, 116, 0.04);
         }
 
         .mode-btn.active {
-            background: var(--gradient-primary-shine);
+            background: var(--primary);
             color: var(--bg-dark);
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.25);
+            font-weight: 500;
+            box-shadow: 0 2px 12px rgba(212, 165, 116, 0.12);
         }
 
         /* Input Section - premium card */
         .input-section {
             background: var(--bg-card);
-            background-image: var(--gradient-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 1.75rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow-elevated);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: none;
             transition: var(--transition-base);
         }
 
         .input-section:hover {
             border-color: var(--border-hover);
-            box-shadow: var(--shadow-elevated), var(--shadow-glow);
+            box-shadow: none;
         }
 
         .char-count {
@@ -896,13 +908,14 @@
         /* Evaluate Button */
         .evaluate-btn {
             width: 100%;
-            padding: 1rem 1.5rem;
+            padding: 1.125rem 1.5rem;
             background: var(--gradient-primary-shine);
             border: none;
             border-radius: var(--radius-sm);
             color: var(--bg-dark);
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
             cursor: pointer;
             transition: var(--transition-base);
             display: flex;
@@ -911,7 +924,7 @@
             gap: 0.5rem;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 16px rgba(200, 169, 126, 0.25);
+            box-shadow: 0 4px 16px rgba(212, 165, 116, 0.12);
         }
 
         .evaluate-btn::before {
@@ -930,13 +943,13 @@
         }
 
         .evaluate-btn:hover:not(:disabled) {
-            box-shadow: 0 6px 24px rgba(200, 169, 126, 0.35);
-            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 165, 116, 0.18);
+            transform: translateY(-1px);
         }
 
         .evaluate-btn:active:not(:disabled) {
-            transform: translateY(0) scale(0.985);
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.2);
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.1);
         }
 
         .evaluate-btn:disabled {
@@ -951,6 +964,20 @@
             border-top-color: white;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
+        }
+
+        .eval-streaming-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.1em;
+            background: var(--accent);
+            margin-left: 2px;
+            vertical-align: text-bottom;
+            animation: cursor-blink 0.8s steps(1) infinite;
+        }
+        @keyframes cursor-blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
         }
 
         /* Results Section */
@@ -986,20 +1013,19 @@
         }
 
         .copy-btn:hover {
-            border-color: var(--primary);
+            border-color: rgba(212, 165, 116, 0.15);
             color: var(--primary);
-            box-shadow: 0 0 12px rgba(200, 169, 126, 0.08);
-            transform: translateY(-1px);
         }
 
         .results-content {
             background: var(--bg-card);
-            background-image: var(--gradient-card);
-            border: 1px solid rgba(200, 169, 126, 0.12);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 165, 116, 0.06);
             border-radius: var(--radius-lg);
-            padding: 1.75rem;
-            box-shadow: var(--shadow-elevated), var(--shadow-glow);
-            animation: fadeSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 2.5rem;
+            box-shadow: none;
+            animation: fadeSlideUp 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
         @keyframes fadeSlideUp {
@@ -1095,9 +1121,10 @@
         }
 
         .score-item {
-            background: var(--bg-input);
-            background-image: linear-gradient(180deg, rgba(200, 169, 126, 0.03) 0%, transparent 100%);
-            padding: 1rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 1.25rem;
             border-radius: var(--radius);
             text-align: center;
             border: 1px solid var(--border);
@@ -1105,9 +1132,7 @@
         }
 
         .score-item:hover {
-            border-color: var(--border-light);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: rgba(212, 165, 116, 0.08);
         }
 
         .score-label {
@@ -1119,8 +1144,8 @@
         }
 
         .score-value {
-            font-size: 1.625rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 400;
             background: var(--gradient-primary-shine);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -1142,19 +1167,19 @@
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: rgba(17, 17, 16, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: rgba(14, 14, 14, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 1rem 1.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 20px rgba(200, 169, 126, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
             display: flex;
             align-items: center;
             gap: 0.75rem;
             transform: translateY(100px);
             opacity: 0;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
             z-index: 1001;
         }
 
@@ -1172,7 +1197,7 @@
             align-items: center;
             justify-content: center;
             font-size: 0.875rem;
-            box-shadow: 0 2px 6px rgba(200, 169, 126, 0.3);
+            box-shadow: none;
         }
 
         /* Voice - Live Transcript Panel */
@@ -1260,7 +1285,7 @@
         .mic-btn:hover {
             border-color: var(--primary);
             color: var(--primary);
-            background: rgba(200, 169, 126, 0.15);
+            background: rgba(212, 165, 116, 0.15);
         }
 
         .mic-btn.recording {
@@ -1310,7 +1335,7 @@
             flex-wrap: wrap;
         }
 
-        .tts-engine-select, .tts-voice-select {
+        .tts-engine-select, .tts-voice-select, .tts-speed {
             padding: 0.25rem 0.5rem;
             background: var(--bg-input);
             border: 1px solid var(--border);
@@ -1319,60 +1344,168 @@
             font-size: 0.75rem;
             cursor: pointer;
             transition: all 0.2s ease-out;
-            max-width: 160px;
         }
 
-        .tts-engine-select:hover, .tts-voice-select:hover {
+        .tts-engine-select:hover, .tts-voice-select:hover, .tts-speed:hover {
             border-color: var(--primary);
             color: var(--text-primary);
         }
 
-        .tts-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+        /* TTS Player Bar */
+        .tts-player {
+            background: var(--bg-card);
             border: 1px solid var(--border);
-            background: var(--bg-input);
-            color: var(--text-secondary);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+        }
+
+        .tts-player-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tts-config-row {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tts-play-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.2s ease-out;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
-        .tts-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
+        .tts-play-btn:hover {
+            background: var(--primary);
+            color: #fff;
         }
 
-        .tts-btn.playing {
+        .tts-play-btn.playing {
             border-color: var(--success);
-            color: var(--success);
-            background: rgba(34, 197, 94, 0.1);
+            color: #fff;
+            background: var(--success);
+            animation: tts-pulse 2s ease-in-out infinite;
         }
 
-        .tts-speed {
-            padding: 0.25rem 0.5rem;
-            background: var(--bg-input);
+        @keyframes tts-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.3); }
+            50% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); }
+        }
+
+        .tts-stop-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
+            background: var(--bg-input);
             color: var(--text-secondary);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        .tts-speed:hover {
-            border-color: var(--primary);
-            color: var(--text-primary);
+        .tts-stop-btn:hover {
+            border-color: #f87171;
+            color: #f87171;
+        }
+
+        .tts-progress-wrap {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-input);
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .tts-progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: 3px;
+            transition: width 0.3s ease-out;
+        }
+
+        .tts-progress-wrap.buffering .tts-progress-bar {
+            background: linear-gradient(90deg, var(--primary), #f59e0b);
+            animation: tts-buffer 1.5s ease-in-out infinite;
+        }
+
+        @keyframes tts-buffer {
+            0% { width: 20%; margin-left: 0%; }
+            50% { width: 60%; margin-left: 20%; }
+            100% { width: 20%; margin-left: 80%; }
+        }
+
+        .tts-time {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+            min-width: 32px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .tts-config-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .tts-config-group label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tts-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            margin-left: auto;
+            transition: background 0.3s;
+        }
+
+        .tts-status-dot.ready { background: var(--text-muted); }
+        .tts-status-dot.loading { background: #f59e0b; animation: tts-dot-blink 0.8s ease-in-out infinite; }
+        .tts-status-dot.playing { background: var(--success); animation: tts-dot-blink 1.5s ease-in-out infinite; }
+        .tts-status-dot.error { background: #f87171; }
+
+        @keyframes tts-dot-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .tts-status-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .container {
-                padding: 1rem;
+                padding: 1.5rem;
             }
 
             .header-content {
@@ -1476,13 +1609,13 @@
         /* Large screens - centered content with breathing room */
         @media (min-width: 1440px) {
             .container {
-                max-width: 1200px;
+                max-width: 960px;
                 margin: 0 auto;
-                padding: 2rem;
+                padding: 3rem;
             }
 
             .header-content {
-                max-width: 1200px;
+                max-width: 960px;
             }
         }
 
@@ -1528,6 +1661,19 @@
             flex-wrap: wrap;
         }
 
+        .practice-ctrl-group {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .practice-ctrl-group label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
         .practice-controls select,
         .practice-controls button {
             padding: 0.5rem 1rem;
@@ -1564,7 +1710,7 @@
 
         .part-dot.active {
             background: var(--primary);
-            box-shadow: 0 0 8px rgba(200, 169, 126, 0.4);
+            box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
         }
 
         .part-dot.completed {
@@ -1581,18 +1727,19 @@
         /* Chat area */
         .chat-area {
             background: var(--bg-card);
-            background-image: var(--gradient-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
             min-height: 400px;
             max-height: 500px;
             overflow-y: auto;
-            padding: 1.5rem;
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
             margin-bottom: 1rem;
-            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: none;
         }
 
         .chat-msg {
@@ -1645,18 +1792,17 @@
         }
 
         .chat-msg.examiner .chat-bubble {
-            background: var(--bg-elevated);
-            background-image: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            background: rgba(30, 30, 30, 0.6);
+            backdrop-filter: blur(8px);
             border: 1px solid var(--border);
             border-top-left-radius: 4px;
         }
 
         .chat-msg.candidate .chat-bubble {
-            background: rgba(200, 169, 126, 0.12);
-            border: 1px solid rgba(200, 169, 126, 0.2);
+            background: rgba(212, 165, 116, 0.06);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(212, 165, 116, 0.08);
             border-top-right-radius: 4px;
-            box-shadow: inset 0 1px 0 rgba(200, 169, 126, 0.06);
-        }
         }
 
         .chat-bubble .play-audio-btn {
@@ -1774,7 +1920,7 @@
 
         .voice-input-bar .text-input:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-soft), 0 0 16px rgba(200, 169, 126, 0.06);
+            box-shadow: 0 0 0 3px var(--primary-soft), 0 0 16px rgba(212, 165, 116, 0.06);
         }
 
         .voice-input-bar .text-input::placeholder {
@@ -1798,8 +1944,8 @@
         }
 
         .record-btn:hover {
-            background: rgba(200, 169, 126, 0.15);
-            box-shadow: 0 0 16px rgba(200, 169, 126, 0.15);
+            background: rgba(212, 165, 116, 0.15);
+            box-shadow: 0 0 16px rgba(212, 165, 116, 0.15);
             transform: scale(1.05);
         }
 
@@ -1819,6 +1965,40 @@
             50% { box-shadow: 0 0 0 12px rgba(239, 68, 68, 0); }
         }
 
+        /* Voice Call States */
+        .record-btn.voice-call-listening {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+            animation: listenPulse 2s ease-in-out infinite;
+        }
+        .record-btn.voice-call-thinking {
+            background: #f59e0b;
+            border-color: #f59e0b;
+            color: white;
+            animation: none;
+        }
+        .record-btn.voice-call-speaking {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+            animation: speakPulse 2s ease-in-out infinite;
+        }
+        @keyframes listenPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5); }
+            50% { box-shadow: 0 0 0 14px rgba(59, 130, 246, 0); }
+        }
+        @keyframes speakPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5); }
+            50% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+        }
+        .practice-stt-status.stt-listening { background: rgba(59,130,246,0.1); color: #3b82f6; }
+        .practice-stt-status.stt-listening .stt-dot { background: #3b82f6; }
+        .practice-stt-status.stt-thinking { background: rgba(245,158,11,0.1); color: #f59e0b; }
+        .practice-stt-status.stt-thinking .stt-dot { background: #f59e0b; }
+        .practice-stt-status.stt-speaking { background: rgba(16,185,129,0.1); color: #10b981; }
+        .practice-stt-status.stt-speaking .stt-dot { background: #10b981; }
+
         .send-btn {
             width: 48px;
             height: 48px;
@@ -1833,11 +2013,11 @@
             justify-content: center;
             transition: var(--transition-base);
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.25);
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.25);
         }
 
         .send-btn:hover {
-            box-shadow: 0 4px 16px rgba(200, 169, 126, 0.35);
+            box-shadow: 0 4px 16px rgba(212, 165, 116, 0.35);
             transform: translateY(-1px);
         }
 
@@ -2298,12 +2478,13 @@
 
         .chatroom-controls {
             background: var(--bg-card);
-            background-image: var(--gradient-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: var(--radius-lg);
-            padding: 1.5rem;
+            padding: 2rem;
             margin-bottom: 1rem;
-            box-shadow: var(--shadow-elevated);
+            box-shadow: none;
         }
 
         .chatroom-topic-row {
@@ -2366,17 +2547,17 @@
         .expert-tag:hover {
             border-color: var(--primary);
             color: var(--primary);
-            box-shadow: 0 0 12px rgba(200, 169, 126, 0.1);
+            box-shadow: 0 0 12px rgba(212, 165, 116, 0.1);
             transform: translateY(-1px);
         }
         .expert-tag:active {
             transform: translateY(0) scale(0.97);
         }
         .expert-tag.selected {
-            background: rgba(200, 169, 126, 0.12);
+            background: rgba(212, 165, 116, 0.12);
             border-color: var(--primary);
             color: var(--primary);
-            box-shadow: 0 0 12px rgba(200, 169, 126, 0.12);
+            box-shadow: 0 0 12px rgba(212, 165, 116, 0.12);
         }
         .expert-tag-add {
             border-style: dashed;
@@ -2392,10 +2573,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition-base);
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.2);
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.2);
         }
         .chatroom-recommend-btn:hover {
-            box-shadow: 0 4px 12px rgba(200, 169, 126, 0.3);
+            box-shadow: 0 4px 12px rgba(212, 165, 116, 0.3);
             transform: translateY(-1px);
         }
         .chatroom-recommend-btn:active {
@@ -2467,7 +2648,26 @@
         }
 
         .chatroom-start-btn {
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
+            padding: 0.65rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        .chatroom-start-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+        .chatroom-start-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* Controls collapse after discussion starts */
@@ -2511,6 +2711,12 @@
         }
         .chatroom-controls.collapsed .chatroom-collapse-toggle {
             display: inline-flex;
+            padding: 0.4rem 1rem;
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            font-weight: 600;
+            border-radius: var(--radius-md);
         }
 
         /* Scroll-to-bottom button */
@@ -2611,8 +2817,8 @@
         }
         .chatroom-msg.user .chatroom-msg-bubble {
             border-radius: 16px 4px 16px 16px;
-            background: rgba(200, 169, 126, 0.08);
-            border: 1px solid rgba(200, 169, 126, 0.12);
+            background: rgba(212, 165, 116, 0.08);
+            border: 1px solid rgba(212, 165, 116, 0.12);
         }
         .chatroom-msg.user .chatroom-msg-time {
             text-align: right;
@@ -2631,7 +2837,7 @@
             border-radius: var(--radius-lg);
             background: var(--bg-card);
             background-image: var(--gradient-card);
-            border: 1px solid rgba(200, 169, 126, 0.1);
+            border: 1px solid rgba(212, 165, 116, 0.1);
             box-shadow: var(--shadow-elevated), var(--shadow-glow);
         }
 
@@ -2685,6 +2891,34 @@
         .expert-text-en-row .play-audio-btn {
             flex-shrink: 0;
             margin-top: 2px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--primary-light, rgba(212, 165, 116, 0.15));
+            border: 1px solid var(--border);
+            color: var(--primary, #d4a574);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s ease-out;
+        }
+        .expert-text-en-row .play-audio-btn:hover {
+            background: var(--primary, #d4a574);
+            color: white;
+            transform: scale(1.1);
+        }
+        .expert-text-en-row .play-audio-btn.playing {
+            background: var(--primary, #d4a574);
+            color: white;
+            animation: pulse-glow 1.5s ease-in-out infinite;
+        }
+        .expert-text-en-row .play-audio-btn.loading {
+            background: rgba(255,255,255,0.15);
+            color: var(--text-muted);
+            animation: spin 0.8s linear infinite;
+            pointer-events: none;
         }
 
         .translation-toggle {
@@ -2961,7 +3195,7 @@
         .eval-type-btn.active {
             background: var(--primary);
             color: var(--bg-dark);
-            box-shadow: 0 2px 8px rgba(200, 169, 126, 0.2);
+            box-shadow: 0 2px 8px rgba(212, 165, 116, 0.2);
         }
 
         /* ========================================
@@ -3236,7 +3470,7 @@
             border-radius: var(--radius);
             padding: 1.25rem;
             margin-bottom: 1rem;
-            box-shadow: 0 0 0 1px rgba(200, 169, 126, 0.1), var(--shadow);
+            box-shadow: 0 0 0 1px rgba(212, 165, 116, 0.1), var(--shadow);
         }
         .layered-config-panel.show {
             display: block;
@@ -3547,6 +3781,31 @@
                         </div>
                         <div class="tts-test-result" id="doubaoTestResult"></div>
                     </div>
+
+                    <hr class="divider">
+
+                    <!-- iFlytek ASR Section Label -->
+                    <div class="section-label">🎙️ Real-time ASR (iFlytek / 讯飞)</div>
+                    <div class="form-hint" style="margin-bottom:0.5rem;">For Practice mode real-time voice transcription. <a href="https://www.xfyun.cn/services/rtasr" target="_blank">Get credentials</a> (Free: 5 hours/day)</div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="iflytekAppId">APPID</label>
+                        <input type="text" class="form-input" id="iflytekAppId" placeholder="Your iFlytek APPID">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="iflytekApiKey">API Key</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" class="form-input" id="iflytekApiKey" placeholder="Your iFlytek API Key">
+                            <button type="button" class="password-toggle" onclick="const i=document.getElementById('iflytekApiKey');i.type=i.type==='password'?'text':'password'">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="iflytekApiSecret">API Secret</label>
+                        <div class="password-input-wrapper">
+                            <input type="password" class="form-input" id="iflytekApiSecret" placeholder="Your iFlytek API Secret">
+                            <button type="button" class="password-toggle" onclick="const i=document.getElementById('iflytekApiSecret');i.type=i.type==='password'?'text':'password'">👁️</button>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
@@ -3594,7 +3853,7 @@
         <!-- Layered Config Bar - Eval -->
         <div class="layered-config-bar" id="layeredBarEval">
             <span class="layered-config-indicator global" id="layeredIndicatorEval">🌐 Global</span>
-            <span class="layered-config-model" id="layeredModelEval">deepseek-chat</span>
+            <span class="layered-config-model" id="layeredModelEval">deepseek-v4-flash</span>
             <span class="layered-config-divider"></span>
             <span style="color:var(--text-muted);font-size:0.7rem;" id="layeredHintEval">Using global config</span>
             <button class="layered-config-toggle" id="layeredToggleEval" title="Configure a dedicated model for this section">⚙️ Custom Model</button>
@@ -3689,23 +3948,44 @@
         <div class="results-section" id="resultsSection" aria-live="polite">
             <div class="results-header">
                 <h2 class="results-title">Evaluation Results</h2>
-                <div class="tts-controls">
-                    <select class="tts-engine-select" id="ttsEngine" aria-label="TTS Engine">
-                        <option value="edge_tts">Edge-TTS (Free)</option>
-                        <option value="elevenlabs">ElevenLabs</option>
-                        <option value="doubao">Doubao TTS</option>
-                    </select>
-                    <select class="tts-voice-select" id="ttsVoice" aria-label="TTS Voice">
-                        <option value="en-US-AriaNeural">Aria (Female, US)</option>
-                    </select>
-                    <button class="tts-btn" id="ttsBtn" aria-label="Read results aloud" style="display:none;">▶</button>
-                    <button class="tts-btn" id="ttsStopBtn" aria-label="Stop reading" style="display:none;">⏹</button>
-                    <select class="tts-speed" id="ttsSpeed" aria-label="Speech speed" style="display:none;">
-                        <option value="0.7">0.7x Slow</option>
-                        <option value="1" selected>1.0x Normal</option>
-                        <option value="1.3">1.3x Fast</option>
-                    </select>
-                    <button class="copy-btn" id="copyBtn" aria-label="Copy results to clipboard"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy Results</button>
+                <div class="copy-btn" id="copyBtn" aria-label="Copy results to clipboard"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy</div>
+            </div>
+            <!-- TTS Player Bar -->
+            <div class="tts-player" id="ttsPlayer">
+                <div class="tts-player-row">
+                    <button class="tts-play-btn" id="ttsBtn" aria-label="Read results aloud">▶</button>
+                    <div class="tts-progress-wrap" id="ttsProgressWrap">
+                        <div class="tts-progress-bar" id="ttsProgressBar"></div>
+                    </div>
+                    <span class="tts-time" id="ttsTime">0:00</span>
+                    <button class="tts-stop-btn" id="ttsStopBtn" aria-label="Stop reading">⏹</button>
+                </div>
+                <div class="tts-player-row tts-config-row">
+                    <div class="tts-config-group">
+                        <label>Engine</label>
+                        <select class="tts-engine-select" id="ttsEngine" aria-label="TTS Engine">
+                            <option value="browser">Browser (Instant)</option>
+                            <option value="edge_tts">Edge-TTS (Natural)</option>
+                            <option value="elevenlabs">ElevenLabs</option>
+                            <option value="doubao">Doubao</option>
+                        </select>
+                    </div>
+                    <div class="tts-config-group">
+                        <label>Voice</label>
+                        <select class="tts-voice-select" id="ttsVoice" aria-label="TTS Voice">
+                            <option value="en-US-AriaNeural">Aria (US)</option>
+                        </select>
+                    </div>
+                    <div class="tts-config-group">
+                        <label>Speed</label>
+                        <select class="tts-speed" id="ttsSpeed" aria-label="Speech speed">
+                            <option value="0.7">0.7x</option>
+                            <option value="1" selected>1.0x</option>
+                            <option value="1.3">1.3x</option>
+                        </select>
+                    </div>
+                    <span class="tts-status-dot" id="ttsStatusDot"></span>
+                    <span class="tts-status-label" id="ttsStatusLabel">Ready</span>
                 </div>
             </div>
             <div class="results-content">
@@ -3719,7 +3999,7 @@
             <!-- Layered Config Bar - Practice -->
             <div class="layered-config-bar" id="layeredBarPractice">
                 <span class="layered-config-indicator global" id="layeredIndicatorPractice">🌐 Global</span>
-                <span class="layered-config-model" id="layeredModelPractice">deepseek-chat</span>
+                <span class="layered-config-model" id="layeredModelPractice">deepseek-v4-flash</span>
                 <span class="layered-config-divider"></span>
                 <span style="color:var(--text-muted);font-size:0.7rem;" id="layeredHintPractice">Using global config</span>
                 <button class="layered-config-toggle" id="layeredTogglePractice" title="Configure a dedicated model for this section">⚙️ Custom Model</button>
@@ -3766,18 +4046,31 @@
             </div>
 
             <div class="practice-controls">
-                <select id="practiceVoice" aria-label="TTS Voice">
-                    <option value="en-GB-SoniaNeural">Sonia (UK Female)</option>
-                    <option value="en-GB-RyanNeural">Ryan (UK Male)</option>
-                    <option value="en-US-AriaNeural">Aria (US Female)</option>
-                    <option value="en-US-DavisNeural">Davis (US Male)</option>
-                    <option value="en-AU-NatashaNeural">Natasha (AU Female)</option>
-                </select>
-                <select id="practiceSpeed" aria-label="Speech speed">
-                    <option value="-20%">0.8x Slow</option>
-                    <option value="+0%" selected>1.0x Normal</option>
-                    <option value="+20%">1.2x Fast</option>
-                </select>
+                <div class="practice-ctrl-group">
+                    <label>Voice</label>
+                    <select id="practiceVoice" aria-label="TTS Voice">
+                        <option value="en-GB-SoniaNeural">Sonia (UK)</option>
+                        <option value="en-GB-RyanNeural">Ryan (UK)</option>
+                        <option value="en-US-AriaNeural">Aria (US)</option>
+                        <option value="en-US-DavisNeural">Davis (US)</option>
+                        <option value="en-AU-NatashaNeural">Natasha (AU)</option>
+                    </select>
+                </div>
+                <div class="practice-ctrl-group">
+                    <label>Speed</label>
+                    <select id="practiceSpeed" aria-label="Speech speed">
+                        <option value="-20%">0.8x</option>
+                        <option value="+0%" selected>1.0x</option>
+                        <option value="+20%">1.2x</option>
+                    </select>
+                </div>
+                <div class="practice-ctrl-group">
+                    <label>TTS</label>
+                    <select id="practiceTtsEngine" aria-label="TTS Engine">
+                        <option value="browser">Browser (Instant)</option>
+                        <option value="edge_tts">Edge-TTS (Natural)</option>
+                    </select>
+                </div>
                 <button id="autoPlayToggle" title="Auto-play examiner voice">Auto-play: ON</button>
                 <button id="azureInlineToggle" aria-pressed="false" title="Azure Speech pronunciation scoring" style="border-color:var(--border);">Azure: OFF</button>
             </div>
@@ -3921,7 +4214,7 @@
             <!-- Layered Config Bar - Chatroom -->
             <div class="layered-config-bar" id="layeredBarChatroom">
                 <span class="layered-config-indicator global" id="layeredIndicatorChatroom">🌐 Global</span>
-                <span class="layered-config-model" id="layeredModelChatroom">deepseek-chat</span>
+                <span class="layered-config-model" id="layeredModelChatroom">deepseek-v4-flash</span>
                 <span class="layered-config-divider"></span>
                 <span style="color:var(--text-muted);font-size:0.7rem;" id="layeredHintChatroom">Using global config</span>
                 <button class="layered-config-toggle" id="layeredToggleChatroom" title="Configure a dedicated model for this section">⚙️ Custom Model</button>
@@ -4011,17 +4304,12 @@
                     </div>
                     <div class="selected-experts" id="selectedExperts"></div>
                 </div>
-                <!-- Quick Config: Model + TTS right before Start -->
+                <!-- Quick Config: TTS only (Model config via ⚙️ Custom Model above) -->
                 <div style="display:flex;gap:0.5rem;align-items:center;flex-wrap:wrap;margin-bottom:0.5rem;padding:0.5rem 0.75rem;background:var(--bg-input);border-radius:var(--radius-sm);border:1px solid var(--border);">
-                    <span style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap;">🤖 Model</span>
-                    <select id="quickChatroomModel" style="flex:1;min-width:140px;font-size:0.8rem;padding:0.35rem 0.5rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);cursor:pointer;">
-                            <!-- Populated by JS -->
-                        </select>
                     <span style="font-size:0.75rem;color:var(--text-muted);white-space:nowrap;">🔊 TTS</span>
                     <select id="quickChatroomTTS" style="min-width:100px;font-size:0.8rem;padding:0.35rem 0.5rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);cursor:pointer;">
-                        <option value="edge_tts">Edge-TTS (Free)</option>
-                        <option value="elevenlabs">ElevenLabs</option>
-                        <option value="doubao">Doubao TTS</option>
+                        <option value="doubao" selected>Doubao TTS</option>
+                        <option value="browser">Browser (Instant)</option>
                     </select>
                     <select id="quickChatroomVoice" style="flex:1;min-width:120px;font-size:0.8rem;padding:0.35rem 0.5rem;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);cursor:pointer;">
                         <option value="en-US-AriaNeural">Aria (US Female)</option>
@@ -4035,10 +4323,17 @@
                             <option value="+40%">1.4x</option>
                         </select>
                     </label>
+                    <button id="doubaoConfigBtn" style="font-size:0.7rem;padding:0.2rem 0.5rem;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-secondary);cursor:pointer;white-space:nowrap;">豆包 Key</button>
                 </div>
-                <button class="evaluate-btn chatroom-start-btn" id="chatroomStartBtn">
-                    Start Discussion
-                </button>
+                <!-- Doubao inline config -->
+                <div id="doubaoConfigPanel" style="display:none;gap:0.4rem;align-items:center;flex-wrap:wrap;margin-bottom:0.5rem;padding:0.5rem 0.75rem;background:var(--bg-input);border-radius:var(--radius-sm);border:1px solid var(--border);">
+                    <span style="font-size:0.7rem;color:var(--text-muted);">App ID:</span>
+                    <input id="doubaoAppIdInput" type="text" placeholder="火山引擎 App ID" style="flex:1;min-width:100px;font-size:0.8rem;padding:0.3rem;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);">
+                    <span style="font-size:0.7rem;color:var(--text-muted);">Token:</span>
+                    <input id="doubaoTokenInput" type="password" placeholder="Access Token" style="flex:1;min-width:100px;font-size:0.8rem;padding:0.3rem;border-radius:4px;border:1px solid var(--border);background:var(--bg-card);color:var(--text-primary);">
+                    <button id="doubaoConfigSave" style="font-size:0.75rem;padding:0.3rem 0.6rem;border-radius:4px;border:none;background:var(--primary);color:white;cursor:pointer;">Save</button>
+                </div>
+                <button id="chatroomStartBtn" class="chatroom-start-btn">Start Discussion</button>
             </div>
 
             <!-- Chat Area -->
@@ -4081,6 +4376,8 @@
         <span id="toastMessage">Copied to clipboard!</span>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/ort.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.29/dist/bundle.min.js"></script>
     <script>
         // Configuration
         let API_BASE_URL = localStorage.getItem('ielts_backend_url') || 'http://localhost:8000';
@@ -4128,7 +4425,7 @@
         let evalType = 'writing';  // 评估类型：writing 或 speaking
         // 新的配置格式：为每个模型保存独立的 API Key
         let apiConfig = {
-            model: 'deepseek-chat',  // 当前选择的模型
+            model: 'deepseek-v4-flash',  // 当前选择的模型
             customModel: '',         // 自定义模型名称
             apiUrl: null,            // 自定义 API URL（可选）
             // 为不同提供商保存不同的 API Key
@@ -4154,9 +4451,8 @@
         // ==========================================
         const MODEL_GROUPS = [
             { label: 'DeepSeek', models: [
-                ['deepseek-chat', 'DeepSeek Chat (V3)'],
-                ['deepseek-coder', 'DeepSeek Coder'],
-                ['deepseek-reasoner', 'DeepSeek R1 (Reasoner)'],
+                ['deepseek-v4-flash', 'DeepSeek V4 Flash'],
+                ['deepseek-v4-pro', 'DeepSeek V4 Pro'],
             ]},
             { label: 'OpenAI', models: [
                 ['gpt-4o', 'GPT-4o'],
@@ -4174,6 +4470,7 @@
             { label: 'Google Gemini', models: [
                 ['gemini-2.5-pro', 'Gemini 2.5 Pro'],
                 ['gemini-2.5-flash', 'Gemini 2.5 Flash'],
+                ['gemini-2.0-flash', 'Gemini 2.0 Flash'],
                 ['gemini-2.0-flash-lite', 'Gemini 2.0 Flash Lite'],
                 ['gemini-1.5-pro', 'Gemini 1.5 Pro'],
                 ['gemini-1.5-flash', 'Gemini 1.5 Flash'],
@@ -4209,7 +4506,7 @@
 
         // 页面加载时填充所有模型下拉框
         function initAllModelSelects() {
-            const currentGlobalModel = apiConfig.model || 'deepseek-chat';
+            const currentGlobalModel = apiConfig.model || 'deepseek-v4-flash';
             // Settings global
             populateModelSelect(modelSelect, currentGlobalModel, true);
             // Layered selects
@@ -4219,10 +4516,6 @@
                 layeredConfig.practice.model || currentGlobalModel);
             populateModelSelect(document.getElementById('layeredModelSelectChatroom'),
                 layeredConfig.chatroom.model || currentGlobalModel);
-            // Quick bar
-            const effective = getEffectiveConfig('chatroom');
-            populateModelSelect(document.getElementById('quickChatroomModel'),
-                effective.model || currentGlobalModel);
         }
 
         // 获取当前模型的 API Key
@@ -4245,18 +4538,17 @@
         function getEffectiveConfig(sectionId) {
             const layered = layeredConfig[sectionId];
             if (layered && layered.model) {
-                // 分层配置生效：API Key 优先使用分层，回退全局
                 const provider = getProvider(layered.model);
                 const effectiveKey = layered.apiKey || apiConfig.apiKeys[provider] || '';
                 return {
                     api_key: effectiveKey,
                     model: layered.model,
                     api_url: layered.apiUrl || null,
+                    custom_model: null,
                     _source: 'layered',
                     _section: sectionId
                 };
             }
-            // 回退全局配置
             const provider = getProvider(apiConfig.model);
             const apiKey = apiConfig.apiKeys[provider] || '';
             return {
@@ -4322,7 +4614,7 @@
                 bar.classList.remove('has-custom');
                 indicator.className = 'layered-config-indicator global';
                 indicator.textContent = '🌐 Global';
-                modelSpan.textContent = apiConfig.model || 'deepseek-chat';
+                modelSpan.textContent = apiConfig.model || 'deepseek-v4-flash';
                 hint.textContent = 'Using global config';
                 hint.style.color = 'var(--text-muted)';
                 toggle.classList.remove('active');
@@ -4356,7 +4648,7 @@
                     if (panel.classList.contains('show')) {
                         // 填充当前值
                         const layered = layeredConfig[section];
-                        modelSelect.value = layered.model || apiConfig.model || 'deepseek-chat';
+                        modelSelect.value = layered.model || apiConfig.model || 'deepseek-v4-flash';
                         apiKeyInput.value = layered.apiKey || '';
                         apiUrlInput.value = layered.apiUrl || '';
                     }
@@ -4388,11 +4680,6 @@
                         };
                         saveLayeredConfig();
                         updateLayeredBar(section);
-                        // Sync quick config bar if chatroom changed
-                        if (section === 'chatroom') {
-                            const effective = getEffectiveConfig('chatroom');
-                            populateModelSelect(document.getElementById('quickChatroomModel'), effective.model || apiConfig.model || 'deepseek-chat');
-                        }
                         panel.classList.remove('show');
                         showToast(`${section === 'eval' ? 'Writing/Speaking' : section === 'practice' ? 'Practice' : 'Chatroom'} model set to ${model}`);
                     });
@@ -4447,7 +4734,7 @@
                         layeredConfig[section] = { model: null, apiKey: null, apiUrl: null };
                         saveLayeredConfig();
                         updateLayeredBar(section);
-                        modelSelect.value = apiConfig.model || 'deepseek-chat';
+                        modelSelect.value = apiConfig.model || 'deepseek-v4-flash';
                         apiKeyInput.value = '';
                         apiUrlInput.value = '';
                         panel.classList.remove('show');
@@ -4486,7 +4773,7 @@
                     if (parsed.apiKeys) {
                         // 新格式
                         apiConfig = {
-                            model: parsed.model || 'deepseek-chat',
+                            model: parsed.model || 'deepseek-v4-flash',
                             customModel: parsed.customModel || '',
                             apiUrl: parsed.apiUrl === 'https://api.deepseek.com/chat/completions' ? null : (parsed.apiUrl || null),
                             apiKeys: {
@@ -4499,9 +4786,9 @@
                     } else if (parsed.apiKey) {
                         // 旧格式：迁移数据
 
-                        const provider = getProvider(parsed.model || 'deepseek-chat');
+                        const provider = getProvider(parsed.model || 'deepseek-v4-flash');
                         apiConfig = {
-                            model: parsed.model || 'deepseek-chat',
+                            model: parsed.model || 'deepseek-v4-flash',
                             customModel: parsed.customModel || '',
                             apiUrl: parsed.apiUrl === 'https://api.deepseek.com/chat/completions' ? null : (parsed.apiUrl || null),
                             apiKeys: {
@@ -4528,7 +4815,7 @@
 
                     const savedUrl = apiConfig.apiUrl;
                     apiUrlInput.value = (savedUrl && savedUrl !== 'undefined') ? savedUrl : '';
-                    modelSelect.value = apiConfig.model || 'deepseek-chat';
+                    modelSelect.value = apiConfig.model || 'deepseek-v4-flash';
                     customModelInput.value = apiConfig.customModel || '';
                     
                     // 显示当前模型的 API Key
@@ -4563,12 +4850,16 @@
             configModal.classList.add('show');
             document.body.style.overflow = 'hidden';
             loadConfig();
-            populateModelSelect(modelSelect, apiConfig.model || "deepseek-chat", true);
+            populateModelSelect(modelSelect, apiConfig.model || "deepseek-v4-flash", true);
             // 填充 TTS 配置
             loadTTSConfig();
             document.getElementById('ttsElevenlabsKey').value = ttsConfig.elevenlabs_api_key || '';
             document.getElementById('ttsDoubaoAppId').value = ttsConfig.doubao_app_id || '';
             document.getElementById('ttsDoubaoToken').value = ttsConfig.doubao_access_token || '';
+            // Load iFlytek config
+            document.getElementById('iflytekAppId').value = localStorage.getItem('iflytek_app_id') || '';
+            document.getElementById('iflytekApiKey').value = localStorage.getItem('iflytek_api_key') || '';
+            document.getElementById('iflytekApiSecret').value = localStorage.getItem('iflytek_api_secret') || '';
             hideTestResult();
             // Focus first input after animation
             setTimeout(() => {
@@ -4921,6 +5212,14 @@
                 if (doubaoToken) ttsConfig.doubao_access_token = doubaoToken;
                 saveTTSConfig();
 
+                // Save iFlytek ASR config
+                const iflytekAppId = document.getElementById('iflytekAppId').value.trim();
+                const iflytekApiKey = document.getElementById('iflytekApiKey').value.trim();
+                const iflytekApiSecret = document.getElementById('iflytekApiSecret').value.trim();
+                if (iflytekAppId) localStorage.setItem('iflytek_app_id', iflytekAppId);
+                if (iflytekApiKey) localStorage.setItem('iflytek_api_key', iflytekApiKey);
+                if (iflytekApiSecret) localStorage.setItem('iflytek_api_secret', iflytekApiSecret);
+
                 saveConfig();
                 closeModalFunc();
                 showToast('Configuration saved successfully!');
@@ -4937,7 +5236,7 @@
             // 重置为默认值
             apiUrlInput.value = '';
             apiKeyInput.value = '';
-            populateModelSelect(modelSelect, 'deepseek-chat', true);
+            populateModelSelect(modelSelect, 'deepseek-v4-flash', true);
             customModelInput.value = '';
             customModelGroup.style.display = 'none';
             advancedToggle.checked = false;
@@ -4946,7 +5245,7 @@
             hideTestResult();
             // 重置 apiConfig
             apiConfig = {
-                model: 'deepseek-chat',
+                model: 'deepseek-v4-flash',
                 customModel: '',
                 apiUrl: null,
                 apiKeys: {
@@ -5038,8 +5337,22 @@
                 return;
             }
 
-            // Check if API config exists - 使用分层配置
-            const effectiveConfig = getEffectiveConfig('eval');
+            // Check if API config exists - try all sections
+            let effectiveConfig = getEffectiveConfig('eval');
+            // Fallback: if eval has no key, try practice and global
+            if (!effectiveConfig.api_key || effectiveConfig.api_key.trim() === '') {
+                effectiveConfig = getEffectiveConfig('practice');
+            }
+            if (!effectiveConfig.api_key || effectiveConfig.api_key.trim() === '') {
+                const globalProvider = getProvider(apiConfig.model);
+                const globalKey = apiConfig.apiKeys[globalProvider] || '';
+                if (globalKey) {
+                    effectiveConfig = { api_key: globalKey, model: apiConfig.model, api_url: apiConfig.apiUrl, custom_model: apiConfig.customModel };
+                }
+            }
+
+            console.log('[DEBUG] evaluate config:', JSON.stringify({key: effectiveConfig.api_key ? '***' : 'EMPTY', model: effectiveConfig.model}));
+
             if (!effectiveConfig.api_key || effectiveConfig.api_key.trim() === '') {
                 showError('Please configure your API settings first. Click the Settings button.');
                 openModal();
@@ -5047,7 +5360,7 @@
             }
 
             evaluateBtn.disabled = true;
-            evaluateBtn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.2);border-top-color:white;"></div><span>Thinking...</span>';
+            evaluateBtn.innerHTML = '<div class="spinner" style="border-color:rgba(255,255,255,0.2);border-top-color:white;"></div><span>Evaluating (streaming)...</span>';
             errorMessage.style.display = 'none';
             resultsSection.classList.remove('show');
 
@@ -5077,32 +5390,59 @@
                 };
 
                 
-                const apiResponse = await fetch(`${API_BASE_URL}/evaluate`, {
+                // SSE Streaming evaluation
+                console.log('[DEBUG] evaluate/stream request:', `${API_BASE_URL}/evaluate/stream`, requestBody);
+                const apiResponse = await fetch(`${API_BASE_URL}/evaluate/stream`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(requestBody)
                 });
 
                 if (!apiResponse.ok) {
-                    let errorMessage = 'Evaluation failed';
-                    try {
-                        const errorData = await apiResponse.json();
-                        // 后端可能返回 message 或 detail
-                        errorMessage = errorData.message || errorData.detail || JSON.stringify(errorData);
-                    } catch (e) {
-                        // 如果不是 JSON，使用文本
-                        const text = await apiResponse.text();
-                        errorMessage = text || `HTTP ${apiResponse.status}`;
-                    }
-                    throw new Error(errorMessage);
+                    let errMsg = 'Evaluation failed';
+                    try { const ed = await apiResponse.json(); errMsg = ed.detail || ed.message || JSON.stringify(ed); } catch(e) { errMsg = `HTTP ${apiResponse.status}`; }
+                    throw new Error(errMsg);
                 }
 
-                const data = await apiResponse.json();
-                resultsContent.innerHTML = parseMarkdown(data.result);
+                // Show skeleton + streaming container
+                resultsContent.innerHTML = '<div class="eval-streaming"><div class="eval-streaming-cursor"></div></div>';
                 resultsSection.classList.add('show');
                 resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                const reader = apiResponse.body.getReader();
+                const decoder = new TextDecoder();
+                let fullText = '';
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ')) continue;
+                        const payload = line.slice(6).trim();
+                        if (payload === '[DONE]') break;
+                        try {
+                            const chunk = JSON.parse(payload);
+                            if (chunk.error) {
+                                    let errMsg = typeof chunk.error === 'string' ? chunk.error : JSON.stringify(chunk.error);
+                                    try { const p = JSON.parse(errMsg); errMsg = (p.error && p.error.message) || p.message || errMsg; } catch(e2) {}
+                                    throw new Error('API Error: ' + errMsg);
+                                }
+                            if (chunk.text) {
+                                fullText += chunk.text;
+                                resultsContent.innerHTML = parseMarkdown(fullText) + '<span class="eval-streaming-cursor"></span>';
+                            }
+                        } catch (e) {
+                            if (e.message && !e.message.includes('JSON')) throw e;
+                        }
+                    }
+                }
+                // Final render without cursor
+                resultsContent.innerHTML = parseMarkdown(fullText);
 
             } catch (error) {
                 showError(error.message || 'Failed to connect to evaluation service. Please try again.');
@@ -5331,6 +5671,12 @@
         const ttsBtn = document.getElementById('ttsBtn');
         const ttsStopBtn = document.getElementById('ttsStopBtn');
         const ttsSpeedSelect = document.getElementById('ttsSpeed');
+        const ttsProgressWrap = document.getElementById('ttsProgressWrap');
+        const ttsProgressBar = document.getElementById('ttsProgressBar');
+        const ttsTimeEl = document.getElementById('ttsTime');
+        const ttsStatusDot = document.getElementById('ttsStatusDot');
+        const ttsStatusLabel = document.getElementById('ttsStatusLabel');
+        let ttsProgressInterval = null;
         const ttsEngineSelect = document.getElementById('ttsEngine');
         const ttsVoiceSelect = document.getElementById('ttsVoice');
         let isSpeaking = false;
@@ -5338,8 +5684,8 @@
 
         // TTS 配置存储（含 API Keys）
         let ttsConfig = {
-            engine: 'edge_tts',
-            voice: 'en-US-AriaNeural',
+            engine: 'browser',
+            voice: 'en-US',
             rate: '+0%',
             elevenlabs_api_key: '',
             doubao_app_id: '',
@@ -5351,7 +5697,10 @@
             const saved = localStorage.getItem('ttsConfig');
             if (saved) {
                 try {
-                    ttsConfig = { ...ttsConfig, ...JSON.parse(saved) };
+                    const parsed = JSON.parse(saved);
+                    ttsConfig = { ...ttsConfig, ...parsed };
+                    // 如果上次存的是 edge_tts 但网络不通，自动切 browser
+                    // (用户可以手动切回)
                 } catch (e) { /* ignore */ }
             }
             ttsEngineSelect.value = ttsConfig.engine;
@@ -5402,12 +5751,20 @@
             ttsConfig.engine = ttsEngineSelect.value;
             updateTTSVoiceOptions();
             saveTTSConfig();
+            // Sync to Practice & Chatroom controls
+            const pe = document.getElementById('practiceTtsEngine');
+            const qe = document.getElementById('quickChatroomTTS');
+            if (pe) pe.value = ttsConfig.engine;
+            if (qe) qe.value = ttsConfig.engine;
         });
 
         // 音色切换事件
         ttsVoiceSelect.addEventListener('change', () => {
             ttsConfig.voice = ttsVoiceSelect.value;
             saveTTSConfig();
+            // Sync to Practice
+            const pv = document.getElementById('practiceVoice');
+            if (pv) pv.value = ttsConfig.voice;
         });
 
         function stripMarkdown(text) {
@@ -5422,7 +5779,7 @@
                 .replace(/\n/g, '. ');
         }
 
-        // 播放 TTS 音频（通过后端 API）
+        // 播放 TTS 音频（根据引擎选择不同路径）
         async function startTTS() {
             const text = stripMarkdown(resultsContent.innerText);
             if (!text.trim()) return;
@@ -5430,9 +5787,19 @@
             // 停止当前播放
             stopTTS();
 
+            // Browser TTS — 直接本地播放，零延迟，不走后端
+            if (ttsConfig.engine === 'browser') {
+                setTtsStatus('playing', 'Browser TTS');
+                return playBrowserTTS(text);
+            }
+
+            // 其他引擎（edge-tts / elevenlabs / doubao）走后端
+            setTtsStatus('loading', 'Loading...');
+            ttsProgressWrap.classList.add('buffering');
+
             try {
                 const requestBody = {
-                    text: text.substring(0, 5000),  // 限制文本长度
+                    text: text.substring(0, 5000),
                     engine: ttsConfig.engine,
                     voice: ttsConfig.voice,
                     rate: ttsSpeedSelect.value === '1' ? '+0%' : (ttsSpeedSelect.value === '0.7' ? '-30%' : '+30%'),
@@ -5448,9 +5815,10 @@
                 });
 
                 if (!resp.ok) {
-                    const err = await resp.json();
-                    showToast(err.detail || 'TTS failed');
-                    return;
+                    // 后端 TTS 失败 → 自动降级到 Browser TTS
+                    console.warn('Backend TTS failed, falling back to Browser TTS');
+                    setTtsStatus('playing', 'Fallback: Browser');
+                    return playBrowserTTS(text);
                 }
 
                 const audioBlob = await resp.blob();
@@ -5459,15 +5827,29 @@
                 currentAudio.onended = () => { updateTTSUI(false); };
                 currentAudio.onerror = () => {
                     updateTTSUI(false);
-                    showToast('Audio playback failed');
+                    // Audio 播放失败也降级
+                    playBrowserTTS(text);
                 };
                 currentAudio.playbackRate = parseFloat(ttsSpeedSelect.value);
                 await currentAudio.play();
+                setTtsStatus('playing', ttsConfig.engine);
                 updateTTSUI(true);
             } catch (e) {
-                showToast('TTS error: ' + e.message);
-                updateTTSUI(false);
+                // 网络错误 → 自动降级到 Browser TTS
+                console.warn('TTS fetch error, falling back to Browser TTS:', e.message);
+                setTtsStatus('playing', 'Fallback: Browser');
+                return playBrowserTTS(text);
             }
+        }
+
+        function playBrowserTTS(text) {
+            const utterance = new SpeechSynthesisUtterance(text.substring(0, 5000));
+            utterance.lang = 'en-US';
+            utterance.rate = parseFloat(ttsSpeedSelect.value) || 1.0;
+            utterance.onend = () => { updateTTSUI(false); };
+            utterance.onerror = () => { updateTTSUI(false); };
+            speechSynthesis.speak(utterance);
+            updateTTSUI(true);
         }
 
         function stopTTS() {
@@ -5484,6 +5866,46 @@
             isSpeaking = speaking;
             ttsBtn.textContent = speaking ? '⏸' : '▶';
             ttsBtn.classList.toggle('playing', speaking);
+            ttsStatusDot.className = 'tts-status-dot ' + (speaking ? 'playing' : 'ready');
+            ttsStatusLabel.textContent = speaking ? 'Playing' : 'Ready';
+            ttsProgressWrap.classList.toggle('buffering', false);
+
+            if (speaking && currentAudio) {
+                startTtsProgressTracking();
+            } else {
+                stopTtsProgressTracking();
+            }
+        }
+
+        function setTtsStatus(status, label) {
+            ttsStatusDot.className = 'tts-status-dot ' + status;
+            ttsStatusLabel.textContent = label || status;
+        }
+
+        function startTtsProgressTracking() {
+            stopTtsProgressTracking();
+            ttsProgressWrap.classList.remove('buffering');
+            ttsProgressInterval = setInterval(() => {
+                if (currentAudio && currentAudio.duration && isFinite(currentAudio.duration)) {
+                    const pct = (currentAudio.currentTime / currentAudio.duration) * 100;
+                    ttsProgressBar.style.width = pct + '%';
+                    const remaining = Math.max(0, currentAudio.duration - currentAudio.currentTime);
+                    const m = Math.floor(remaining / 60);
+                    const s = Math.floor(remaining % 60);
+                    ttsTimeEl.textContent = m + ':' + String(s).padStart(2, '0');
+                }
+            }, 200);
+        }
+
+        function stopTtsProgressTracking() {
+            if (ttsProgressInterval) {
+                clearInterval(ttsProgressInterval);
+                ttsProgressInterval = null;
+            }
+            if (!isSpeaking) {
+                ttsProgressBar.style.width = '0%';
+                ttsTimeEl.textContent = '0:00';
+            }
         }
 
         ttsBtn.addEventListener('click', () => {
@@ -5496,14 +5918,19 @@
 
         ttsStopBtn.addEventListener('click', stopTTS);
 
-        // Show TTS controls always (backend-driven)
-        ttsBtn.style.display = 'flex';
-        ttsStopBtn.style.display = 'flex';
-        ttsSpeedSelect.style.display = 'inline-block';
+        // TTS player controls are always visible (new player bar)
+        setTtsStatus('ready', 'Ready');
 
         // 加载 TTS 配置和音色
         loadTTSConfig();
         loadTTSVoices();
+
+        // Sync global ttsConfig to Practice controls
+        const _initPracticeTtsSync = () => {
+            const pe = document.getElementById('practiceTtsEngine');
+            if (pe) pe.value = ttsConfig.engine;
+        };
+        setTimeout(_initPracticeTtsSync, 100);
 
         // ==========================================
         // Practice Mode - Voice Conversation
@@ -5523,6 +5950,7 @@
         const resetPracticeBtn = document.getElementById('resetPracticeBtn');
         const practiceVoice = document.getElementById('practiceVoice');
         const practiceSpeed = document.getElementById('practiceSpeed');
+        const practiceTtsEngine = document.getElementById('practiceTtsEngine');
         const autoPlayToggle = document.getElementById('autoPlayToggle');
         const partLabel = document.getElementById('partLabel');
         const partIndicator = document.getElementById('partIndicator');
@@ -5532,6 +5960,22 @@
         const practiceResultsContent = document.getElementById('practiceResultsContent');
         const copyPracticeResultBtn = document.getElementById('copyPracticeResultBtn');
         const practiceApiStatus = document.getElementById('practiceApiStatus');
+
+        // Practice TTS controls sync to global ttsConfig
+        if (practiceTtsEngine) practiceTtsEngine.addEventListener('change', () => {
+            ttsConfig.engine = practiceTtsEngine.value;
+            ttsEngineSelect.value = practiceTtsEngine.value;
+            saveTTSConfig();
+        });
+        if (practiceVoice) practiceVoice.addEventListener('change', () => {
+            ttsConfig.voice = practiceVoice.value;
+            ttsVoiceSelect.value = practiceVoice.value;
+            saveTTSConfig();
+        });
+        if (practiceSpeed) practiceSpeed.addEventListener('change', () => {
+            ttsConfig.rate = practiceSpeed.value;
+            saveTTSConfig();
+        });
         const practiceStatusDot = document.getElementById('practiceStatusDot');
         const practiceStatusText = document.getElementById('practiceStatusText');
 
@@ -5539,7 +5983,7 @@
         let currentPart = '1';
         let practiceActive = false;
         let autoPlayVoice = true;
-        let practiceAudio = null;  // Practice 模式专用音频对象
+        let practiceAudio = null;
         let practiceRecognition = null;
         let isPracticeRecording = false;
 
@@ -5552,6 +5996,34 @@
         let recordingStartTime = 0;
         let waveformAnimId = null;
         let lastRecordedWav = null;
+
+        // iFlytek real-time ASR state
+        let asrWebSocket = null;
+        let asrScriptProcessor = null;
+        let asrFinalText = '';
+        let asrInterimText = '';
+        let asrActive = false;
+
+        // Voice Call State Machine
+        // States: 'idle' | 'listening' | 'processing' | 'speaking'
+        let voiceCallActive = false;
+        let voiceCallState = 'idle';
+        let voiceRecognition = null; // Web Speech API recognition
+        let voiceCallText = '';
+        let voiceCallInterim = '';
+        let voiceTtsAudioCtx = null;
+        let voiceTtsSource = null;
+        let voiceTtsQueue = [];
+        let voiceTtsPlaying = false;
+        let voiceBargeInStream = null;
+        let voiceBargeInAnalyser = null;
+        let voiceBargeInInterval = null;
+
+        // Silero VAD (replaces volume-threshold barge-in)
+        let sileroVad = null;
+        let sileroVadStream = null;
+        let speakingStartedAt = 0;
+        const BARGE_IN_GRACE_MS = 800; // Ignore echo right after TTS starts
 
         // Analysis UI elements
         const waveformContainer = document.getElementById('waveformContainer');
@@ -5620,13 +6092,34 @@
             autoPlayToggle.style.borderColor = autoPlayVoice ? 'var(--primary)' : 'var(--border)';
         });
 
+        // Helper: get TTS rate as number from config (handles both number and string like "+0%")
+        function getTtsRate() {
+            const r = ttsConfig.rate;
+            if (typeof r === 'number') return r;
+            const n = parseFloat(String(r).replace('%','').replace('+',''));
+            return isNaN(n) ? 1.0 : (n / 100 + 1);
+        }
+
         // TTS: Play audio via backend edge-tts (with button state control)
         async function playTTS(text, btnElement) {
             if (!text.trim()) return;
             // Stop any current audio
             stopTTSPlayback(btnElement);
 
-            // Set loading state
+            // Browser TTS — 直接本地播放
+            if (ttsConfig.engine === 'browser') {
+                const utterance = new SpeechSynthesisUtterance(text.substring(0, 5000));
+                utterance.lang = 'en-US';
+                utterance.rate = getTtsRate();
+                if (btnElement) { btnElement.textContent = '⏸'; btnElement.classList.add('playing'); }
+                utterance.onend = () => resetTtsBtn(btnElement);
+                utterance.onerror = () => resetTtsBtn(btnElement);
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
+                return;
+            }
+
+            // 其他引擎走后端
             if (btnElement) {
                 btnElement.classList.add('loading');
                 btnElement.classList.remove('playing');
@@ -5641,7 +6134,7 @@
                         text: text,
                         engine: ttsConfig.engine,
                         voice: ttsConfig.voice,
-                        rate: practiceSpeed.value,
+                        rate: ttsConfig.rate,
                         elevenlabs_api_key: ttsConfig.elevenlabs_api_key || undefined,
                         doubao_app_id: ttsConfig.doubao_app_id || undefined,
                         doubao_access_token: ttsConfig.doubao_access_token || undefined,
@@ -5649,8 +6142,15 @@
                 });
 
                 if (!response.ok) {
-                    showToast('TTS not available. Install edge-tts: pip install edge-tts');
-                    resetTtsBtn(btnElement);
+                    // 后端失败 → 降级到 Browser TTS
+                    const utterance = new SpeechSynthesisUtterance(text.substring(0, 5000));
+                    utterance.lang = 'en-US';
+                    utterance.rate = getTtsRate();
+                    if (btnElement) { btnElement.textContent = '⏸'; btnElement.classList.add('playing'); }
+                    utterance.onend = () => resetTtsBtn(btnElement);
+                    utterance.onerror = () => resetTtsBtn(btnElement);
+                    speechSynthesis.cancel();
+                    speechSynthesis.speak(utterance);
                     return;
                 }
 
@@ -5677,8 +6177,15 @@
                 };
                 practiceAudio.play();
             } catch (e) {
-                showToast('TTS failed: ' + e.message);
-                resetTtsBtn(btnElement);
+                // 网络错误 → 降级到 Browser TTS
+                const utterance = new SpeechSynthesisUtterance(text.substring(0, 5000));
+                utterance.lang = 'en-US';
+                utterance.rate = getTtsRate();
+                if (btnElement) { btnElement.textContent = '⏸'; btnElement.classList.add('playing'); }
+                utterance.onend = () => resetTtsBtn(btnElement);
+                utterance.onerror = () => resetTtsBtn(btnElement);
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
             }
         }
 
@@ -5690,6 +6197,7 @@
 
         let lastTtsBtn = null;
         function stopTTSPlayback(btn) {
+            speechSynthesis.cancel();
             if (practiceAudio) {
                 practiceAudio.pause();
                 practiceAudio = null;
@@ -5698,7 +6206,7 @@
         }
 
         // Add chat message
-        function addChatMessage(role, text) {
+        function addChatMessage(role, text, isStreaming = false) {
             chatEmpty.style.display = 'none';
 
             const msgDiv = document.createElement('div');
@@ -5711,10 +6219,14 @@
             const bubbleWrap = document.createElement('div');
             const bubble = document.createElement('div');
             bubble.className = 'chat-bubble';
-            bubble.textContent = text;
 
-            // Add play button for examiner messages
-            if (role === 'assistant') {
+            const contentSpan = document.createElement('span');
+            contentSpan.className = 'message-content';
+            contentSpan.textContent = text;
+            bubble.appendChild(contentSpan);
+
+            // Add play button for examiner messages (non-streaming only)
+            if (role === 'assistant' && !isStreaming) {
                 const playBtn = document.createElement('button');
                 playBtn.className = 'play-audio-btn';
                 playBtn.textContent = '▶';
@@ -5740,10 +6252,12 @@
             chatArea.insertBefore(msgDiv, typingIndicator);
             chatArea.scrollTop = chatArea.scrollHeight;
 
-            // Auto-play examiner voice
-            if (role === 'assistant' && autoPlayVoice) {
+            // Auto-play examiner voice (non-streaming only; streaming handles its own TTS)
+            if (role === 'assistant' && !isStreaming && autoPlayVoice) {
                 playTTS(text);
             }
+
+            return msgDiv;
         }
 
         function setPart(part) {
@@ -5756,11 +6270,10 @@
             });
         }
 
-        // Send message to AI examiner
+        // Send message to AI examiner (streaming SSE + streaming TTS)
         async function sendPracticeMessage(text) {
             if (!text.trim() || !practiceActive) return;
 
-            // Check API config - 使用分层配置
             const effectiveConfig = getEffectiveConfig('practice');
             if (!effectiveConfig.api_key || !effectiveConfig.api_key.trim()) {
                 showToast('Please configure your API key first.');
@@ -5783,7 +6296,7 @@
             if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/practice/chat`, {
+                const response = await fetch(`${API_BASE_URL}/practice/chat/stream`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -5798,14 +6311,207 @@
                     throw new Error(err.detail || 'API error');
                 }
 
-                const data = await response.json();
                 typingIndicator.classList.remove('show');
 
-                practiceMessages.push({ role: 'assistant', content: data.reply });
-                addChatMessage('assistant', data.reply);
+                // Create assistant message bubble for streaming
+                const msgEl = addChatMessage('assistant', '', true);
+                let fullReply = '';
+
+                // Start streaming TTS audio collection if auto-play is on
+                let ttsAudioChunks = [];
+                let ttsAudioContext = null;
+                let ttsSource = null;
+                let ttsQueuedChunks = [];
+                let ttsPlaying = false;
+
+                if (autoPlayVoice) {
+                    ttsAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+                }
+
+                function playNextTtsChunk() {
+                    if (ttsQueuedChunks.length === 0) {
+                        ttsPlaying = false;
+                        return;
+                    }
+                    ttsPlaying = true;
+                    const chunk = ttsQueuedChunks.shift();
+                    ttsAudioContext.decodeAudioData(chunk.slice(0), (buffer) => {
+                        const source = ttsAudioContext.createBufferSource();
+                        source.buffer = buffer;
+                        source.connect(ttsAudioContext.destination);
+                        source.onended = () => playNextTtsChunk();
+                        source.start(0);
+                    }, () => playNextTtsChunk());
+                }
+
+                // Read SSE stream
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let ttsBuffer = '';
+                let ttsChunkTimer = null;
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ')) continue;
+                        const payload = line.slice(6);
+                        if (payload.trim() === '[DONE]') break;
+
+                        try {
+                            const chunk = JSON.parse(payload);
+                            if (chunk.error) {
+                                showToast('Stream error: ' + chunk.error);
+                                break;
+                            }
+                            if (chunk.text) {
+                                fullReply += chunk.text;
+                                // Update message bubble
+                                const contentEl = msgEl.querySelector('.message-content');
+                                if (contentEl) contentEl.textContent = fullReply;
+                                chatArea.scrollTop = chatArea.scrollHeight;
+
+                                // Buffer text for streaming TTS
+                                if (autoPlayVoice) {
+                                    ttsBuffer += chunk.text;
+                                    // Send TTS in sentence-level chunks
+                                    const sentenceEnd = ttsBuffer.search(/[.!?]\s/);
+                                    if (sentenceEnd !== -1 || ttsBuffer.length > 80) {
+                                        const toSpeak = ttsBuffer.substring(0, sentenceEnd !== -1 ? sentenceEnd + 2 : ttsBuffer.length);
+                                        ttsBuffer = ttsBuffer.substring(toSpeak.length);
+                                        // Stream TTS for this chunk
+                                        streamTtsAudio(toSpeak, ttsAudioContext, ttsQueuedChunks, () => {
+                                            if (!ttsPlaying) playNextTtsChunk();
+                                        });
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            // Skip malformed JSON
+                        }
+                    }
+                }
+
+                // Flush remaining TTS buffer
+                if (autoPlayVoice && ttsBuffer.trim()) {
+                    streamTtsAudio(ttsBuffer, ttsAudioContext, ttsQueuedChunks, () => {
+                        if (!ttsPlaying) playNextTtsChunk();
+                    });
+                }
+
+                // Finalize
+                practiceMessages.push({ role: 'assistant', content: fullReply });
+
+                // Add TTS play button to the message
+                const contentEl = msgEl.querySelector('.message-content');
+                if (contentEl && fullReply) {
+                    const playBtn = document.createElement('button');
+                    playBtn.className = 'chat-msg-tts-btn';
+                    playBtn.innerHTML = '▶';
+                    playBtn.title = 'Play this message';
+                    playBtn.style.cssText = 'background:none;border:1px solid var(--border);color:var(--text-muted);padding:2px 8px;border-radius:4px;cursor:pointer;font-size:12px;margin-left:8px;';
+                    playBtn.addEventListener('click', () => {
+                        playTtsForText(fullReply);
+                    });
+                    contentEl.appendChild(playBtn);
+                }
+
             } catch (e) {
                 typingIndicator.classList.remove('show');
                 showToast('Error: ' + e.message);
+            }
+        }
+
+        // Stream TTS audio for a text chunk
+        async function streamTtsAudio(text, audioCtx, queue, onReady) {
+            try {
+                const voice = practiceVoice ? practiceVoice.value : 'en-US-AriaNeural';
+                const rate = practiceSpeed ? practiceSpeed.value : '+0%';
+                const backendUrl = API_BASE_URL;
+
+                const response = await fetch(`${backendUrl}/tts/stream`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, engine: 'edge_tts', voice, rate })
+                });
+
+                if (!response.ok) return;
+
+                const reader = response.body.getReader();
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    queue.push(value.buffer);
+                }
+                if (onReady) onReady();
+            } catch (e) {
+                // Silent fail for TTS
+            }
+        }
+
+        // Play TTS for a complete text (used by play button)
+        async function playTtsForText(text) {
+            if (practiceAudio) {
+                practiceAudio.pause();
+                practiceAudio = null;
+            }
+            if (window.speechSynthesis) speechSynthesis.cancel();
+
+            const engine = practiceTtsEngine ? practiceTtsEngine.value : 'browser';
+
+            // Browser native: instant, no network
+            if (engine === 'browser' && window.speechSynthesis) {
+                const utterance = new SpeechSynthesisUtterance(text.substring(0, 5000));
+                const selVoice = practiceVoice ? practiceVoice.value : 'en-US-AriaNeural';
+                const langPrefix = selVoice.substring(0, 5);
+                const voices = speechSynthesis.getVoices();
+                const match = voices.find(v => v.lang.startsWith(langPrefix));
+                if (match) utterance.voice = match;
+                utterance.lang = langPrefix;
+                const rateVal = practiceSpeed ? practiceSpeed.value : '+0%';
+                utterance.rate = rateVal === '-20%' ? 0.8 : rateVal === '+20%' ? 1.2 : 1.0;
+                speechSynthesis.speak(utterance);
+                return;
+            }
+
+            // Edge-TTS
+            const voice = practiceVoice ? practiceVoice.value : 'en-US-AriaNeural';
+            const rate = practiceSpeed ? practiceSpeed.value : '+0%';
+            const backendUrl = API_BASE_URL;
+
+            try {
+                const response = await fetch(`${backendUrl}/tts/stream`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, engine: 'edge_tts', voice, rate })
+                });
+                if (!response.ok) {
+                    // Fallback to browser native
+                    if (window.speechSynthesis) {
+                        const u = new SpeechSynthesisUtterance(text.substring(0, 5000));
+                        u.lang = 'en-US';
+                        speechSynthesis.speak(u);
+                    }
+                    return;
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                practiceAudio = new Audio(url);
+                practiceAudio.play();
+            } catch (e) {
+                // Fallback to browser native
+                if (window.speechSynthesis) {
+                    const u = new SpeechSynthesisUtterance(text.substring(0, 5000));
+                    u.lang = 'en-US';
+                    speechSynthesis.speak(u);
+                }
             }
         }
 
@@ -5937,12 +6643,11 @@
                 return;
             }
 
-            // Check API key
-            const currentProvider = getProvider(apiConfig.model);
-            const key = apiConfig.apiKeys[currentProvider];
-            if (key && key.trim()) {
+            // Check API key — use getEffectiveConfig to respect layered config
+            const effective = getEffectiveConfig('practice');
+            if (effective.api_key && effective.api_key.trim()) {
                 practiceStatusDot.className = 'status-dot online';
-                practiceStatusText.textContent = `${apiConfig.model} — Ready`;
+                practiceStatusText.textContent = `${effective.model} — Ready`;
                 practiceStatusText.style.color = 'var(--success)';
             } else {
                 practiceStatusDot.className = 'status-dot';
@@ -6164,81 +6869,783 @@
         }
 
         async function startPracticeRecording() {
+            // Check for iFlytek credentials
+            const iflytekCfg = getIflytekConfig();
+            if (!iflytekCfg.appId || !iflytekCfg.apiKey || !iflytekCfg.apiSecret) {
+                showToast('Please configure iFlytek credentials in Settings first.');
+                openSettingsModal();
+                return;
+            }
+
             try {
                 mediaStream = await navigator.mediaDevices.getUserMedia({
                     audio: {
                         channelCount: 1,
                         echoCancellation: true,
-                        noiseSuppression: true
+                        noiseSuppression: true,
+                        sampleRate: 16000
                     }
                 });
 
-                audioContext = new AudioContext();
+                audioContext = new AudioContext({ sampleRate: 16000 });
                 const source = audioContext.createMediaStreamSource(mediaStream);
                 analyserNode = audioContext.createAnalyser();
                 analyserNode.fftSize = 2048;
                 source.connect(analyserNode);
 
-                recordedChunks = [];
-                mediaRecorder = new MediaRecorder(mediaStream);
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) recordedChunks.push(e.data);
-                };
-
                 recordingStartTime = Date.now();
-                mediaRecorder.start(100);
 
                 // Show waveform
                 waveformContainer.classList.add('active');
                 initWaveformCanvas();
                 drawWaveform();
 
+                // Show STT status
+                practiceSttStatus.classList.add('active');
+                practiceSttText.textContent = 'Connecting to ASR...';
+
                 // Update mic button
                 practiceMicBtn.classList.add('recording');
                 practiceMicBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
-                practiceInput.placeholder = 'Recording... click ⏹ to stop and analyze';
+                practiceInput.placeholder = 'Listening... click ⏹ to stop';
+
+                // Connect to iFlytek ASR via backend proxy
+                asrFinalText = '';
+                asrInterimText = '';
+                asrActive = true;
+
+                const backendUrl = API_BASE_URL;
+                const wsUrl = backendUrl.replace('http', 'ws') + `/ws/asr?app_id=${encodeURIComponent(iflytekCfg.appId)}&api_key=${encodeURIComponent(iflytekCfg.apiKey)}&api_secret=${encodeURIComponent(iflytekCfg.apiSecret)}`;
+
+                asrWebSocket = new WebSocket(wsUrl);
+
+                asrWebSocket.onopen = () => {
+                    practiceSttText.textContent = 'Listening...';
+                    // Start streaming PCM audio via ScriptProcessor
+                    asrScriptProcessor = audioContext.createScriptProcessor(4096, 1, 1);
+                    source.connect(asrScriptProcessor);
+                    asrScriptProcessor.connect(audioContext.destination);
+
+                    asrScriptProcessor.onaudioprocess = (e) => {
+                        if (!asrActive || asrWebSocket.readyState !== WebSocket.OPEN) return;
+                        const pcm = e.inputBuffer.getChannelData(0);
+                        // Convert float32 to int16
+                        const int16 = new Int16Array(pcm.length);
+                        for (let i = 0; i < pcm.length; i++) {
+                            const s = Math.max(-1, Math.min(1, pcm[i]));
+                            int16[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
+                        }
+                        asrWebSocket.send(int16.buffer);
+                    };
+                };
+
+                asrWebSocket.onmessage = (event) => {
+                    try {
+                        let result;
+                        if (typeof event.data === 'string') {
+                            result = JSON.parse(event.data);
+                        } else {
+                            return;
+                        }
+
+                        if (result.error) {
+                            practiceSttText.textContent = 'ASR Error: ' + result.error;
+                            return;
+                        }
+
+                        // Parse iFlytek result
+                        const data = result.data;
+                        if (data && data.result) {
+                            const wsResult = data.result;
+                            // wsResult is a JSON string of recognition results
+                            try {
+                                const parsed = JSON.parse(wsResult);
+                                const sn = parsed.sn; // sentence number
+                                const ls = parsed.ls; // last sentence?
+                                const pgs = parsed.pgs; // "apd" = append, "rpl" = replace
+                                const rg = parsed.rg; // range [start, end]
+                                const cw = parsed.cw; // Chinese word array
+
+                                // Build text from cw array
+                                let sentenceText = '';
+                                for (const w of cw) {
+                                    sentenceText += w.w;
+                                }
+
+                                if (pgs === 'rpl') {
+                                    // Replace previous interim with this result
+                                    asrInterimText = sentenceText;
+                                } else if (pgs === 'apd') {
+                                    // Append to final
+                                    asrFinalText = sentenceText;
+                                    asrInterimText = '';
+                                } else {
+                                    // Legacy format
+                                    if (ls) {
+                                        asrFinalText += sentenceText;
+                                        asrInterimText = '';
+                                    } else {
+                                        asrInterimText = sentenceText;
+                                    }
+                                }
+
+                                // Update UI in real-time
+                                practiceInput.value = asrFinalText + asrInterimText;
+                                practiceSttText.innerHTML = asrFinalText
+                                    ? `<span style="color:var(--text-primary)">${asrFinalText}</span><span style="color:var(--text-muted);opacity:0.6">${asrInterimText}</span>`
+                                    : `<span style="color:var(--text-muted);opacity:0.6">${asrInterimText}</span>`;
+
+                            } catch (e) {
+                                // Might be raw text
+                                if (typeof wsResult === 'string') {
+                                    asrInterimText = wsResult;
+                                    practiceSttText.textContent = wsResult;
+                                }
+                            }
+                        }
+
+                        // Handle action result
+                        if (result.action === 'result' && result.data) {
+                            const resultData = result.data;
+                            if (typeof resultData === 'string') {
+                                try {
+                                    const parsed = JSON.parse(resultData);
+                                    const cw = parsed.cw || [];
+                                    let text = cw.map(w => w.w).join('');
+                                    if (parsed.ls) {
+                                        asrFinalText += text;
+                                        asrInterimText = '';
+                                    } else {
+                                        asrInterimText = text;
+                                    }
+                                } catch (e) {
+                                    asrInterimText = resultData;
+                                }
+                                practiceInput.value = asrFinalText + asrInterimText;
+                            }
+                        }
+                    } catch (e) {
+                        // Ignore parse errors
+                    }
+                };
+
+                asrWebSocket.onerror = () => {
+                    practiceSttText.textContent = 'ASR connection error. Falling back to Web Speech API...';
+                    stopAsrAndFallbackToWebSpeech();
+                };
+
+                asrWebSocket.onclose = () => {
+                    asrActive = false;
+                };
 
             } catch (e) {
                 showToast('Microphone access denied: ' + e.message);
             }
         }
 
+        function stopAsrAndFallbackToWebSpeech() {
+            // Clean up ASR
+            if (asrScriptProcessor) {
+                asrScriptProcessor.disconnect();
+                asrScriptProcessor = null;
+            }
+            if (asrWebSocket) {
+                asrWebSocket.close();
+                asrWebSocket = null;
+            }
+            asrActive = false;
+        }
+
         async function stopPracticeRecordingAndAnalyze() {
+            const recognizedText = asrFinalText + asrInterimText;
+
+            // Stop ASR
+            asrActive = false;
+            if (asrScriptProcessor) {
+                asrScriptProcessor.disconnect();
+                asrScriptProcessor = null;
+            }
+            if (asrWebSocket && asrWebSocket.readyState === WebSocket.OPEN) {
+                asrWebSocket.close();
+            }
+            asrWebSocket = null;
+
             // Stop waveform
             if (waveformAnimId) cancelAnimationFrame(waveformAnimId);
             waveformContainer.classList.remove('active');
+
+            // Hide STT status
+            practiceSttStatus.classList.remove('active');
 
             // Reset mic button
             practiceMicBtn.classList.remove('recording');
             practiceMicBtn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
             practiceInput.placeholder = 'Type your response or press the mic to speak...';
 
-            if (!mediaRecorder || mediaRecorder.state === 'inactive') return;
+            // Clean up audio
+            if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+            if (audioContext) { audioContext.close(); audioContext = null; }
+            analyserNode = null;
 
+            // If we got text from ASR, send it as a message
+            if (recognizedText.trim()) {
+                practiceInput.value = recognizedText.trim();
+                await sendPracticeMessage(recognizedText.trim());
+                practiceInput.value = '';
+            }
+        }
+
+        function getIflytekConfig() {
+            return {
+                appId: localStorage.getItem('iflytek_app_id') || '',
+                apiKey: localStorage.getItem('iflytek_api_key') || '',
+                apiSecret: localStorage.getItem('iflytek_api_secret') || ''
+            };
+        }
+
+        // ==========================================
+        // Voice Call — Real-time Phone-like Conversation
+        // ==========================================
+
+        function setVoiceCallState(state) {
+            voiceCallState = state;
+            const sttEl = practiceSttStatus;
+            const sttText = practiceSttText;
+            const btn = practiceMicBtn;
+
+            // Reset all state classes
+            sttEl.classList.remove('stt-listening', 'stt-thinking', 'stt-speaking');
+            btn.classList.remove('recording', 'voice-call-listening', 'voice-call-thinking', 'voice-call-speaking');
+
+            switch (state) {
+                case 'listening':
+                    sttEl.classList.add('show', 'stt-listening');
+                    sttText.textContent = voiceCallInterim || 'Listening...';
+                    btn.classList.add('voice-call-listening');
+                    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>';
+                    practiceInput.placeholder = 'Listening... speak now';
+                    break;
+                case 'processing':
+                    sttEl.classList.add('show', 'stt-thinking');
+                    sttText.textContent = 'Thinking...';
+                    btn.classList.add('voice-call-thinking');
+                    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="animation:spin 1s linear infinite"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="31" stroke-dashoffset="10"/></svg>';
+                    practiceInput.placeholder = 'AI is thinking...';
+                    break;
+                case 'speaking':
+                    sttEl.classList.add('show', 'stt-speaking');
+                    sttText.textContent = 'Speaking...';
+                    btn.classList.add('voice-call-speaking');
+                    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>';
+                    practiceInput.placeholder = 'AI is speaking... (talk to interrupt)';
+                    break;
+                case 'idle':
+                default:
+                    sttEl.classList.remove('show');
+                    sttText.textContent = '';
+                    practiceInput.placeholder = 'Type your response or press the mic to speak...';
+                    btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>';
+                    break;
+            }
+        }
+
+        function hasWebSpeechAPI() {
+            return !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+        }
+
+        async function startVoiceCall() {
+            if (!hasWebSpeechAPI()) {
+                showToast('Web Speech API not supported. Please use Chrome or Edge.');
+                return;
+            }
+            if (!practiceActive) {
+                showToast('Please start a practice session first.');
+                return;
+            }
+            voiceCallActive = true;
+            voiceCallText = '';
+            voiceCallInterim = '';
+            setVoiceCallState('listening');
+
+            // Init Silero VAD for main voice detection (once)
+            try {
+                if (!sileroVad) {
+                    sileroVad = await vad.MicVAD.new({
+                        positiveSpeechThreshold: 0.5,
+                        negativeSpeechThreshold: 0.25,
+                        redemptionMs: 600,
+                        minSpeechMs: 300,
+                        preSpeechPadMs: 300,
+                        onSpeechStart: () => {
+                            // If AI is speaking, check for barge-in
+                            if (voiceCallState === 'speaking' && voiceCallActive) {
+                                if (Date.now() - speakingStartedAt < BARGE_IN_GRACE_MS) return;
+                                handleBargeIn();
+                            }
+                        },
+                        onSpeechEnd: (audio) => {
+                            // Auto-send when speech ends during listening
+                            if (voiceCallState !== 'listening' || !voiceCallActive) return;
+                            const text = (voiceCallText + voiceCallInterim).trim();
+                            if (text) {
+                                voiceCallAutoSend(text);
+                            }
+                        },
+                        onnxWASMBasePath: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/",
+                        baseAssetPath: "https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.29/dist/",
+                    });
+                }
+                sileroVad.setOptions({ positiveSpeechThreshold: 0.5 });
+            } catch (e) {
+                console.warn('Silero VAD init failed, using Web Speech API only:', e);
+            }
+
+            startVoiceListening();
+        }
+
+        function stopVoiceCall() {
+            voiceCallActive = false;
+            stopVoiceListening();
+            stopVoiceTts();
+            stopBargeInDetection();
+            setVoiceCallState('idle');
+        }
+
+        function startVoiceListening() {
+            if (voiceRecognition) {
+                try { voiceRecognition.stop(); } catch (e) {}
+            }
+
+            voiceCallText = '';
+            voiceCallInterim = '';
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            voiceRecognition = new SpeechRecognition();
+            voiceRecognition.continuous = true;
+            voiceRecognition.interimResults = true;
+            voiceRecognition.lang = 'en-US';
+            voiceRecognition.maxAlternatives = 1;
+
+            voiceRecognition.onresult = (event) => {
+                let interim = '';
+                let final = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        final += transcript;
+                    } else {
+                        interim += transcript;
+                    }
+                }
+                if (final) voiceCallText += final;
+                voiceCallInterim = interim;
+                const display = voiceCallText + interim;
+                practiceInput.value = display;
+                practiceSttText.textContent = display || 'Listening...';
+            };
+
+            voiceRecognition.onerror = (event) => {
+                if (event.error === 'no-speech' || event.error === 'aborted') return;
+                if (voiceCallActive && voiceCallState === 'listening') {
+                    // Retry
+                    setTimeout(() => {
+                        if (voiceCallActive && voiceCallState === 'listening') startVoiceListening();
+                    }, 500);
+                }
+            };
+
+            voiceRecognition.onend = () => {
+                if (voiceCallActive && voiceCallState === 'listening') {
+                    const text = (voiceCallText + voiceCallInterim).trim();
+                    if (text && !sileroVad) {
+                        // No Silero VAD: use Web Speech API onend to auto-send
+                        voiceCallAutoSend(text);
+                    } else {
+                        // Restart recognition (Silero VAD handles auto-send via onSpeechEnd)
+                        try { voiceRecognition.start(); } catch (e) {
+                            setTimeout(() => {
+                                if (voiceCallActive && voiceCallState === 'listening') startVoiceListening();
+                            }, 200);
+                        }
+                    }
+                }
+            };
+
+            try {
+                voiceRecognition.start();
+            } catch (e) {
+                showToast('Failed to start voice recognition: ' + e.message);
+            }
+        }
+
+        function stopVoiceListening() {
+            if (voiceRecognition) {
+                try { voiceRecognition.stop(); } catch (e) {}
+                voiceRecognition = null;
+            }
+        }
+
+        async function voiceCallAutoSend(text) {
+            if (!voiceCallActive) return;
+            stopVoiceListening();
+            setVoiceCallState('processing');
+            practiceInput.value = '';
+
+            // Reuse existing sendPracticeMessage but with callback
+            await voiceCallSendAndSpeak(text);
+        }
+
+        async function voiceCallSendAndSpeak(text) {
+            if (!text.trim() || !voiceCallActive) return;
+
+            practiceMessages.push({ role: 'user', content: text });
+            addChatMessage('user', text);
+
+            const effectiveConfig = getEffectiveConfig('practice');
+            if (!effectiveConfig.api_key || !effectiveConfig.api_key.trim()) {
+                showToast('Please configure your API key first.');
+                stopVoiceCall();
+                return;
+            }
+
+            const apiConfigData = { api_key: effectiveConfig.api_key, model: effectiveConfig.model };
+            if (effectiveConfig.api_url) apiConfigData.api_url = effectiveConfig.api_url;
+            if (apiConfig.customModel) apiConfigData.custom_model = apiConfig.customModel;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/practice/chat/stream`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ messages: practiceMessages, api_config: apiConfigData, part: currentPart })
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({ detail: 'Unknown error' }));
+                    throw new Error(err.detail || 'API error');
+                }
+
+                const msgEl = addChatMessage('assistant', '', true);
+                let fullReply = '';
+                let ttsBuffer = '';
+
+                const ttsEngine = practiceTtsEngine ? practiceTtsEngine.value : 'browser';
+                const isBrowserTts = ttsEngine === 'browser' && window.speechSynthesis;
+
+                // Prepare TTS engine
+                voiceTtsQueue = [];
+                voiceTtsPlaying = false;
+                if (!isBrowserTts) {
+                    if (!voiceTtsAudioCtx || voiceTtsAudioCtx.state === 'closed') {
+                        voiceTtsAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    }
+                }
+
+                setVoiceCallState('speaking');
+                speakingStartedAt = Date.now();
+
+                // Start barge-in detection (Silero VAD with echo grace)
+                startBargeInDetection();
+
+                // Edge-TTS only: seamless playback scheduler
+                let streamNextTime, streamSources;
+                if (!isBrowserTts && voiceTtsAudioCtx) {
+                    streamNextTime = voiceTtsAudioCtx.currentTime + 0.05;
+                    streamSources = [];
+                }
+
+                function playNextVoiceTts() {
+                    if (!voiceCallActive) return;
+                    if (voiceTtsQueue.length === 0) {
+                        voiceTtsPlaying = false;
+                        return;
+                    }
+                    voiceTtsPlaying = true;
+                    const chunk = voiceTtsQueue.shift();
+                    voiceTtsAudioCtx.decodeAudioData(chunk.slice(0), (buffer) => {
+                        const source = voiceTtsAudioCtx.createBufferSource();
+                        source.buffer = buffer;
+                        source.connect(voiceTtsAudioCtx.destination);
+
+                        const startAt = Math.max(streamNextTime, voiceTtsAudioCtx.currentTime);
+                        source.start(startAt);
+                        streamNextTime = startAt + buffer.duration;
+
+                        streamSources.push(source);
+                        voiceTtsSource = source;
+
+                        source.onended = () => {
+                            const idx = streamSources.indexOf(source);
+                            if (idx !== -1) streamSources.splice(idx, 1);
+                            playNextVoiceTts();
+                        };
+                    }, () => playNextVoiceTts());
+                }
+
+                // Read SSE stream
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let sseBuffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    sseBuffer += decoder.decode(value, { stream: true });
+                    const lines = sseBuffer.split('\n');
+                    sseBuffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ')) continue;
+                        const payload = line.slice(6);
+                        if (payload.trim() === '[DONE]') continue;
+
+                        try {
+                            const chunk = JSON.parse(payload);
+                            if (chunk.error) {
+                                showToast('Stream error: ' + chunk.error);
+                                continue;
+                            }
+                            if (chunk.text) {
+                                fullReply += chunk.text;
+                                const contentEl = msgEl.querySelector('.message-content');
+                                if (contentEl) contentEl.textContent = fullReply;
+                                chatArea.scrollTop = chatArea.scrollHeight;
+
+                                // Stream TTS sentence by sentence
+                                ttsBuffer += chunk.text;
+                                const sentenceEnd = ttsBuffer.search(/[.!?]\s/);
+                                if (sentenceEnd !== -1 || ttsBuffer.length > 80) {
+                                    const toSpeak = ttsBuffer.substring(0, sentenceEnd !== -1 ? sentenceEnd + 2 : ttsBuffer.length);
+                                    ttsBuffer = ttsBuffer.substring(toSpeak.length);
+                                    voiceStreamTtsChunk(toSpeak, () => {
+                                        if (!voiceTtsPlaying) playNextVoiceTts();
+                                    });
+                                }
+                            }
+                        } catch (e) {}
+                    }
+                }
+
+                // Flush remaining TTS
+                if (ttsBuffer.trim()) {
+                    voiceStreamTtsChunk(ttsBuffer, () => {
+                        if (!voiceTtsPlaying) playNextVoiceTts();
+                    });
+                }
+
+                // Wait for TTS to finish, then auto-restart listening
+                practiceMessages.push({ role: 'assistant', content: fullReply });
+                const contentEl = msgEl.querySelector('.message-content');
+                if (contentEl && fullReply) {
+                    const playBtn = document.createElement('button');
+                    playBtn.className = 'chat-msg-tts-btn';
+                    playBtn.innerHTML = '▶';
+                    playBtn.title = 'Play this message';
+                    playBtn.style.cssText = 'background:none;border:1px solid var(--border);color:var(--text-muted);padding:2px 8px;border-radius:4px;cursor:pointer;font-size:12px;margin-left:8px;';
+                    playBtn.addEventListener('click', () => playTtsForText(fullReply));
+                    contentEl.appendChild(playBtn);
+                }
+
+                // Wait for all TTS to finish
+                await waitForVoiceTtsFinish();
+
+                if (voiceCallActive) {
+                    stopBargeInDetection();
+                    setVoiceCallState('listening');
+                    startVoiceListening();
+                }
+
+            } catch (e) {
+                showToast('Error: ' + e.message);
+                if (voiceCallActive) {
+                    stopBargeInDetection();
+                    setVoiceCallState('listening');
+                    startVoiceListening();
+                }
+            }
+        }
+
+        // Browser-native TTS state
+        let browserTtsUtterance = null;
+
+        async function voiceStreamTtsChunk(text, onReady) {
+            const engine = practiceTtsEngine ? practiceTtsEngine.value : 'browser';
+            try {
+                if (engine === 'browser' && window.speechSynthesis) {
+                    // Browser-native TTS: zero latency, instant playback
+                    browserTtsUtterance = new SpeechSynthesisUtterance(text);
+                    // Match voice selection to browser voices
+                    const selVoice = practiceVoice ? practiceVoice.value : 'en-US-AriaNeural';
+                    const langPrefix = selVoice.substring(0, 5); // e.g. 'en-GB'
+                    const voices = speechSynthesis.getVoices();
+                    const match = voices.find(v => v.lang.startsWith(langPrefix) && v.localService);
+                    if (match) browserTtsUtterance.voice = match;
+                    browserTtsUtterance.lang = langPrefix;
+                    // Speed
+                    const rateVal = practiceSpeed ? practiceSpeed.value : '+0%';
+                    browserTtsUtterance.rate = rateVal === '-20%' ? 0.8 : rateVal === '+20%' ? 1.2 : 1.0;
+                    browserTtsUtterance.onend = () => {
+                        browserTtsUtterance = null;
+                    };
+                    speechSynthesis.speak(browserTtsUtterance);
+                    if (onReady) onReady();
+                } else {
+                    // Edge-TTS: high quality but slower (HTTP round-trip)
+                    const voice = practiceVoice ? practiceVoice.value : 'en-US-AriaNeural';
+                    const rate = practiceSpeed ? practiceSpeed.value : '+0%';
+                    const backendUrl = API_BASE_URL;
+                    const response = await fetch(`${backendUrl}/tts/stream`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text, engine: 'edge_tts', voice, rate })
+                    });
+                    if (!response.ok) return;
+                    const reader = response.body.getReader();
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        voiceTtsQueue.push(value.buffer);
+                    }
+                    if (onReady) onReady();
+                }
+            } catch (e) {
+                console.warn('TTS chunk error:', e);
+            }
+        }
+
+        function stopVoiceTts() {
+            // Stop browser-native TTS
+            if (window.speechSynthesis) {
+                speechSynthesis.cancel();
+            }
+            browserTtsUtterance = null;
+            // Stop all scheduled audio sources
+            if (typeof streamSources !== 'undefined' && streamSources) {
+                for (const src of streamSources) {
+                    try { src.stop(); } catch (e) {}
+                }
+                streamSources = [];
+            }
+            if (voiceTtsSource) {
+                try { voiceTtsSource.stop(); } catch (e) {}
+                voiceTtsSource = null;
+            }
+            voiceTtsQueue = [];
+            voiceTtsPlaying = false;
+        }
+
+        function waitForVoiceTtsFinish() {
+            const isBrowserTts = practiceTtsEngine && practiceTtsEngine.value === 'browser' && window.speechSynthesis;
             return new Promise((resolve) => {
-                mediaRecorder.onstop = async () => {
-                    const blob = new Blob(recordedChunks, { type: 'audio/webm' });
-
-                    // Convert to WAV
-                    const arrayBuffer = await blob.arrayBuffer();
-                    const tempCtx = new AudioContext();
-                    const audioBuffer = await tempCtx.decodeAudioData(arrayBuffer);
-                    const wavBlob = await audioBufferToWav(audioBuffer);
-                    tempCtx.close();
-
-                    lastRecordedWav = wavBlob;
-
-                    // Clean up
-                    if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
-                    if (audioContext) { audioContext.close(); audioContext = null; }
-                    analyserNode = null;
-
-                    // Upload and analyze
-                    await analyzeRecording(wavBlob);
-                    resolve();
+                const check = () => {
+                    if (!voiceCallActive) { resolve(); return; }
+                    if (isBrowserTts) {
+                        if (!speechSynthesis.speaking) resolve();
+                        else setTimeout(check, 200);
+                    } else {
+                        if (voiceTtsQueue.length === 0 && !voiceTtsPlaying) resolve();
+                        else setTimeout(check, 200);
+                    }
                 };
-                mediaRecorder.stop();
+                check();
             });
+        }
+
+        // Barge-in: Silero VAD detects user speaking during TTS playback
+        async function startBargeInDetection() {
+            stopBargeInDetection();
+            try {
+                // Init Silero VAD if not already
+                if (!sileroVad) {
+                    sileroVad = await vad.MicVAD.new({
+                        positiveSpeechThreshold: 0.6,
+                        negativeSpeechThreshold: 0.3,
+                        redemptionMs: 400,
+                        minSpeechMs: 200,
+                        preSpeechPadMs: 200,
+                        onSpeechStart: () => {
+                            if (voiceCallState !== 'speaking' || !voiceCallActive) return;
+                            // Echo grace period: ignore VAD triggers right after TTS starts
+                            if (Date.now() - speakingStartedAt < BARGE_IN_GRACE_MS) return;
+                            handleBargeIn();
+                        },
+                        onSpeechEnd: () => {},
+                        onnxWASMBasePath: "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.22.0/dist/",
+                        baseAssetPath: "https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.29/dist/",
+                    });
+                }
+                // Raise threshold during speaking to reduce echo false triggers
+                sileroVad.setOptions({ positiveSpeechThreshold: 0.85 });
+                speakingStartedAt = Date.now();
+                await sileroVad.start();
+            } catch (e) {
+                console.warn('Silero VAD barge-in fallback to volume threshold:', e);
+                startBargeInDetectionFallback();
+            }
+        }
+
+        // Fallback: volume-threshold barge-in (if Silero VAD fails to load)
+        function startBargeInDetectionFallback() {
+            stopBargeInDetection();
+            navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } })
+                .then(stream => {
+                    voiceBargeInStream = stream;
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const source = ctx.createMediaStreamSource(stream);
+                    voiceBargeInAnalyser = ctx.createAnalyser();
+                    voiceBargeInAnalyser.fftSize = 512;
+                    source.connect(voiceBargeInAnalyser);
+
+                    let speakingFrames = 0;
+                    const threshold = 8;
+
+                    voiceBargeInInterval = setInterval(() => {
+                        if (voiceCallState !== 'speaking' || !voiceCallActive) {
+                            stopBargeInDetection();
+                            return;
+                        }
+                        if (Date.now() - speakingStartedAt < BARGE_IN_GRACE_MS) return;
+
+                        const data = new Uint8Array(voiceBargeInAnalyser.frequencyBinCount);
+                        voiceBargeInAnalyser.getByteFrequencyData(data);
+                        const avg = data.reduce((a, b) => a + b, 0) / data.length;
+
+                        if (avg > 30) {
+                            speakingFrames++;
+                            if (speakingFrames >= threshold) {
+                                speakingFrames = 0;
+                                handleBargeIn();
+                            }
+                        } else {
+                            speakingFrames = 0;
+                        }
+                    }, 100);
+                })
+                .catch(() => {});
+        }
+
+        function stopBargeInDetection() {
+            if (sileroVad) {
+                try { sileroVad.pause(); } catch (e) {}
+            }
+            if (voiceBargeInInterval) {
+                clearInterval(voiceBargeInInterval);
+                voiceBargeInInterval = null;
+            }
+            if (voiceBargeInStream) {
+                voiceBargeInStream.getTracks().forEach(t => t.stop());
+                voiceBargeInStream = null;
+            }
+        }
+
+        function handleBargeIn() {
+            // Stop TTS immediately
+            stopVoiceTts();
+            stopBargeInDetection();
+            // Switch to listening
+            setVoiceCallState('listening');
+            voiceCallText = '';
+            voiceCallInterim = '';
+            startVoiceListening();
         }
 
         async function analyzeRecording(wavBlob) {
@@ -6457,6 +7864,18 @@
             feedbackTtsBtn.classList.add('playing');
             feedbackTtsBtn.innerHTML = '⏹ Stop';
 
+            // Browser TTS — 直接本地播放
+            if (ttsConfig.engine === 'browser') {
+                const utterance = new SpeechSynthesisUtterance(text.substring(0, 2000));
+                utterance.lang = 'en-US';
+                utterance.rate = getTtsRate();
+                utterance.onend = () => { feedbackTtsBtn.classList.remove('playing'); feedbackTtsBtn.innerHTML = '▶ Listen'; };
+                utterance.onerror = () => { feedbackTtsBtn.classList.remove('playing'); feedbackTtsBtn.innerHTML = '▶ Listen'; };
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
+                return;
+            }
+
             try {
                 const response = await fetch(`${API_BASE_URL}/tts/speak`, {
                     method: 'POST',
@@ -6465,13 +7884,23 @@
                         text: text.substring(0, 2000),
                         engine: ttsConfig.engine,
                         voice: ttsConfig.voice,
-                        rate: practiceSpeed.value,
+                        rate: ttsConfig.rate,
                         elevenlabs_api_key: ttsConfig.elevenlabs_api_key || undefined,
                         doubao_app_id: ttsConfig.doubao_app_id || undefined,
                         doubao_access_token: ttsConfig.doubao_access_token || undefined,
                     })
                 });
-                if (!response.ok) throw new Error('TTS failed');
+                if (!response.ok) {
+                    // 降级到 Browser TTS
+                    const utterance = new SpeechSynthesisUtterance(text.substring(0, 2000));
+                    utterance.lang = 'en-US';
+                    utterance.rate = getTtsRate();
+                    utterance.onend = () => { feedbackTtsBtn.classList.remove('playing'); feedbackTtsBtn.innerHTML = '▶ Listen'; };
+                    utterance.onerror = () => { feedbackTtsBtn.classList.remove('playing'); feedbackTtsBtn.innerHTML = '▶ Listen'; };
+                    speechSynthesis.cancel();
+                    speechSynthesis.speak(utterance);
+                    return;
+                }
                 const blob = await response.blob();
                 const url = URL.createObjectURL(blob);
                 feedbackAudio = new Audio(url);
@@ -6483,20 +7912,30 @@
                 };
                 feedbackAudio.play();
             } catch (e) {
-                showToast('TTS: ' + e.message);
-                feedbackTtsBtn.classList.remove('playing');
-                feedbackTtsBtn.innerHTML = '▶ Listen';
+                // 降级到 Browser TTS
+                const utterance = new SpeechSynthesisUtterance(text.substring(0, 2000));
+                utterance.lang = 'en-US';
+                utterance.rate = getTtsRate();
+                utterance.onend = () => { feedbackTtsBtn.classList.remove('playing'); feedbackTtsBtn.innerHTML = '▶ Listen'; };
+                utterance.onerror = () => { feedbackTtsBtn.classList.remove('playing'); feedbackTtsBtn.innerHTML = '▶ Listen'; };
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
             }
         });
 
         // Mic button handler
         practiceMicBtn.addEventListener('click', async () => {
+            if (voiceCallActive) {
+                // End voice call
+                stopVoiceCall();
+                return;
+            }
             if (isPracticeRecording) {
                 isPracticeRecording = false;
                 await stopPracticeRecordingAndAnalyze();
             } else {
-                isPracticeRecording = true;
-                await startPracticeRecording();
+                // Start voice call (new mode)
+                await startVoiceCall();
             }
         });
 
@@ -6728,18 +8167,22 @@
         });
 
         // ==========================================
-        // Chatroom Quick Config: Model + TTS
+        // Chatroom Quick Config: TTS only
         // ==========================================
-        const quickModelSelect = document.getElementById('quickChatroomModel');
         const quickTTSSelect = document.getElementById('quickChatroomTTS');
         const quickVoiceSelect = document.getElementById('quickChatroomVoice');
         const quickSpeedSelect = document.getElementById('quickChatroomSpeed');
 
-        // Initialize from current layered/global config
+        // Initialize TTS config — default doubao for ChatRoom
         function initQuickChatroomConfig() {
-            const effective = getEffectiveConfig('chatroom');
-            quickModelSelect.value = effective.model || apiConfig.model || 'deepseek-chat';
-            quickTTSSelect.value = ttsConfig.engine || 'edge_tts';
+            const savedEngine = ttsConfig.engine;
+            if (savedEngine === 'doubao' || savedEngine === 'browser') {
+                quickTTSSelect.value = savedEngine;
+            } else {
+                quickTTSSelect.value = 'doubao';
+                ttsConfig.engine = 'doubao';
+                saveTTSConfig();
+            }
             quickSpeedSelect.value = ttsConfig.rate || '+0%';
             updateQuickVoiceOptions();
         }
@@ -6767,16 +8210,6 @@
             }
         }
 
-        // When model changes → update layered config silently
-        quickModelSelect.addEventListener('change', () => {
-            const model = quickModelSelect.value;
-            layeredConfig.chatroom.model = model;
-            // Don't override API key — let it fall back to global
-            layeredConfig.chatroom.apiKey = null;
-            saveLayeredConfig();
-            updateLayeredBar('chatroom');
-        });
-
         // When TTS engine changes → sync to global ttsConfig & update voices
         quickTTSSelect.addEventListener('change', () => {
             ttsConfig.engine = quickTTSSelect.value;
@@ -6799,7 +8232,48 @@
         // Initialize after TTS voices are loaded
         loadTTSVoices().then(() => initQuickChatroomConfig());
 
-        // Start discussion
+        // Doubao config panel
+        const doubaoConfigBtn = document.getElementById('doubaoConfigBtn');
+        const doubaoConfigPanel = document.getElementById('doubaoConfigPanel');
+        const doubaoAppIdInput = document.getElementById('doubaoAppIdInput');
+        const doubaoTokenInput = document.getElementById('doubaoTokenInput');
+        const doubaoConfigSave = document.getElementById('doubaoConfigSave');
+
+        if (doubaoConfigBtn) {
+            // Show config status
+            const updateDoubaoBtn = () => {
+                if (ttsConfig.doubao_app_id && ttsConfig.doubao_access_token) {
+                    doubaoConfigBtn.textContent = '豆包 ✓';
+                    doubaoConfigBtn.style.color = '#4caf50';
+                    doubaoConfigBtn.style.borderColor = '#4caf50';
+                } else {
+                    doubaoConfigBtn.textContent = '豆包 Key';
+                    doubaoConfigBtn.style.color = 'var(--text-secondary)';
+                    doubaoConfigBtn.style.borderColor = 'var(--border)';
+                }
+            };
+            updateDoubaoBtn();
+
+            doubaoConfigBtn.addEventListener('click', () => {
+                const visible = doubaoConfigPanel.style.display !== 'none';
+                doubaoConfigPanel.style.display = visible ? 'none' : 'flex';
+                if (!visible) {
+                    doubaoAppIdInput.value = ttsConfig.doubao_app_id || '';
+                    doubaoTokenInput.value = ttsConfig.doubao_access_token || '';
+                }
+            });
+
+            doubaoConfigSave.addEventListener('click', () => {
+                ttsConfig.doubao_app_id = doubaoAppIdInput.value.trim();
+                ttsConfig.doubao_access_token = doubaoTokenInput.value.trim();
+                saveTTSConfig();
+                doubaoConfigPanel.style.display = 'none';
+                updateDoubaoBtn();
+                showToast('豆包 TTS 配置已保存');
+            });
+        }
+
+        // Start discussion - SSE streaming
         chatroomStartBtn.addEventListener('click', async () => {
             if (chatroomBusy) return;
             const topic = chatroomTopic.value.trim();
@@ -6819,7 +8293,7 @@
             judgeSummary.style.display = 'none';
             followupBar.style.display = 'none';
             chatroomStartBtn.disabled = true;
-            chatroomStartBtn.textContent = 'Discussing...';
+            chatroomStartBtn.textContent = 'Discussing (streaming)...';
 
             try {
                 // Show loading for each expert
@@ -6827,7 +8301,7 @@
                     addChatroomLoadingMsg(ex.name, i);
                 });
 
-                const response = await fetch(`${API_BASE_URL}/chatroom/discuss`, {
+                const response = await fetch(`${API_BASE_URL}/chatroom/discuss/stream`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -6849,45 +8323,68 @@
                     throw new Error(err.detail || 'Discussion failed');
                 }
 
-                const data = await response.json();
-
-                // Clear loading messages
+                // Clear loading messages, replace as experts arrive
                 clearChatArea();
+                const dualTrumpPresent = false;
 
-                // Render each expert message
-                const dualTrumpPresent = data.responses.some(r => r.dual_trump);
-                if (dualTrumpPresent) {
-                    const flash = document.createElement('div');
-                    flash.className = 'dual-trump-clash-effect';
-                    document.body.appendChild(flash);
-                    setTimeout(() => flash.remove(), 1000);
-                }
-                data.responses.forEach((r, i) => {
-                    if (r.trump_hijack) {
-                        renderTrumpHijackMessage(r.name, r.original_expert, r.en_text, r.zh_text, r.trump_variant);
-                    } else {
-                        const colorIdx = chatroomExperts.findIndex(ex => ex.name === r.name);
-                        renderExpertMessage(r.name, r.en_text, r.zh_text, colorIdx >= 0 ? colorIdx : i);
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (!line.startsWith('data: ')) continue;
+                        try {
+                            const event = JSON.parse(line.slice(6));
+
+                            if (event.type === 'expert') {
+                                // Remove loading msg for this expert if exists
+                                const loadingEl = document.querySelector(`.chat-msg-loading[data-idx="${event.idx}"]`);
+                                if (loadingEl) loadingEl.remove();
+
+                                if (event.dual_trump && !document.querySelector('.dual-trump-clash-effect')) {
+                                    const flash = document.createElement('div');
+                                    flash.className = 'dual-trump-clash-effect';
+                                    document.body.appendChild(flash);
+                                    setTimeout(() => flash.remove(), 1000);
+                                }
+
+                                if (event.trump_hijack) {
+                                    renderTrumpHijackMessage(event.name, event.original_expert, event.en_text, event.zh_text, event.trump_variant);
+                                } else {
+                                    const colorIdx = chatroomExperts.findIndex(ex => ex.name === event.name);
+                                    renderExpertMessage(event.name, event.en_text, event.zh_text, colorIdx >= 0 ? colorIdx : event.idx);
+                                }
+                                chatroomDiscussion.push(event);
+                                chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
+
+                            } else if (event.type === 'judge') {
+                                const trumpMode = event.dual_trump_present ? 'dual'
+                                                : event.trump_present ? 'trump'
+                                                : null;
+                                showJudgeSummary(event.en_text, event.zh_text, trumpMode);
+                                chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
+
+                            } else if (event.type === 'error') {
+                                showToast('Error: ' + event.message);
+
+                            } else if (event.type === 'done') {
+                                // Discussion complete
+                                updateFollowupTargets();
+                                followupBar.style.display = 'flex';
+                                chatroomControls.classList.add('collapsed');
+                                chatroomCollapseBtn.style.display = 'inline-flex';
+                            }
+                        } catch (parseErr) { /* skip invalid JSON */ }
                     }
-                    chatroomDiscussion.push(r);
-                });
-
-                // Render judge summary
-                if (data.judge_summary && data.judge_summary.en_text) {
-                    const trumpMode = data.dual_trump_present ? 'dual'
-                                    : data.trump_present ? 'trump'
-                                    : null;
-                    showJudgeSummary(data.judge_summary.en_text, data.judge_summary.zh_text, trumpMode);
                 }
-
-                // Show followup bar
-                updateFollowupTargets();
-                followupBar.style.display = 'flex';
-                chatroomChatArea.scrollTop = chatroomChatArea.scrollHeight;
-
-                // Collapse controls after discussion starts
-                chatroomControls.classList.add('collapsed');
-                chatroomCollapseBtn.style.display = 'inline-flex';
 
             } catch (e) {
                 clearChatArea();
@@ -6940,6 +8437,89 @@
             chatroomChatArea.appendChild(msg);
         }
 
+        // ChatRoom TTS: doubao first, fallback to browser
+        async function playChatroomTTS(text, btnElement) {
+            if (!text.trim()) return;
+            speechSynthesis.cancel();
+
+            const engine = quickTTSSelect ? quickTTSSelect.value : 'doubao';
+
+            // Try doubao backend TTS
+            if (engine === 'doubao' && ttsConfig.doubao_app_id && ttsConfig.doubao_access_token) {
+                if (btnElement) {
+                    btnElement.textContent = '\u23F3';
+                    btnElement.classList.add('loading');
+                    btnElement.classList.remove('playing');
+                }
+                try {
+                    const resp = await fetch(`${API_BASE_URL}/tts/speak`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            text: text.substring(0, 2000),
+                            engine: 'doubao',
+                            voice: quickVoiceSelect ? quickVoiceSelect.value : 'BV700_V2_streaming',
+                            rate: ttsConfig.rate || '+0%',
+                            doubao_app_id: ttsConfig.doubao_app_id,
+                            doubao_access_token: ttsConfig.doubao_access_token,
+                        })
+                    });
+                    if (resp.ok) {
+                        const blob = await resp.blob();
+                        const url = URL.createObjectURL(blob);
+                        const audio = new Audio(url);
+                        if (btnElement) {
+                            btnElement.textContent = '\u23F8';
+                            btnElement.classList.remove('loading');
+                            btnElement.classList.add('playing');
+                        }
+                        audio.onended = () => {
+                            URL.revokeObjectURL(url);
+                            if (btnElement) {
+                                btnElement.textContent = '\u25B6';
+                                btnElement.classList.remove('playing');
+                            }
+                        };
+                        audio.onerror = () => {
+                            URL.revokeObjectURL(url);
+                            _browserTTSFallback(text, btnElement);
+                        };
+                        await audio.play();
+                        return;
+                    }
+                } catch (e) {
+                    // fallback below
+                }
+            }
+
+            // Fallback: browser TTS
+            _browserTTSFallback(text, btnElement);
+        }
+
+        function _browserTTSFallback(text, btnElement) {
+            if (btnElement) {
+                btnElement.textContent = '\u23F8';
+                btnElement.classList.remove('loading');
+                btnElement.classList.add('playing');
+            }
+            const utterance = new SpeechSynthesisUtterance(text.substring(0, 5000));
+            utterance.lang = 'en-US';
+            utterance.rate = getTtsRate();
+            utterance.onend = () => {
+                if (btnElement) {
+                    btnElement.textContent = '\u25B6';
+                    btnElement.classList.remove('playing');
+                }
+            };
+            utterance.onerror = () => {
+                if (btnElement) {
+                    btnElement.textContent = '\u25B6';
+                    btnElement.classList.remove('playing');
+                }
+            };
+            speechSynthesis.speak(utterance);
+        }
+
         function renderExpertMessage(name, enText, zhText, colorIndex) {
             const color = getExpertColor(colorIndex);
             const msg = document.createElement('div');
@@ -6976,7 +8556,7 @@
             const playBtn = msg.querySelector('.play-audio-btn');
             playBtn.addEventListener('click', () => {
                 lastTtsBtn = playBtn;
-                playTTS(enText, playBtn);
+                playChatroomTTS(enText, playBtn);
             });
 
             // Bind translation toggle
@@ -7033,7 +8613,7 @@
             const playBtn = msg.querySelector('.play-audio-btn');
             playBtn.addEventListener('click', () => {
                 lastTtsBtn = playBtn;
-                playTTS(enText, playBtn);
+                playChatroomTTS(enText, playBtn);
             });
 
             // Bind translation toggle
@@ -7208,20 +8788,19 @@
         align-items: center;
         gap: 0.5rem;
         padding: 0.5rem 0.875rem;
-        background: linear-gradient(135deg, rgba(200, 169, 126, 0.06) 0%, rgba(200, 169, 126, 0.02) 100%);
-        border: 1px solid rgba(200, 169, 126, 0.15);
+        background: rgba(212, 165, 116, 0.02);
+        border: 1px solid rgba(212, 165, 116, 0.06);
         border-radius: var(--radius-sm);
-        backdrop-filter: blur(12px);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        backdrop-filter: blur(16px);
+        box-shadow: none;
+        transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         opacity: 0.9;
     }
 
     .builder-badge:hover {
-        background: linear-gradient(135deg, rgba(200, 169, 126, 0.1) 0%, rgba(200, 169, 126, 0.04) 100%);
-        border-color: rgba(200, 169, 126, 0.25);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 20px rgba(200, 169, 126, 0.12);
+        background: rgba(212, 165, 116, 0.04);
+        border-color: rgba(212, 165, 116, 0.1);
+        box-shadow: none;
         opacity: 1;
     }
 
@@ -7242,7 +8821,7 @@
         height: 6px;
         background: var(--primary);
         border-radius: 50%;
-        box-shadow: 0 0 8px rgba(200, 169, 126, 0.4);
+        box-shadow: 0 0 8px rgba(212, 165, 116, 0.4);
         animation: dotPulse 2.5s ease-in-out infinite;
     }
 
@@ -7285,26 +8864,25 @@
         align-items: center;
         gap: 0.35rem;
         padding: 0.5rem 1rem;
-        background: rgba(200, 169, 126, 0.04);
-        border: 1px solid rgba(200, 169, 126, 0.12);
+        background: rgba(212, 165, 116, 0.02);
+        border: 1px solid rgba(212, 165, 116, 0.06);
         border-radius: 24px;
         color: var(--text-muted);
         text-decoration: none;
         font-size: 0.75rem;
-        font-weight: 500;
+        font-weight: 400;
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        letter-spacing: 0.025em;
-        backdrop-filter: blur(8px);
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        letter-spacing: 0.04em;
+        backdrop-filter: blur(12px);
+        transition: all 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         pointer-events: auto;
     }
 
     .builder-footer-link:hover {
-        background: rgba(200, 169, 126, 0.08);
-        border-color: rgba(200, 169, 126, 0.2);
+        background: rgba(212, 165, 116, 0.04);
+        border-color: rgba(212, 165, 116, 0.1);
         color: var(--primary);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(200, 169, 126, 0.1);
+        box-shadow: none;
     }
 
     .builder-text {
@@ -7317,7 +8895,7 @@
     }
 
     .builder-heart {
-        color: rgba(200, 169, 126, 0.4);
+        color: rgba(212, 165, 116, 0.4);
         font-size: 0.65rem;
         transition: all 0.3s ease;
     }
@@ -7377,7 +8955,7 @@
                     width: 100%;
                     height: 100%;
                     border-radius: var(--radius-sm);
-                    background: radial-gradient(circle, rgba(200, 169, 126, 0.3) 0%, transparent 70%);
+                    background: radial-gradient(circle, rgba(212, 165, 116, 0.3) 0%, transparent 70%);
                     top: 0;
                     left: 0;
                     pointer-events: none;
