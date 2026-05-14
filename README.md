@@ -1,168 +1,168 @@
-# 一分钱学英语 / Learn English for one cent
+# 一分钱学英语
 
-> "Everything is possible in the AI era."
+> "AI 时代，一切皆有可能。"
 
-**Why pay $50/hr for a human tutor when you can debate with the distilled minds of Nobel Laureates for pennies?**
-
----
-
-## 💡 Core Philosophy
-
-- **API is all you need.** No bloated backends, just raw, unfiltered intelligence.
-- **Atomic Cost.** ~¥0.5 per session. A cup of coffee buys you a month of fluency.
-- **Dissolution over Solutions.** We don't provide answers; we dissolve problems. English is not a subject to study—it is the medium you inhabit.
+**花 50 美元/小时请人类外教？不如花几分钱和诺贝尔奖得主的思维蒸馏体辩论。**
 
 ---
 
-## 🛠️ The "Fundamental Logic"
+## 💡 核心理念
 
-Human time is limited; AI never sleeps. In this space, language barriers don't just break—they vanish into your logic.
-
-**Don't learn English. Live in it.**
-
----
-
-## ✨ Features
-
-### 🎭 Multi-Expert Chatroom
-Debate with historical figures, philosophers, scientists, and thinkers:
-- **Feynman** - Break down complex concepts into simple terms
-- **Einstein** - Thought experiments and imagination
-- **Kahneman** - Cognitive bias detection and System 1/2 thinking
-- **Trump Hijack Mode** - Unexpected interruptions with signature phrases
-- **Prank Mode** - Hilarious, chaotic roasting between experts
-- **And more...**
-
-### 🎯 Unified Evaluation (Writing + Speaking)
-Single interface for both assessment types:
-- Toggle between Writing (TR/CC/LR/GRA) and Speaking (FC/LR/GRA/P) criteria
-- Text input for Writing evaluation
-- Voice input (STT) for Speaking practice
-- Band scoring with detailed feedback
-
-### 🗣️ AI-Powered Conversation Practice
-- Real-time dialogue with AI examiners
-- Speech-to-text integration (Browser Web Speech API)
-- **Multi-Engine TTS** - Choose your voice:
-  - **Edge-TTS** (Free) - Microsoft Neural voices
-  - **ElevenLabs** (10k chars/month free) - Premium emotional voices
-  - **Doubao TTS** (Volcano Engine) - Chinese-optimized voices
-- **TTS Test Buttons** - Test each engine directly in settings before using
-- Pronunciation analysis via Azure Speech Services
-
-### 🤖 Multi-Model Support
-Bring your own API key:
-- **DeepSeek** (Chat / Reasoner)
-- **OpenAI** (GPT-4 / GPT-4o / GPT-3.5)
-- **Anthropic** (Claude 3 Opus / Sonnet / Haiku)
-- **Google** (Gemini 2.5 Pro / Flash)
-
-### ⚡ Layered Model Config
-- Configure different models for different sections (Evaluate / Practice / Chatroom)
-- Per-section API key support
-- Priority: Layered config > Global config
-- Real-time switching without restart
+- **API 即一切。** 没有臃肿的后端，只有纯粹的、未经稀释的智能。
+- **原子级成本。** 每次会话约 ¥0.5。一杯咖啡的钱够你用一个月。
+- **消解而非解答。** 我们不提供答案，我们消解问题。英语不是一门需要学习的学科——它是你栖居的媒介。
 
 ---
 
-## 🚀 Quick Start
+## 🛠️ 底层逻辑
 
-### One-Click Launch (Windows)
+人类的时间是有限的；AI 永远不会疲倦。在这个空间里，语言障碍不是被打破的——而是消融在你的逻辑之中。
+
+**不要学英语。活在英语里。**
+
+---
+
+## ✨ 功能特性
+
+### 🎭 多专家聊天室
+与历史人物、哲学家、科学家和思想家辩论：
+- **费曼** - 把复杂概念拆解成简单术语
+- **爱因斯坦** - 思想实验与想象力
+- **卡尼曼** - 认知偏差检测与系统 1/2 思维
+- **特朗普劫持模式** - 意想不到的标志性短语打断
+- **恶搞模式** - 专家之间互相吐槽、戏剧性争吵
+- **更多角色...**
+
+### 🎯 统一评估（写作 + 口语）
+同一界面支持两种评估类型：
+- 在写作 (TR/CC/LR/GRA) 和口语 (FC/LR/GRA/P) 评分标准之间切换
+- 文本输入用于写作评估
+- 语音输入 (STT) 用于口语练习
+- 雅思评分带详细反馈
+
+### 🗣️ AI 对话练习
+- 与 AI 考官实时对话
+- 语音转文字集成（浏览器 Web Speech API）
+- **多引擎语音合成** - 自由选择声音：
+  - **Edge-TTS**（免费）- 微软 Neural 语音
+  - **ElevenLabs**（每月免费 1 万字符）- 顶级情感语音
+  - **豆包 TTS**（火山引擎）- 中英混合优化语音
+- **TTS 测试按钮** - 在设置中直接试听每个引擎
+- 通过 Azure 语音服务进行发音分析
+
+### 🤖 多模型支持
+自带 API Key：
+- **DeepSeek**（Chat / Reasoner）
+- **OpenAI**（GPT-4 / GPT-4o / GPT-3.5）
+- **Anthropic**（Claude 3 Opus / Sonnet / Haiku）
+- **Google**（Gemini 2.5 Pro / Flash）
+
+### ⚡ 分层模型配置
+- 为不同板块（评估/练习/聊天室）配置不同模型
+- 支持每个板块独立的 API Key
+- 优先级：分层配置 > 全局配置
+- 实时切换，无需重启
+
+---
+
+## 🚀 快速开始
+
+### 一键启动（Windows）
 ```bash
 双击 IELTS-Evaluator.bat
 ```
 
-### Manual Setup
+### 手动安装
 ```bash
-# Backend
+# 后端
 cd backend
 pip install -r requirements.txt
 python main.py
 
-# Frontend
-# Open frontend/index.html in browser
-# Or serve with: python -m http.server 3000
+# 前端
+# 在浏览器中打开 frontend/index.html
+# 或使用命令：python -m http.server 3000
 ```
 
 ---
 
-## ⚙️ Configuration
+## ⚙️ 配置说明
 
-### AI Model Setup
-1. Click **Settings** (top-right)
-2. Select your AI model
-3. Enter your API key
-4. Test connection
+### AI 模型配置
+1. 点击右上角 **设置** 按钮
+2. 选择你的 AI 模型
+3. 输入 API Key
+4. 测试连接
 
-### TTS Voice Setup
-1. Open **Settings** → TTS Voice Engines section
-2. Choose your preferred engine:
-   - **Edge-TTS**: No setup required (free)
-   - **ElevenLabs**: Enter API key from [elevenlabs.io](https://elevenlabs.io)
-   - **Doubao TTS**: Enter App ID and Access Token from [Volcengine](https://console.volcengine.com/speech/service)
-3. Select voice and speed
-4. **Test each engine** with the dedicated test buttons before saving
+### 语音合成配置
+1. 打开 **设置** → 语音引擎板块
+2. 选择你喜欢的引擎：
+   - **Edge-TTS**：无需配置（免费）
+   - **ElevenLabs**：从 [elevenlabs.io](https://elevenlabs.io) 获取 API Key
+   - **豆包 TTS**：从[火山引擎控制台](https://console.volcengine.com/speech/service)获取 App ID 和 Access Token
+3. 选择音色和语速
+4. 使用专用测试按钮 **试听** 后再保存
 
-### Layered Model Config
-1. In each section (Evaluate/Practice/Chatroom), click **⚙️ Custom Model**
-2. Select a dedicated model for that section
-3. Optionally enter a separate API key
-4. Click **Apply** - changes take effect immediately
-
----
-
-## 📡 API Endpoints
-
-| Endpoint | Description |
-|----------|-------------|
-| `POST /evaluate` | IELTS writing/speaking assessment |
-| `POST /practice/chat` | AI examiner conversation |
-| `POST /chatroom/discuss` | Multi-expert discussion |
-| `POST /chatroom/followup` | Follow-up discussion |
-| `POST /tts/speak` | Multi-engine text-to-speech |
-| `GET /tts/voices` | List available TTS voices |
-| `POST /analyze-pronunciation` | Azure Speech pronunciation analysis |
+### 分层模型配置
+1. 在每个板块（评估/练习/聊天室）中点击 **⚙️ 自定义模型**
+2. 为该板块选择专用模型
+3. 可选填独立的 API Key
+4. 点击 **应用** - 立即生效
 
 ---
 
-## 💰 Cost Breakdown
+## 📡 API 接口
 
-| Component | Cost per Session |
-|-----------|-----------------|
-| AI API (DeepSeek/OpenAI/etc) | ~¥0.3-0.8 |
-| TTS (Edge-TTS) | Free |
-| TTS (ElevenLabs) | Free tier: 10k chars/month |
-| TTS (Doubao) | ~¥0.003/100 chars |
-| Azure Speech (optional) | Free tier: 5 hours/month |
-| **Total** | **~¥0.5** |
-
-Compare: Human tutor = $50/hour = ~¥360/hour
+| 接口 | 说明 |
+|------|------|
+| `POST /evaluate` | 雅思写作/口语评估 |
+| `POST /practice/chat` | AI 考官对话 |
+| `POST /chatroom/discuss` | 多专家讨论 |
+| `POST /chatroom/followup` | 追问讨论 |
+| `POST /tts/speak` | 多引擎语音合成 |
+| `GET /tts/voices` | 获取可用音色列表 |
+| `POST /analyze-pronunciation` | Azure 语音发音分析 |
 
 ---
 
-## 🏗️ Architecture
+## 💰 成本分析
+
+| 组件 | 每次会话成本 |
+|------|-------------|
+| AI API（DeepSeek/OpenAI 等） | ~¥0.3-0.8 |
+| TTS（Edge-TTS） | 免费 |
+| TTS（ElevenLabs） | 免费额度：每月 1 万字符 |
+| TTS（豆包） | ~¥0.003/100 字符 |
+| Azure 语音（可选） | 免费额度：每月 5 小时 |
+| **合计** | **约 ¥0.5** |
+
+对比：人类外教 = $50/小时 ≈ ¥360/小时
+
+---
+
+## 🏗️ 系统架构
 
 ```
 ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│   Frontend  │────▶│   Backend   │────▶│  AI APIs    │
-│  (Vanilla)  │     │  (FastAPI)  │     │(DeepSeek/   │
-└─────────────┘     └─────────────┘     │ OpenAI/etc) │
+│    前端      │────▶│    后端      │────▶│   AI 接口   │
+│  (原生 HTML) │     │  (FastAPI)  │     │(DeepSeek/   │
+└─────────────┘     └─────────────┘     │ OpenAI 等)  │
      │                   │               └─────────────┘
      │                   │
      ▼                   ▼
 ┌─────────────┐     ┌─────────────┐
-│  TTS APIs   │     │  Azure STT  │
-│(ElevenLabs/ │     │  (Optional) │
-│ Doubao)     │     └─────────────┘
+│  TTS 接口   │     │ Azure 语音  │
+│(ElevenLabs/ │     │  （可选）    │
+│  豆包 TTS)  │     └─────────────┘
 └─────────────┘
 ```
 
-**No database. No user accounts. No tracking.**
-Just you, your API key, and infinite intelligence.
+**无数据库。无用户账号。无追踪。**
+只有你、你的 API Key、和无限的智能。
 
 ---
 
-## 📝 License
+## 📝 许可证
 
 Apache License 2.0
 
@@ -170,6 +170,6 @@ Copyright 2025 RT-C-6668882025
 
 ---
 
-> *"The limits of my language mean the limits of my world."* — Ludwig Wittgenstein
+> *"我语言的边界就是我世界的边界。"* — 路德维希·维特根斯坦
 
-**一分钱学英语。Learn English for one cent.**
+**一分钱学英语。**

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互式物理拟真小票 - Verlet Integration</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #1a1a1a;
+            background-image: radial-gradient(circle at 50% 50%, #2a2a2a 0%, #111 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            touch-action: none;
+        }
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            display: block;
+        }
+        #ui-layer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            pointer-events: none;
+            user-select: none;
+        }
+        h1 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: #fff;
+        }
+        p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+    </style>
+    <!-- 引入 Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+    <div id="ui-layer">
+        <h1>物理拟真小票 (Thermal Paper)</h1>
+        <p>鼠标左键：抓取并拖拽小票任意位置</p>
+        <p>特点：全幅顶部固定 / Verlet 约束 / 纸张刚性与褶皱</p>
+    </div>
+
+    <div id="canvas-container"></div>
+
+    <script>
+        // ==========================================
+        // 1. 生成真实感小票纹理 (Canvas 2D)
+        // ==========================================
+        function createReceiptTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512;
+            canvas.height = 1024;
+            const ctx = canvas.getContext('2d');
+
+            // 纸张底色 (微带灰黄的热敏纸质感)
+            ctx.fillStyle = '#fcfbf9';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 增加细微的纸张噪点纹理
+            for(let i=0; i<10000; i++) {
+                ctx.fillStyle = `rgba(0,0,0, ${Math.random() * 0.03})`;
+                ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 2, 2);
+            }
+
+            ctx.fillStyle = '#222'; // 褪色的黑色墨水
+            ctx.textAlign = 'center';
+
+            // 标题
+            ctx.font = 'bold 42px monospace';
+            ctx.fillText('SUPERMARKET', canvas.width / 2, 100);
+            
+            ctx.font = '24px monospace';
+            ctx.fillText('Store #402 - Terminal 03', canvas.width / 2, 150);
+            ctx.fillText('2026-03-12 14:35:02', canvas.width / 2, 190);
+
+            // 分割线
+            function drawDashedLine(y) {
+                ctx.beginPath();
+                ctx.setLineDash([10, 10]);
+                ctx.moveTo(40, y);
+                ctx.lineTo(canvas.width - 40, y);
+                ctx.strokeStyle = '#333';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            drawDashedLine(230);
+
+            // 商品列表
+            ctx.textAlign = 'left';
+            ctx.font = '28px monospace';
+            const items = [
+                { name: 'Organic Milk 1L', price: '$3.99' },
+                { name: 'Whole Wheat Bread', price: '$2.49' },
+                { name: 'Avocado (x3)', price: '$4.50' },
+                { name: 'Colombian Coffee', price: '$8.99' },
+                { name: 'Eggs 12-pack', price: '$3.20' },
+                { name: 'Paper Towels', price: '$6.50' },
+                { name: 'Sea Salt Chocolate', price: '$4.00' },
+                { name: 'Fresh Apples', price: '$2.80' }
+            ];
+
+            let startY = 290;
+            items.forEach(item => {
+                ctx.fillText(item.name, 40, startY);
+                ctx.textAlign = 'right';
+                ctx.fillText(item.price, canvas.width - 40, startY);
+                ctx.textAlign = 'left';
+                startY += 45;
+            });
+
+            drawDashedLine(startY + 20);
+
+            // 总计
+            startY += 80;
+            ctx.font = 'bold 36px monospace';
+            ctx.fillText('TOTAL:', 40, startY);
+            ctx.textAlign = 'right';
+            ctx.fillText('$36.47', canvas.width - 40, startY);
+
+            // 支付信息
+            startY += 60;
+            ctx.textAlign = 'left';
+            ctx.font = '24px monospace';
+            ctx.fillText('Visa ending in 8899', 40, startY);
+            ctx.textAlign = 'right';
+            ctx.fillText('APPROVED', canvas.width - 40, startY);
+
+            drawDashedLine(startY + 40);
+
+            // 条形码模拟
+            startY += 90;
+            for(let i=0; i<80; i++) {
+                let w = Math.random() * 6 + 1;
+                ctx.fillRect(60 + i * 5, startY, w, 80);
+            }
+
+            ctx.textAlign = 'center';
+            ctx.font = '20px monospace';
+            ctx.fillText('|| |||| | ||| || ||| || |||', canvas.width / 2, startY + 110);
+            
+            ctx.font = '24px monospace';
+            ctx.fillText('Thank you for shopping!', canvas.width / 2, startY + 170);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.anisotropy = 16;
+            return texture;
+        }
+
+        // ==========================================
+        // 2. Verlet 物理引擎 (粒子与约束)
+        // ==========================================
+        const DAMPING = 0.85; // 阻尼：热敏纸较高，让它迅速停止摆动，不像布料那样飘逸
+        const MASS = 1.0;
+        const TIMESTEP = 18 / 1000;
+        const TIMESTEP_SQ = TIMESTEP * TIMESTEP;
+        const GRAVITY = new THREE.Vector3(0, -900, 0); // 适度重力
+
+        class Particle {
+            constructor(x, y, z, u, v) {
+                this.position = new THREE.Vector3(x, y, z);
+                this.previous = new THREE.Vector3(x, y, z);
+                this.original = new THREE.Vector3(x, y, z);
+                this.a = new THREE.Vector3(0, 0, 0); // 加速度
+                this.mass = MASS;
+                this.isPinned = false; // 是否被固定（如顶部边缘或被鼠标抓取）
+                
+                // UV 坐标，用于映射纹理
+                this.uv = new THREE.Vector2(u, v);
+            }
+
+            addForce(force) {
+                this.a.add(new THREE.Vector3().copy(force).divideScalar(this.mass));
+            }
+
+            integrate() {
+                if (this.isPinned) return;
+
+                // Verlet 积分计算新位置
+                let newPos = new THREE.Vector3().subVectors(this.position, this.previous);
+                newPos.multiplyScalar(DAMPING).add(this.position);
+                newPos.add(this.a.clone().multiplyScalar(TIMESTEP_SQ));
+
+                this.previous.copy(this.position);
+                this.position.copy(newPos);
+
+                this.a.set(0, 0, 0); // 清空加速度
+            }
+        }
+
+        class Constraint {
+            constructor(p1, p2, stiffness = 1.0) {
+                this.p1 = p1;
+                this.p2 = p2;
+                this.restDistance = p1.position.distanceTo(p2.position);
+                this.stiffness = stiffness; // 纸张由于要保持形状，stiffness设得很高
+            }
+
+            resolve() {
+                let diff = new THREE.Vector3().subVectors(this.p2.position, this.p1.position);
+                let currentDist = diff.length();
+                if (currentDist === 0) return;
+
+                // 约束计算：将两点拉回原距离
+                let difference = (this.restDistance - currentDist) / currentDist;
+                
+                // 为了模拟纸张的抗拉伸特性，补偿力度较大
+                let translate = diff.multiplyScalar(0.5 * difference * this.stiffness);
+
+                if (!this.p1.isPinned) this.p1.position.sub(translate);
+                if (!this.p2.isPinned) this.p2.position.add(translate);
+            }
+        }
+
+        class PhysicsPaper {
+            constructor(width, height, segmentsW, segmentsH) {
+                this.particles = [];
+                this.constraints = [];
+                this.segmentsW = segmentsW;
+                this.segmentsH = segmentsH;
+                
+                // 创建粒子网格
+                for (let v = 0; v <= segmentsH; v++) {
+                    for (let u = 0; u <= segmentsW; u++) {
+                        let x = (u / segmentsW - 0.5) * width;
+                        let y = (0.5 - v / segmentsH) * height; // 顶部 y>0，底部 y<0
+                        let z = 0;
+                        
+                        let p = new Particle(x, y, z, u / segmentsW, 1 - v / segmentsH);
+                        
+                        // 【严格约束】: 顶部边缘（v=0）的所有粒子全部固定
+                        // 这彻底杜绝了仅固定几个点导致的“晾衣绳”悬挂效应
+                        if (v === 0) {
+                            p.isPinned = true;
+                        }
+                        
+                        this.particles.push(p);
+                    }
+                }
+
+                // 创建约束
+                const index = (u, v) => u + v * (segmentsW + 1);
+
+                for (let v = 0; v <= segmentsH; v++) {
+                    for (let u = 0; u <= segmentsW; u++) {
+                        // 1. 结构约束 (相邻顶点) - 纸张抗拉伸，刚度最高
+                        if (u < segmentsW) this.constraints.push(new Constraint(this.particles[index(u, v)], this.particles[index(u + 1, v)], 1.0));
+                        if (v < segmentsH) this.constraints.push(new Constraint(this.particles[index(u, v)], this.particles[index(u, v + 1)], 1.0));
+
+                        // 2. 剪切约束 (对角线) - 防止纸张扭曲变形
+                        if (u < segmentsW && v < segmentsH) {
+                            this.constraints.push(new Constraint(this.particles[index(u, v)], this.particles[index(u + 1, v + 1)], 0.95));
+                            this.constraints.push(new Constraint(this.particles[index(u + 1, v)], this.particles[index(u, v + 1)], 0.95));
+                        }
+
+                        // 3. 弯曲约束 (跨越一个顶点) - 纸张的核心属性，抗过度折叠
+                        if (u < segmentsW - 1) this.constraints.push(new Constraint(this.particles[index(u, v)], this.particles[index(u + 2, v)], 0.6));
+                        if (v < segmentsH - 1) this.constraints.push(new Constraint(this.particles[index(u, v)], this.particles[index(u, v + 2)], 0.6));
+                    }
+                }
+            }
+
+            update() {
+                // 1. 施加重力和风力
+                let windForce = new THREE.Vector3(
+                    Math.sin(Date.now() / 1000) * 20, 
+                    0, 
+                    Math.cos(Date.now() / 800) * 30
+                );
+
+                for (let p of this.particles) {
+                    p.addForce(GRAVITY);
+                    p.addForce(windForce);
+                    p.integrate();
+                }
+
+                // 2. 满足约束 (多次迭代以保证纸张的刚性，防止像橡皮筋一样拉伸)
+                const ITERATIONS = 15; // 迭代次数越高，材质越像硬纸张
+                for (let i = 0; i < ITERATIONS; i++) {
+                    for (let c of this.constraints) {
+                        c.resolve();
+                    }
+                    
+                    // 【二次保险】：在每次约束解析后，强制将顶部粒子锁死在原始位置
+                    // 确保任何向下的拉力绝对无法让顶部产生凹陷
+                    for (let u = 0; u <= this.segmentsW; u++) {
+                        let topP = this.particles[u]; // v=0 的行
+                        topP.position.copy(topP.original);
+                    }
+                }
+            }
+        }
+
+        // ==========================================
+        // 3. Three.js 场景初始化与渲染
+        // ==========================================
+        const container = document.getElementById('canvas-container');
+        
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x1a1a1a, 0.02);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+        camera.position.set(0, 0, 60);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(window.devicePixelRatio);
+        // 渲染高质量阴影以突出纸张褶皱
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        container.appendChild(renderer.domElement);
+
+        // 灯光设置
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(10, 20, 30);
+        directionalLight.castShadow = true;
+        directionalLight.shadow.mapSize.width = 2048;
+        directionalLight.shadow.mapSize.height = 2048;
+        directionalLight.shadow.bias = -0.001;
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0xf0f5ff, 0.4, 100);
+        pointLight.position.set(-20, -10, 20);
+        scene.add(pointLight);
+
+        // 纸张物理模型实例化 (宽 12, 高 32, 网格 12x32)
+        const paperW = 12;
+        const paperH = 32;
+        const segW = 12;
+        const segH = 32;
+        const physicsPaper = new PhysicsPaper(paperW, paperH, segW, segH);
+
+        // 创建 Three.js 几何体与材质
+        const geometry = new THREE.BufferGeometry();
+        const positions = new Float32Array(physicsPaper.particles.length * 3);
+        const uvs = new Float32Array(physicsPaper.particles.length * 2);
+        const indices = [];
+
+        // 填充初始顶点数据
+        physicsPaper.particles.forEach((p, i) => {
+            positions[i * 3] = p.position.x;
+            positions[i * 3 + 1] = p.position.y;
+            positions[i * 3 + 2] = p.position.z;
+            uvs[i * 2] = p.uv.x;
+            uvs[i * 2 + 1] = p.uv.y;
+        });
+
+        // 填充面索引
+        for (let v = 0; v < segH; v++) {
+            for (let u = 0; u < segW; u++) {
+                let a = u + v * (segW + 1);
+                let b = (u + 1) + v * (segW + 1);
+                let c = u + (v + 1) * (segW + 1);
+                let d = (u + 1) + (v + 1) * (segW + 1);
+
+                indices.push(a, b, d);
+                indices.push(a, d, c);
+            }
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+        geometry.setIndex(indices);
+        geometry.computeVertexNormals();
+
+        // 材质：使用 Standard 材质并带有轻微反射，模拟热敏纸的光滑感
+        const receiptTexture = createReceiptTexture();
+        const material = new THREE.MeshStandardMaterial({
+            map: receiptTexture,
+            color: 0xffffff,
+            roughness: 0.6,    // 并非完全粗糙
+            metalness: 0.1,    // 极微弱的金属感增加平滑反光
+            side: THREE.DoubleSide, // 双面渲染以支持折叠翻转
+            wireframe: false
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.castShadow = true;
+        mesh.receiveShadow = true;
+        // 微调纸张在屏幕中央的位置
+        mesh.position.y = paperH / 2 - 5; 
+        scene.add(mesh);
+
+        // 背景投射面 (接收阴影)
+        const bgGeo = new THREE.PlaneGeometry(200, 200);
+        const bgMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a, depthWrite: false });
+        const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+        bgMesh.position.z = -15;
+        bgMesh.receiveShadow = true;
+        scene.add(bgMesh);
+
+        // ==========================================
+        // 4. 鼠标交互控制 (抓取与拖拽物理顶点)
+        // ==========================================
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+        
+        let draggedParticle = null;
+        let dragPlane = new THREE.Plane();
+        let dragOffset = new THREE.Vector3();
+
+        function getIntersects(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            raycaster.setFromCamera(mouse, camera);
+            return raycaster.intersectObject(mesh);
+        }
+
+        window.addEventListener('mousedown', (event) => {
+            const intersects = getIntersects(event);
+            if (intersects.length > 0) {
+                // 找到距离鼠标点击处最近的几何体顶点
+                const face = intersects[0].face;
+                const pA = physicsPaper.particles[face.a];
+                const pB = physicsPaper.particles[face.b];
+                const pC = physicsPaper.particles[face.c];
+
+                // 比较距离选出最近点
+                const hitPoint = intersects[0].point;
+                
+                // 将交点转换回网格本地坐标系进行比较
+                const localHit = mesh.worldToLocal(hitPoint.clone());
+                
+                let closestP = pA;
+                let minDist = localHit.distanceTo(pA.position);
+                
+                if (localHit.distanceTo(pB.position) < minDist) { closestP = pB; minDist = localHit.distanceTo(pB.position); }
+                if (localHit.distanceTo(pC.position) < minDist) { closestP = pC; }
+
+                // 顶边不允许被抓取脱离
+                if (closestP.position.y !== closestP.original.y) {
+                    draggedParticle = closestP;
+                    draggedParticle.isPinned = true;
+
+                    // 创建一个平行于相机的拖拽平面，穿过抓取点
+                    const worldPos = mesh.localToWorld(draggedParticle.position.clone());
+                    dragPlane.setFromNormalAndCoplanarPoint(camera.getWorldDirection(new THREE.Vector3()), worldPos);
+                }
+            }
+        });
+
+        window.addEventListener('mousemove', (event) => {
+            if (draggedParticle) {
+                mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+                mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+                raycaster.setFromCamera(mouse, camera);
+
+                const targetPos = new THREE.Vector3();
+                raycaster.ray.intersectPlane(dragPlane, targetPos);
+                
+                if (targetPos) {
+                    // 转回本地坐标系
+                    mesh.worldToLocal(targetPos);
+                    
+                    // 将顶点强制移动至鼠标位置
+                    draggedParticle.position.copy(targetPos);
+                    draggedParticle.previous.copy(targetPos); // 清除该点的动量
+                }
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (draggedParticle) {
+                // 释放粒子
+                draggedParticle.isPinned = false;
+                draggedParticle = null;
+            }
+        });
+
+        // 窗口缩放响应
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // ==========================================
+        // 5. 渲染与动画循环
+        // ==========================================
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // 更新物理
+            physicsPaper.update();
+
+            // 将物理计算结果同步到 Three.js 几何体
+            const positions = geometry.attributes.position.array;
+            physicsPaper.particles.forEach((p, i) => {
+                positions[i * 3] = p.position.x;
+                positions[i * 3 + 1] = p.position.y;
+                positions[i * 3 + 2] = p.position.z;
+            });
+
+            geometry.attributes.position.needsUpdate = true;
+            // 实时重新计算法线，使得褶皱产生准确的明暗光影
+            geometry.computeVertexNormals();
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
